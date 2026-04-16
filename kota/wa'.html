@@ -3099,14 +3099,7 @@
                 const data = collectResponses();
                 const json = JSON.stringify(data, null, 2);
                 const encoded = btoa(unescape(encodeURIComponent(json)));
-                const output = [
-                    "=== RESPONS SISWA OSN-K INFORMATIKA ===",
-                    "=== Sesi 1: Fondasi ===",
-                    "=== Format: Base64-encoded JSON ===",
-                    "=== Untuk instruktur: decode dengan atob() atau base64 decoder ===",
-                    "",
-                    encoded,
-                ].join("\n");
+                const output = [encoded].join("\n");
 
                 const blob = new Blob([output], {
                     type: "text/plain;charset=utf-8",

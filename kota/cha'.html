@@ -1,0 +1,3450 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sesi 2 — Graf I: Merepresentasikan Dunia sebagai Graf</title>
+        <style>
+            :root {
+                --bg: #fdf8f2;
+                --card: #ffffff;
+                --border: #e8ddd0;
+                --ink: #1a1410;
+                --muted: #7a6a5a;
+                --accent: #d4521a;
+                --accent-light: #fdeee5;
+                --blue: #1b4f8a;
+                --blue-light: #e5edf7;
+                --green: #1f7a4a;
+                --green-light: #e5f4ec;
+                --yellow: #c8930a;
+                --yellow-light: #fef7e5;
+                --purple: #8b3a9c;
+                --purple-light: #f3e8f8;
+                --s1: #d4521a;
+                --s1-bg: #fdeee5;
+                --s2: #1b4f8a;
+                --s2-bg: #e5edf7;
+                --s3: #1f7a4a;
+                --s3-bg: #e5f4ec;
+                --s4: #8b3a9c;
+                --s4-bg: #f3e8f8;
+                --s5: #c8930a;
+                --s5-bg: #fef7e5;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                font-family: Georgia, "Times New Roman", serif;
+                color: var(--ink);
+                line-height: 1.7;
+            }
+            code,
+            .mono {
+                font-family: "Courier New", monospace;
+            }
+
+            .site-header {
+                background: #1a1410;
+                padding: 16px 24px;
+            }
+            .site-header .eyebrow {
+                font-size: 11px;
+                color: #aaa;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+                font-family: monospace;
+            }
+            .site-header h1 {
+                font-size: 20px;
+                font-weight: 700;
+                color: #fff;
+                letter-spacing: -0.3px;
+            }
+
+            .prog-nav {
+                background: var(--card);
+                border-bottom: 2px solid var(--border);
+                padding: 0 24px;
+                display: flex;
+                gap: 0;
+                overflow-x: auto;
+            }
+            .prog-btn {
+                padding: 12px 16px;
+                border: none;
+                background: transparent;
+                color: var(--muted);
+                font-family: Georgia, serif;
+                font-size: 12px;
+                cursor: pointer;
+                border-bottom: 3px solid transparent;
+                white-space: nowrap;
+                transition: all 0.2s;
+            }
+            .prog-btn.active {
+                color: var(--accent);
+                border-bottom-color: var(--accent);
+                font-weight: 700;
+            }
+            .prog-btn:not(.active):hover {
+                color: var(--ink);
+                background: var(--accent-light);
+            }
+
+            .panel {
+                display: none;
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 32px 24px 64px;
+            }
+            .panel.active {
+                display: block;
+            }
+
+            h2 {
+                font-size: 22px;
+                color: var(--accent);
+                margin-bottom: 8px;
+                margin-top: 32px;
+            }
+            h2:first-child {
+                margin-top: 0;
+            }
+            h3 {
+                font-size: 17px;
+                color: var(--ink);
+                margin: 24px 0 8px;
+                font-weight: 700;
+            }
+            h4 {
+                font-size: 14px;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin: 20px 0 6px;
+                font-family: monospace;
+            }
+            p {
+                margin-bottom: 14px;
+                font-size: 15px;
+            }
+            ul,
+            ol {
+                margin: 0 0 14px 22px;
+                font-size: 15px;
+            }
+            li {
+                margin-bottom: 4px;
+            }
+            strong {
+                color: var(--ink);
+            }
+
+            .callout {
+                border-radius: 8px;
+                padding: 14px 18px;
+                font-size: 14px;
+                line-height: 1.65;
+                margin: 16px 0;
+            }
+            .callout-yellow {
+                background: var(--yellow-light);
+                border: 1px solid #c8930a60;
+            }
+            .callout-blue {
+                background: var(--blue-light);
+                border: 1px solid #1b4f8a60;
+            }
+            .callout-green {
+                background: var(--green-light);
+                border: 1px solid #1f7a4a60;
+            }
+            .callout-purple {
+                background: var(--purple-light);
+                border: 1px solid #8b3a9c60;
+            }
+            .callout-accent {
+                background: var(--accent-light);
+                border: 1px solid #d4521a60;
+            }
+            .callout-label {
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            .tbl-wrap {
+                overflow-x: auto;
+                margin: 16px 0;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14px;
+            }
+            th {
+                background: var(--accent);
+                color: #fff;
+                padding: 9px 12px;
+                text-align: left;
+                font-weight: 700;
+            }
+            td {
+                padding: 8px 12px;
+                border-bottom: 1px solid var(--border);
+                vertical-align: top;
+            }
+            tr:nth-child(even) td {
+                background: #faf7f4;
+            }
+            tr:last-child td {
+                border-bottom: none;
+            }
+            .th-blue th {
+                background: var(--blue);
+            }
+            .th-green th {
+                background: var(--green);
+            }
+
+            .section-badge {
+                display: inline-block;
+                background: var(--accent);
+                color: #fff;
+                font-family: monospace;
+                font-size: 11px;
+                letter-spacing: 1px;
+                padding: 3px 10px;
+                border-radius: 20px;
+                margin-bottom: 12px;
+                text-transform: uppercase;
+            }
+            .section-badge.blue {
+                background: var(--blue);
+            }
+            .section-badge.green {
+                background: var(--green);
+            }
+            .section-badge.purple {
+                background: var(--purple);
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-label {
+                font-size: 14px;
+                font-weight: 700;
+                display: block;
+                margin-bottom: 6px;
+                color: var(--ink);
+            }
+            .form-sub {
+                font-size: 12px;
+                color: var(--muted);
+                margin-bottom: 6px;
+                display: block;
+            }
+            input[type="text"],
+            input[type="email"],
+            textarea,
+            select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1.5px solid var(--border);
+                border-radius: 6px;
+                font-family: Georgia, serif;
+                font-size: 14px;
+                background: #fff;
+                color: var(--ink);
+                transition: border-color 0.2s;
+            }
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            textarea:focus,
+            select:focus {
+                border-color: var(--accent);
+                outline: none;
+            }
+            textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+            .radio-group,
+            .check-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 6px;
+            }
+            .radio-opt,
+            .check-opt {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            .radio-opt input,
+            .check-opt input {
+                margin-top: 3px;
+                flex-shrink: 0;
+                accent-color: var(--accent);
+            }
+
+            .grid-survey {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+            .grid-survey th {
+                background: var(--accent);
+                color: #fff;
+                padding: 8px 10px;
+                text-align: center;
+            }
+            .grid-survey th:first-child {
+                text-align: left;
+            }
+            .grid-survey td {
+                padding: 8px 10px;
+                border-bottom: 1px solid var(--border);
+                text-align: center;
+            }
+            .grid-survey td:first-child {
+                text-align: left;
+                font-weight: 500;
+            }
+            .grid-survey tr:nth-child(even) td {
+                background: #faf7f4;
+            }
+            .grid-survey input[type="radio"] {
+                accent-color: var(--accent);
+            }
+
+            .sim-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+                margin: 16px 0;
+            }
+            .sim-table th {
+                padding: 9px 14px;
+                text-align: center;
+                font-weight: 700;
+                color: #fff;
+            }
+            .sim-table td {
+                padding: 8px 12px;
+                border: 1px solid var(--border);
+                text-align: center;
+            }
+            .sim-table .row-label {
+                text-align: left;
+                font-weight: 600;
+                background: #faf7f4;
+                font-size: 13px;
+            }
+            .sim-table input.cell-input {
+                width: 100%;
+                padding: 6px;
+                border: 1.5px solid var(--border);
+                border-radius: 4px;
+                text-align: center;
+                font-family: monospace;
+                font-size: 13px;
+                font-weight: 700;
+                background: #fff;
+            }
+            .sim-table input.cell-input:focus {
+                border-color: var(--accent);
+                outline: none;
+            }
+            .sim-table .given {
+                background: var(--blue-light);
+                font-family: monospace;
+                font-weight: 700;
+                color: var(--blue);
+            }
+
+            .explainer-card {
+                background: var(--card);
+                border: 2px solid var(--border);
+                border-radius: 12px;
+                overflow: hidden;
+                margin: 20px 0;
+            }
+            .explainer-header {
+                background: var(--accent);
+                color: #fff;
+                padding: 12px 20px;
+                font-weight: 700;
+                font-size: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .explainer-body {
+                padding: 20px;
+            }
+            .reveal-btn {
+                background: #fff;
+                color: var(--accent);
+                border: none;
+                padding: 7px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 13px;
+                font-weight: 700;
+                transition: all 0.2s;
+            }
+            .reveal-btn:hover {
+                background: var(--accent-light);
+            }
+            .reset-btn {
+                background: transparent;
+                color: #fff;
+                border: 1.5px solid #ffffff80;
+                padding: 6px 14px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 12px;
+                transition: all 0.2s;
+            }
+            .reset-btn:hover {
+                background: #ffffff20;
+            }
+            .ctrl-row {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-top: 16px;
+                flex-wrap: wrap;
+            }
+            .step-counter {
+                font-size: 12px;
+                color: var(--muted);
+                font-family: monospace;
+            }
+
+            .flowchart-wrap {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+                margin: 16px 0;
+            }
+            .flow-step {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                background: var(--card);
+                border: 2px solid var(--border);
+                border-radius: 12px;
+                padding: 14px 20px;
+                cursor: pointer;
+                width: min(560px, 100%);
+                transition: all 0.25s;
+            }
+            .flow-step:hover {
+                border-color: var(--accent);
+                background: var(--accent-light);
+            }
+            .flow-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                flex-shrink: 0;
+            }
+            .flow-chev {
+                margin-left: auto;
+                font-size: 14px;
+                color: var(--muted);
+                opacity: 0.4;
+                transition: all 0.2s;
+            }
+            .flow-desc {
+                background: var(--accent-light);
+                border: 1.5px solid #d4521a40;
+                border-top: none;
+                border-radius: 0 0 10px 10px;
+                width: min(560px, 100%);
+                padding: 12px 20px 16px;
+                font-size: 14px;
+                line-height: 1.65;
+                display: none;
+            }
+            .flow-connector {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-left: 22px;
+            }
+            .flow-line {
+                width: 2px;
+                height: 12px;
+                background: var(--border);
+            }
+            .flow-arrow {
+                font-size: 16px;
+                color: var(--muted);
+            }
+
+            .download-section {
+                background: #1a1410;
+                border-radius: 12px;
+                padding: 32px;
+                margin-top: 40px;
+                text-align: center;
+            }
+            .download-section h3 {
+                color: #fff;
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            .download-section p {
+                color: #aaa;
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            .download-btn {
+                background: var(--accent);
+                color: #fff;
+                border: none;
+                padding: 14px 32px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 16px;
+                font-weight: 700;
+                transition: background 0.2s;
+            }
+            .download-btn:hover {
+                background: #b84215;
+            }
+            .download-note {
+                font-size: 12px;
+                color: #888;
+                margin-top: 12px;
+            }
+
+            .answer-box {
+                background: var(--card);
+                border: 2px dashed var(--accent);
+                border-radius: 10px;
+                padding: 20px;
+                margin: 16px 0;
+            }
+            .answer-box-label {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--accent);
+                font-family: monospace;
+                font-weight: 700;
+                margin-bottom: 10px;
+            }
+            .final-answer-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 12px;
+                flex-wrap: wrap;
+            }
+            .final-answer-row label {
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .final-answer-row input {
+                width: 140px;
+            }
+
+            .error-log-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .error-log-table th {
+                background: var(--blue);
+                color: #fff;
+                padding: 8px 10px;
+                font-size: 13px;
+                font-weight: 700;
+            }
+            .error-log-table td {
+                padding: 6px 8px;
+                border: 1px solid var(--border);
+                vertical-align: top;
+                font-size: 13px;
+            }
+            .error-log-table td:first-child {
+                width: 30px;
+                text-align: center;
+                color: var(--muted);
+                font-size: 13px;
+                background: #faf7f4;
+            }
+            .add-row-btn {
+                margin-top: 10px;
+                background: var(--green-light);
+                color: var(--green);
+                border: 1.5px solid var(--green);
+                padding: 7px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 13px;
+                font-weight: 700;
+            }
+            .add-row-btn:hover {
+                background: var(--green);
+                color: #fff;
+            }
+            .error-log-table input[type="text"],
+            .error-log-table select {
+                width: 100%;
+                border: none;
+                padding: 4px 6px;
+                font-size: 12px;
+                font-family: Georgia, serif;
+                background: transparent;
+            }
+            .error-log-table input[type="text"]:focus,
+            .error-log-table select:focus {
+                outline: 1px solid var(--accent);
+            }
+
+            .exit-card {
+                background: var(--accent-light);
+                border: 2px solid #d4521a60;
+                border-radius: 12px;
+                padding: 24px;
+                margin: 20px 0;
+            }
+
+            /* Sim reveal table */
+            .sim-reveal-row td {
+                transition: background 0.4s;
+            }
+            .sim-reveal-row.revealed td.new-cell {
+                background: var(--green-light);
+                animation: flash 0.5s ease;
+            }
+            @keyframes flash {
+                0% {
+                    background: var(--yellow-light);
+                }
+                100% {
+                    background: var(--green-light);
+                }
+            }
+
+            /* Union find viz */
+            .uf-wrap {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 12px 0;
+            }
+            .uf-group {
+                display: inline-flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 2px solid;
+                font-size: 13px;
+                font-family: monospace;
+            }
+            .uf-node {
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-weight: 700;
+            }
+
+            /* Graph viz SVG */
+            .graph-svg {
+                display: block;
+                margin: 12px auto;
+                overflow: visible;
+            }
+
+            /* Step progress bar */
+            .step-prog {
+                height: 4px;
+                background: var(--border);
+                border-radius: 2px;
+                margin-bottom: 12px;
+                overflow: hidden;
+            }
+            .step-prog-fill {
+                height: 100%;
+                background: var(--accent);
+                transition: width 0.3s;
+            }
+
+            /* Candidate buttons */
+            .candidate-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 12px 0;
+            }
+            .cand-btn {
+                padding: 8px 16px;
+                border: 2px solid var(--border);
+                border-radius: 8px;
+                background: var(--card);
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 14px;
+                font-weight: 700;
+                transition: all 0.2s;
+            }
+            .cand-btn:hover {
+                border-color: var(--accent);
+                background: var(--accent-light);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="site-header">
+            <div class="eyebrow">OSN-K Informatika · Kursus Persiapan</div>
+            <h1>Sesi 2 — Graf I: Merepresentasikan Dunia sebagai Graf</h1>
+        </div>
+
+        <div class="prog-nav" id="progNav">
+            <button class="prog-btn active" onclick="goPanel('p-identitas')">
+                ① Identitas
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-gambaran')">
+                ② Gambaran Sesi
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-bacaan')">
+                ③ Bacaan
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-contoh')">
+                ④ Contoh (I Do)
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-terpandu')">
+                ⑤ Latihan Terpandu
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-bacaan2')">
+                ⑥ Bacaan Lanjutan
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-mandiri')">
+                ⑦ Latihan Mandiri
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-errorlog')">
+                ⑧ Error Log
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-karcis')">
+                ⑨ Karcis Keluar
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-ringkasan')">
+                ⑩ Ringkasan
+            </button>
+        </div>
+
+        <!-- ① IDENTITAS -->
+        <div id="p-identitas" class="panel active">
+            <div class="section-badge">Sebelum Mulai</div>
+            <h2>Data Diri</h2>
+            <p>
+                Isi kolom di bawah. Data ini akan disertakan dalam file unduhan
+                responmu di akhir sesi.
+            </p>
+            <div class="form-group">
+                <label class="form-label" for="s-nama">Nama Lengkap</label>
+                <input type="text" id="s-nama" placeholder="Nama kamu…" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="s-email">Alamat Email</label>
+                <input
+                    type="email"
+                    id="s-email"
+                    placeholder="email@contoh.com"
+                />
+            </div>
+            <div style="margin-top: 24px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-gambaran')"
+                >
+                    Lanjut ke Gambaran Sesi →
+                </button>
+            </div>
+        </div>
+
+        <!-- ② GAMBARAN SESI -->
+        <div id="p-gambaran" class="panel">
+            <div class="section-badge">Orientasi</div>
+            <h2>Gambaran Sesi 2</h2>
+            <div class="tbl-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Blok</th>
+                            <th>Durasi</th>
+                            <th>Aktivitas Utama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pembuka</td>
+                            <td>10 menit</td>
+                            <td>Review karcis keluar S1 + orientasi graf</td>
+                        </tr>
+                        <tr>
+                            <td>Instruksi I</td>
+                            <td>25 menit</td>
+                            <td>
+                                "I do" — instruktur memperkenalkan graf dari
+                                konteks OSN-K; memodelkan Serangan Lima Langkah
+                                pada Soal 5 (2024, Parade Bebek)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Latihan Terpandu</td>
+                            <td>25 menit</td>
+                            <td>
+                                "We do" — crowdsourcing "ini graf atau bukan?";
+                                5 skenario, siswa merespons di chat
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Instruksi II</td>
+                            <td>20 menit</td>
+                            <td>
+                                Mengurai soal berlapis (B1): Soal 14–16 (2024,
+                                Pertemanan Ayam) diurai menjadi sub-pertanyaan
+                                independen
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Latihan Mandiri</td>
+                            <td>25 menit</td>
+                            <td>
+                                "You do" — skenario Jaringan Kota Baru; siswa
+                                menggambar graf dan menjawab pertanyaan
+                                keterhubungan
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Penutup</td>
+                            <td>15 menit</td>
+                            <td>Debrief singkat + karcis keluar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Capaian Pembelajaran (LO) yang Dilatih</h3>
+            <div class="callout callout-accent">
+                <div class="callout-label">A3 (Utama)</div>
+                Merepresentasikan skenario dunia nyata sebagai graf —
+                mengidentifikasi simpul, sisi, dan sifat struktural yang
+                relevan.
+            </div>
+            <div class="callout callout-blue">
+                <div class="callout-label">A4 (Utama)</div>
+                Menerapkan konsep keterhubungan (komponen terhubung) untuk
+                menjawab pertanyaan tentang struktur graf.
+            </div>
+            <div class="callout callout-green">
+                <div class="callout-label">B1 (Utama)</div>
+                Menguraikan soal skenario berlapis menjadi sub-pertanyaan yang
+                independen; mengidentifikasi struktur matematis di balik narasi.
+            </div>
+            <div class="callout callout-yellow">
+                <div class="callout-label">D1 (Kontinu)</div>
+                Serangan Lima Langkah dimodelkan instruktur di setiap blok "I
+                do".
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-bacaan')"
+                >
+                    Lanjut ke Bacaan →
+                </button>
+            </div>
+        </div>
+
+        <!-- ③ BACAAN -->
+        <div id="p-bacaan" class="panel">
+            <div class="section-badge blue">Bacaan</div>
+            <h2>Graf — Simpul, Sisi, dan Keterhubungan</h2>
+
+            <h3>Apa itu Graf?</h3>
+            <p>
+                Graf adalah cara merepresentasikan
+                <strong>hubungan antara objek-objek</strong>. Sebuah graf
+                terdiri dari dua komponen:
+            </p>
+            <ul>
+                <li>
+                    <strong>Simpul</strong> (node/vertex) — mewakili objek atau
+                    entitas dalam masalah.
+                </li>
+                <li>
+                    <strong>Sisi</strong> (edge) — mewakili hubungan atau
+                    koneksi antara dua simpul.
+                </li>
+            </ul>
+            <p>
+                Contoh sederhana: Jika ada 3 kota (A, B, C) dan jalan
+                menghubungkan A–B serta B–C, maka kota-kota adalah simpul dan
+                jalan-jalan adalah sisi.
+            </p>
+
+            <!-- Simple graph illustration -->
+            <svg
+                class="graph-svg"
+                width="260"
+                height="110"
+                viewBox="0 0 260 110"
+            >
+                <line
+                    x1="50"
+                    y1="55"
+                    x2="130"
+                    y2="55"
+                    stroke="#E8DDD0"
+                    stroke-width="3"
+                />
+                <line
+                    x1="130"
+                    y1="55"
+                    x2="210"
+                    y2="55"
+                    stroke="#E8DDD0"
+                    stroke-width="3"
+                />
+                <circle
+                    cx="50"
+                    cy="55"
+                    r="22"
+                    fill="#FDEEE5"
+                    stroke="#D4521A"
+                    stroke-width="2.5"
+                />
+                <text
+                    x="50"
+                    y="60"
+                    text-anchor="middle"
+                    font-family="monospace"
+                    font-weight="700"
+                    font-size="15"
+                    fill="#D4521A"
+                >
+                    A
+                </text>
+                <circle
+                    cx="130"
+                    cy="55"
+                    r="22"
+                    fill="#E5EDF7"
+                    stroke="#1B4F8A"
+                    stroke-width="2.5"
+                />
+                <text
+                    x="130"
+                    y="60"
+                    text-anchor="middle"
+                    font-family="monospace"
+                    font-weight="700"
+                    font-size="15"
+                    fill="#1B4F8A"
+                >
+                    B
+                </text>
+                <circle
+                    cx="210"
+                    cy="55"
+                    r="22"
+                    fill="#E5F4EC"
+                    stroke="#1F7A4A"
+                    stroke-width="2.5"
+                />
+                <text
+                    x="210"
+                    y="60"
+                    text-anchor="middle"
+                    font-family="monospace"
+                    font-weight="700"
+                    font-size="15"
+                    fill="#1F7A4A"
+                >
+                    C
+                </text>
+                <text
+                    x="90"
+                    y="44"
+                    font-family="Georgia,serif"
+                    font-size="11"
+                    fill="#7A6A5A"
+                >
+                    sisi A–B
+                </text>
+                <text
+                    x="162"
+                    y="44"
+                    font-family="Georgia,serif"
+                    font-size="11"
+                    fill="#7A6A5A"
+                >
+                    sisi B–C
+                </text>
+            </svg>
+
+            <h3>Mengapa Graf Penting di OSN-K?</h3>
+            <p>
+                Banyak soal OSN-K Bagian A dan B adalah soal graf "yang
+                berkamuflase". Mereka muncul sebagai cerita tentang pertemanan,
+                peta jalan, urutan kegiatan, atau kompetisi, tetapi di balik
+                narasi tersebut tersembunyi struktur graf. Kemampuan untuk
+                mengenali struktur inilah yang membedakan siswa yang bisa
+                menjawab dengan cepat dari yang terjebak membaca ulang soal.
+            </p>
+
+            <h3>Tiga Pertanyaan Struktural Graf yang Sering Muncul</h3>
+            <div class="tbl-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pertanyaan</th>
+                            <th>Artinya dalam Soal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Berapa komponen terhubung?</td>
+                            <td>
+                                Objek-objek terbagi menjadi berapa kelompok yang
+                                saling terhubung?
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Apakah graf ini terhubung?</td>
+                            <td>
+                                Dari simpul mana pun, bisakah kita mencapai
+                                simpul mana pun lainnya?
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Berapa derajat simpul X?</td>
+                            <td>
+                                Berapa banyak sisi yang terhubung langsung ke
+                                simpul X?
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Cara Menggambar Graf dari Narasi</h3>
+            <ol>
+                <li>
+                    Identifikasi objek utama; masing-masing menjadi
+                    <strong>simpul</strong>.
+                </li>
+                <li>
+                    Identifikasi hubungan antar objek; masing-masing menjadi
+                    <strong>sisi</strong>.
+                </li>
+                <li>
+                    Periksa apakah hubungannya <strong>simetris</strong> (A
+                    kenal B maka B kenal A → sisi tidak berarah) atau
+                    <strong>satu arah</strong> (A → B tapi bukan B → A → sisi
+                    berarah).
+                </li>
+                <li>Gambar ulang: lingkaran untuk simpul, garis untuk sisi.</li>
+                <li>
+                    Baca ulang soal dengan graf di tangan. Sering kali
+                    pertanyaan langsung terjawab secara visual.
+                </li>
+            </ol>
+
+            <h3>Contoh Referensi: Soal 5 Parade Bebek (OSN-K 2024)</h3>
+            <div class="callout callout-yellow">
+                <div class="callout-label">
+                    Soal 5 OSN-K 2024: Bebek dan Lampu
+                </div>
+                <p style="margin-bottom: 8px">
+                    Sebagai walikota, Pak Dengklek ingin mengadakan parade bebek
+                    di kotanya. Kota tersebut memiliki denah jalan sebagai
+                    berikut. Lingkaran menunjukkan persimpangan jalan dan garis
+                    menunjukkan jalan.
+                </p>
+                <p style="margin-bottom: 8px">
+                    Sebuah parade akan dimulai dari suatu persimpangan jalan
+                    tertentu dan berakhir di suatu persimpangan jalan tertentu
+                    melalui serangkaian jalan-jalan yang terhubung. Agar seluruh
+                    lapisan masyarakat dapat menikmati parade bebek, Pak
+                    Dengklek ingin menjamin bahwa seluruh jalan pernah dilewati
+                    oleh parade bebek. Namun, karena masalah anggaran, setiap
+                    jalan hanya dapat dilewati maksimal satu kali.
+                </p>
+                <p style="margin-bottom: 8px">
+                    Untuk mengatasi masalah tersebut, Pak Dengklek memiliki ide
+                    untuk mengadakan parade bebek selama beberapa hari. Dalam
+                    satu hari, akan ada satu parade bebek yang diadakan oleh Pak
+                    Dengklek. Ingat bahwa apabila suatu jalan sudah dilewati
+                    oleh parade bebek pada suatu hari, maka jalan tersebut juga
+                    tidak boleh dilewati oleh parade bebek pada hari-hari
+                    lainnya.
+                </p>
+                <p style="margin-bottom: 0">
+                    <strong
+                        >Berapakah minimal hari yang diperlukan oleh Pak
+                        Dengklek agar seluruh jalan dijamin pernah dilewati oleh
+                        parade bebek?</strong
+                    >
+                    <em>(Tuliskan jawaban dalam bentuk ANGKA.)</em>
+                </p>
+            </div>
+            <p>
+                Soal ini menampilkan peta kota dengan persimpangan (simpul) dan
+                jalan (sisi). Pertanyaannya: berapa hari minimal agar semua
+                jalan dilewati tepat satu kali? Ini adalah masalah Lintasan
+                Euler — topik yang akan diperdalam di Sesi 6. Untuk sekarang,
+                yang penting adalah mengenali bahwa ini adalah soal graf dan
+                cara memodelkannya.
+            </p>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-contoh')"
+                >
+                    Lanjut ke Contoh (I Do) →
+                </button>
+            </div>
+        </div>
+
+        <!-- ④ CONTOH (I Do) — Serangan Lima Langkah pada Soal 5 -->
+        <div id="p-contoh" class="panel">
+            <div class="section-badge">I Do — Contoh Instruktur</div>
+            <h2>Serangan Lima Langkah: Soal 5 Parade Bebek</h2>
+            <p>
+                Ikuti instruktur yang memodelkan Serangan Lima Langkah pada Soal
+                5. Klik setiap langkah untuk melihat apa yang dilakukan
+                instruktur.
+            </p>
+
+            <div class="explainer-card">
+                <div class="explainer-header">
+                    🎬 Serangan Lima Langkah — Soal 5 Parade Bebek (OSN-K 2024)
+                    <span style="font-size: 12px; opacity: 0.8"
+                        >Klik langkah untuk membuka</span
+                    >
+                </div>
+                <div class="explainer-body">
+                    <div class="flowchart-wrap" id="fc-parade"></div>
+                </div>
+            </div>
+
+            <div class="callout callout-blue">
+                <div class="callout-label">📌 Catatan untuk Sekarang</div>
+                Di Sesi 2, fokus kita adalah <strong>mengenali</strong> bahwa
+                ini soal graf dan cara memodelkannya. Konsep Lintasan Euler
+                (solusi lengkap) akan diperdalam di Sesi 6. Langkah 2 —
+                "Identifikasi Tipe" — adalah keterampilan terpenting yang kita
+                latih hari ini.
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-terpandu')"
+                >
+                    Lanjut ke Latihan Terpandu →
+                </button>
+            </div>
+        </div>
+
+        <!-- ⑤ LATIHAN TERPANDU (We Do) -->
+        <div id="p-terpandu" class="panel">
+            <div class="section-badge green">We Do — Latihan Terpandu</div>
+            <h2>Latihan Terpandu: "Ini Graf atau Bukan?"</h2>
+            <p>
+                Baca kelima skenario di bawah. Untuk setiap skenario, tentukan:
+                (a) apakah situasi ini bisa direpresentasikan sebagai graf? (b)
+                jika ya, apa simpulnya dan apa sisinya? (c) apakah sisinya
+                berarah atau tidak? Isi tabel jawaban, lalu klik "Lihat Solusi"
+                untuk memeriksa.
+            </p>
+
+            <div class="callout callout-yellow" style="margin-bottom: 8px">
+                <div class="callout-label">Skenario 1: Jadwal Kegiatan</div>
+                Sekolah memiliki 6 kegiatan ekstrakurikuler: Basket, Futsal,
+                Musik, Melukis, Debat, dan Robotika. Aturan: seorang siswa tidak
+                boleh mengikuti Basket dan Futsal di hari yang sama, tidak boleh
+                mengikuti Musik dan Debat di hari yang sama, dan tidak boleh
+                mengikuti Melukis dan Robotika di hari yang sama.
+            </div>
+            <div class="callout callout-blue" style="margin-bottom: 8px">
+                <div class="callout-label">Skenario 2: Peta Kota Kecil</div>
+                Sebuah kota kecil memiliki 4 kelurahan: Utara, Selatan, Barat,
+                Timur. Jalan satu arah: dari Utara ke Selatan, dari Selatan ke
+                Timur, dari Timur ke Utara, dan dari Barat ke semua kelurahan
+                lainnya.
+            </div>
+            <div class="callout callout-green" style="margin-bottom: 8px">
+                <div class="callout-label">
+                    Skenario 3: Daftar Teman di Kelas
+                </div>
+                Andi berteman dengan Budi dan Cici. Budi berteman dengan Andi
+                dan Dedi. Cici berteman dengan Andi saja. Dedi berteman dengan
+                Budi dan Eka. Eka hanya berteman dengan Dedi.
+            </div>
+            <div class="callout callout-purple" style="margin-bottom: 8px">
+                <div class="callout-label">Skenario 4: Urutan Memasak</div>
+                Resep kue: (1) Campur tepung dan gula, (2) Kocok telur, (3)
+                Panaskan oven, (4) Campur adonan dari langkah 1 dan 2, (5)
+                Masukkan ke oven setelah langkah 3 dan 4 selesai, (6) Dinginkan
+                setelah langkah 5.
+            </div>
+            <div class="callout callout-accent" style="margin-bottom: 20px">
+                <div class="callout-label">Skenario 5: Jaringan Lampu</div>
+                Terdapat 5 lampu: L1, L2, L3, L4, L5. Satu saklar mengontrol L1
+                dan L3 bersama-sama. Saklar lain mengontrol L2, L4, dan L5
+                bersama-sama.
+            </div>
+
+            <!-- Tabel isian siswa -->
+            <h3>Lembar Kerja — Tabel Representasi Graf</h3>
+            <div class="tbl-wrap">
+                <table id="tbl-grafatau">
+                    <thead>
+                        <tr>
+                            <th style="width: 18%">Skenario</th>
+                            <th style="width: 12%">Graf?</th>
+                            <th style="width: 24%">Simpul adalah…</th>
+                            <th style="width: 24%">Sisi adalah…</th>
+                            <th style="width: 12%">Berarah?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600">1. Jadwal Kegiatan</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq1-graf"
+                                    placeholder="Ya/Tidak"
+                                    style="
+                                        width: 70px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq1-simpul"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq1-sisi"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq1-arah"
+                                    placeholder="Y/T"
+                                    style="
+                                        width: 60px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600">2. Peta Kota</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq2-graf"
+                                    placeholder="Ya/Tidak"
+                                    style="
+                                        width: 70px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq2-simpul"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq2-sisi"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq2-arah"
+                                    placeholder="Y/T"
+                                    style="
+                                        width: 60px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600">3. Daftar Teman</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq3-graf"
+                                    placeholder="Ya/Tidak"
+                                    style="
+                                        width: 70px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq3-simpul"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq3-sisi"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq3-arah"
+                                    placeholder="Y/T"
+                                    style="
+                                        width: 60px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600">4. Urutan Memasak</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq4-graf"
+                                    placeholder="Ya/Tidak"
+                                    style="
+                                        width: 70px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq4-simpul"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq4-sisi"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq4-arah"
+                                    placeholder="Y/T"
+                                    style="
+                                        width: 60px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600">5. Jaringan Lampu</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq5-graf"
+                                    placeholder="Ya/Tidak"
+                                    style="
+                                        width: 70px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq5-simpul"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq5-sisi"
+                                    placeholder="…"
+                                    style="
+                                        width: 100%;
+                                        padding: 5px;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    class="cell-input"
+                                    id="gq5-arah"
+                                    placeholder="Y/T"
+                                    style="
+                                        width: 60px;
+                                        padding: 5px;
+                                        text-align: center;
+                                        font-size: 13px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Interactive explainer: per-scenario reveal -->
+            <h3 style="margin-top: 32px">
+                Solusi Interaktif — Skenario per Skenario
+            </h3>
+            <p>
+                Setelah membahas setiap skenario bersama instruktur, klik
+                skenario di bawah untuk memeriksa solusinya.
+            </p>
+
+            <div class="explainer-card" style="margin-bottom: 12px">
+                <div
+                    class="explainer-header"
+                    style="cursor: pointer"
+                    onclick="toggleSol('sol1')"
+                >
+                    Skenario 1: Jadwal Kegiatan
+                    <span id="sol1-chev" style="font-size: 14px; opacity: 0.6"
+                        >▼ Lihat Solusi</span
+                    >
+                </div>
+                <div id="sol1" style="display: none; padding: 20px">
+                    <p>
+                        <strong>Graf: Ya.</strong> Simpul = kegiatan
+                        ekstrakurikuler. Sisi = pasangan yang tidak boleh
+                        dijadwalkan bersamaan (konflik). Tidak berarah — konflik
+                        bersifat simetris.
+                    </p>
+                    <div class="callout callout-accent">
+                        <div class="callout-label">💡 Pola yang Dipelajari</div>
+                        Ini adalah <em>Graf Konflik</em>. Kamu tidak perlu tahu
+                        nama resminya sekarang — yang penting: dua kegiatan yang
+                        bertabrakan jadwal = satu sisi.
+                    </div>
+                    <svg
+                        class="graph-svg"
+                        width="320"
+                        height="120"
+                        viewBox="0 0 320 120"
+                    >
+                        <!-- Basket-Futsal, Musik-Debat, Melukis-Robotika -->
+                        <line
+                            x1="60"
+                            y1="60"
+                            x2="140"
+                            y2="60"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                        />
+                        <line
+                            x1="160"
+                            y1="60"
+                            x2="240"
+                            y2="60"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                        />
+                        <line
+                            x1="262"
+                            y1="60"
+                            x2="310"
+                            y2="60"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                        />
+                        <circle
+                            cx="50"
+                            cy="60"
+                            r="20"
+                            fill="#FDEEE5"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="50"
+                            y="65"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#D4521A"
+                        >
+                            Basket
+                        </text>
+                        <circle
+                            cx="150"
+                            cy="60"
+                            r="20"
+                            fill="#FDEEE5"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="150"
+                            y="65"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#D4521A"
+                        >
+                            Futsal
+                        </text>
+                        <circle
+                            cx="200"
+                            cy="60"
+                            r="20"
+                            fill="#E5EDF7"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="200"
+                            y="65"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#1B4F8A"
+                        >
+                            Musik
+                        </text>
+                        <circle
+                            cx="275"
+                            cy="60"
+                            r="20"
+                            fill="#E5EDF7"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="275"
+                            y="65"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#1B4F8A"
+                        >
+                            Debat
+                        </text>
+                        <text
+                            x="160"
+                            y="20"
+                            text-anchor="middle"
+                            font-size="11"
+                            font-family="Georgia,serif"
+                            fill="#7A6A5A"
+                        >
+                            (+ Melukis — Robotika, tidak ditampilkan)
+                        </text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="explainer-card" style="margin-bottom: 12px">
+                <div
+                    class="explainer-header"
+                    style="cursor: pointer"
+                    onclick="toggleSol('sol2')"
+                >
+                    Skenario 2: Peta Kota Kecil
+                    <span id="sol2-chev" style="font-size: 14px; opacity: 0.6"
+                        >▼ Lihat Solusi</span
+                    >
+                </div>
+                <div id="sol2" style="display: none; padding: 20px">
+                    <p>
+                        <strong>Graf: Ya, berarah.</strong> Simpul = kelurahan
+                        (Utara, Selatan, Barat, Timur). Sisi = jalan satu arah.
+                    </p>
+                    <div class="callout callout-blue">
+                        <div class="callout-label">⚠️ Perangkap Umum</div>
+                        Jangan menggambar sisi tidak berarah! Kata kunci "satu
+                        arah" dan "dari X ke Y" adalah sinyal bahwa sisinya
+                        berarah. Kelurahan Barat punya derajat keluar=3 tapi
+                        derajat masuk=0.
+                    </div>
+                    <svg
+                        class="graph-svg"
+                        width="260"
+                        height="160"
+                        viewBox="0 0 260 160"
+                    >
+                        <defs>
+                            <marker
+                                id="arr"
+                                markerWidth="8"
+                                markerHeight="6"
+                                refX="6"
+                                refY="3"
+                                orient="auto"
+                            >
+                                <polygon points="0 0,8 3,0 6" fill="#1B4F8A" />
+                            </marker>
+                        </defs>
+                        <!-- Utara top, Selatan bottom-left, Timur bottom-right, Barat left -->
+                        <line
+                            x1="130"
+                            y1="35"
+                            x2="80"
+                            y2="118"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                            marker-end="url(#arr)"
+                        />
+                        <line
+                            x1="80"
+                            y1="130"
+                            x2="172"
+                            y2="130"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                            marker-end="url(#arr)"
+                        />
+                        <line
+                            x1="180"
+                            y1="118"
+                            x2="135"
+                            y2="38"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                            marker-end="url(#arr)"
+                        />
+                        <line
+                            x1="30"
+                            y1="80"
+                            x2="118"
+                            y2="30"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                            marker-end="url(#arr)"
+                        />
+                        <line
+                            x1="30"
+                            y1="85"
+                            x2="68"
+                            y2="122"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                            marker-end="url(#arr)"
+                        />
+                        <line
+                            x1="34"
+                            y1="88"
+                            x2="172"
+                            y2="125"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                            marker-end="url(#arr)"
+                        />
+                        <circle
+                            cx="130"
+                            cy="25"
+                            r="20"
+                            fill="#E5EDF7"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="130"
+                            y="30"
+                            text-anchor="middle"
+                            font-size="11"
+                            font-family="Georgia,serif"
+                            fill="#1B4F8A"
+                        >
+                            Utara
+                        </text>
+                        <circle
+                            cx="72"
+                            cy="132"
+                            r="20"
+                            fill="#E5EDF7"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="72"
+                            y="137"
+                            text-anchor="middle"
+                            font-size="11"
+                            font-family="Georgia,serif"
+                            fill="#1B4F8A"
+                        >
+                            Selatan
+                        </text>
+                        <circle
+                            cx="188"
+                            cy="132"
+                            r="20"
+                            fill="#E5EDF7"
+                            stroke="#1B4F8A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="188"
+                            y="137"
+                            text-anchor="middle"
+                            font-size="11"
+                            font-family="Georgia,serif"
+                            fill="#1B4F8A"
+                        >
+                            Timur
+                        </text>
+                        <circle
+                            cx="22"
+                            cy="82"
+                            r="20"
+                            fill="#FDEEE5"
+                            stroke="#D4521A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="22"
+                            y="87"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#D4521A"
+                        >
+                            Barat
+                        </text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="explainer-card" style="margin-bottom: 12px">
+                <div
+                    class="explainer-header"
+                    style="cursor: pointer"
+                    onclick="toggleSol('sol3')"
+                >
+                    Skenario 3: Daftar Teman di Kelas
+                    <span id="sol3-chev" style="font-size: 14px; opacity: 0.6"
+                        >▼ Lihat Solusi</span
+                    >
+                </div>
+                <div id="sol3" style="display: none; padding: 20px">
+                    <p>
+                        <strong>Graf: Ya, tidak berarah.</strong> Simpul =
+                        siswa. Sisi = pertemanan. Semua 5 siswa membentuk 1
+                        komponen terhubung.
+                    </p>
+                    <div class="callout callout-green">
+                        <div class="callout-label">🔗 Pertanyaan Turunan</div>
+                        "Bisakah Cici menyampaikan pesan ke Eka?" Ya! Lewat Andi
+                        → Budi → Dedi → Eka. Inilah cara komponen terhubung
+                        bekerja. Soal Pertemanan Ayam (14–16) memiliki struktur
+                        persis seperti ini, hanya lebih besar.
+                    </div>
+                    <svg
+                        class="graph-svg"
+                        width="280"
+                        height="160"
+                        viewBox="0 0 280 160"
+                    >
+                        <line
+                            x1="90"
+                            y1="40"
+                            x2="190"
+                            y2="40"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <line
+                            x1="90"
+                            y1="40"
+                            x2="50"
+                            y2="120"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <line
+                            x1="190"
+                            y1="40"
+                            x2="230"
+                            y2="120"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <line
+                            x1="230"
+                            y1="120"
+                            x2="140"
+                            y2="150"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <circle
+                            cx="90"
+                            cy="30"
+                            r="22"
+                            fill="#E5F4EC"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="90"
+                            y="35"
+                            text-anchor="middle"
+                            font-size="12"
+                            font-family="Georgia,serif"
+                            fill="#1F7A4A"
+                        >
+                            Andi
+                        </text>
+                        <circle
+                            cx="190"
+                            cy="30"
+                            r="22"
+                            fill="#E5F4EC"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="190"
+                            y="35"
+                            text-anchor="middle"
+                            font-size="12"
+                            font-family="Georgia,serif"
+                            fill="#1F7A4A"
+                        >
+                            Budi
+                        </text>
+                        <circle
+                            cx="42"
+                            cy="128"
+                            r="22"
+                            fill="#E5F4EC"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="42"
+                            y="133"
+                            text-anchor="middle"
+                            font-size="12"
+                            font-family="Georgia,serif"
+                            fill="#1F7A4A"
+                        >
+                            Cici
+                        </text>
+                        <circle
+                            cx="238"
+                            cy="128"
+                            r="22"
+                            fill="#E5F4EC"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="238"
+                            y="133"
+                            text-anchor="middle"
+                            font-size="12"
+                            font-family="Georgia,serif"
+                            fill="#1F7A4A"
+                        >
+                            Dedi
+                        </text>
+                        <circle
+                            cx="140"
+                            cy="152"
+                            r="22"
+                            fill="#E5F4EC"
+                            stroke="#1F7A4A"
+                            stroke-width="2"
+                        />
+                        <text
+                            x="140"
+                            y="157"
+                            text-anchor="middle"
+                            font-size="12"
+                            font-family="Georgia,serif"
+                            fill="#1F7A4A"
+                        >
+                            Eka
+                        </text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="explainer-card" style="margin-bottom: 12px">
+                <div
+                    class="explainer-header"
+                    style="cursor: pointer"
+                    onclick="toggleSol('sol4')"
+                >
+                    Skenario 4: Urutan Memasak
+                    <span id="sol4-chev" style="font-size: 14px; opacity: 0.6"
+                        >▼ Lihat Solusi</span
+                    >
+                </div>
+                <div id="sol4" style="display: none; padding: 20px">
+                    <p>
+                        <strong>Graf: Ya, berarah (DAG).</strong> Simpul =
+                        langkah memasak. Sisi = "harus dilakukan sebelum". Arah
+                        sisi menunjukkan urutan ketergantungan.
+                    </p>
+                    <div class="callout callout-purple">
+                        <div class="callout-label">💡 Nama Resminya</div>
+                        Struktur seperti ini disebut <em>Topological Sort</em> —
+                        akan diperkenalkan di Sesi 6. Hubungkan ke Soal 2 (2024,
+                        Mengurutkan Rutinitas).
+                    </div>
+                    <svg
+                        class="graph-svg"
+                        width="340"
+                        height="110"
+                        viewBox="0 0 340 110"
+                    >
+                        <defs>
+                            <marker
+                                id="arr2"
+                                markerWidth="8"
+                                markerHeight="6"
+                                refX="6"
+                                refY="3"
+                                orient="auto"
+                            >
+                                <polygon points="0 0,8 3,0 6" fill="#8B3A9C" />
+                            </marker>
+                        </defs>
+                        <line
+                            x1="55"
+                            y1="40"
+                            x2="130"
+                            y2="70"
+                            stroke="#8B3A9C"
+                            stroke-width="2"
+                            marker-end="url(#arr2)"
+                        />
+                        <line
+                            x1="55"
+                            y1="80"
+                            x2="130"
+                            y2="72"
+                            stroke="#8B3A9C"
+                            stroke-width="2"
+                            marker-end="url(#arr2)"
+                        />
+                        <line
+                            x1="158"
+                            y1="72"
+                            x2="215"
+                            y2="72"
+                            stroke="#8B3A9C"
+                            stroke-width="2"
+                            marker-end="url(#arr2)"
+                        />
+                        <line
+                            x1="55"
+                            y1="100"
+                            x2="215"
+                            y2="78"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                            stroke-dasharray="5,4"
+                            marker-end="url(#arr2)"
+                        />
+                        <line
+                            x1="240"
+                            y1="72"
+                            x2="300"
+                            y2="72"
+                            stroke="#8B3A9C"
+                            stroke-width="2"
+                            marker-end="url(#arr2)"
+                        />
+                        <rect
+                            x="5"
+                            y="28"
+                            width="50"
+                            height="22"
+                            rx="4"
+                            fill="#F3E8F8"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                        />
+                        <text
+                            x="30"
+                            y="43"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#8B3A9C"
+                        >
+                            1. Campur
+                        </text>
+                        <rect
+                            x="5"
+                            y="68"
+                            width="50"
+                            height="22"
+                            rx="4"
+                            fill="#F3E8F8"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                        />
+                        <text
+                            x="30"
+                            y="83"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#8B3A9C"
+                        >
+                            2. Kocok
+                        </text>
+                        <rect
+                            x="5"
+                            y="90"
+                            width="50"
+                            height="22"
+                            rx="4"
+                            fill="#F3E8F8"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                        />
+                        <text
+                            x="30"
+                            y="105"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#8B3A9C"
+                        >
+                            3. Panaskan
+                        </text>
+                        <rect
+                            x="130"
+                            y="60"
+                            width="30"
+                            height="22"
+                            rx="4"
+                            fill="#F3E8F8"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                        />
+                        <text
+                            x="145"
+                            y="75"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#8B3A9C"
+                        >
+                            4
+                        </text>
+                        <rect
+                            x="215"
+                            y="60"
+                            width="30"
+                            height="22"
+                            rx="4"
+                            fill="#F3E8F8"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                        />
+                        <text
+                            x="230"
+                            y="75"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#8B3A9C"
+                        >
+                            5
+                        </text>
+                        <rect
+                            x="300"
+                            y="60"
+                            width="30"
+                            height="22"
+                            rx="4"
+                            fill="#F3E8F8"
+                            stroke="#8B3A9C"
+                            stroke-width="1.5"
+                        />
+                        <text
+                            x="315"
+                            y="75"
+                            text-anchor="middle"
+                            font-size="10"
+                            font-family="Georgia,serif"
+                            fill="#8B3A9C"
+                        >
+                            6
+                        </text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="explainer-card" style="margin-bottom: 12px">
+                <div
+                    class="explainer-header"
+                    style="cursor: pointer"
+                    onclick="toggleSol('sol5')"
+                >
+                    Skenario 5: Jaringan Lampu
+                    <span id="sol5-chev" style="font-size: 14px; opacity: 0.6"
+                        >▼ Lihat Solusi</span
+                    >
+                </div>
+                <div id="sol5" style="display: none; padding: 20px">
+                    <p>
+                        <strong>Graf: Bisa Ya.</strong> Simpul = lampu. Sisi =
+                        "dikontrol saklar yang sama". Hasilnya: 2 komponen —
+                        {L1, L3} dan {L2, L4, L5}.
+                    </p>
+                    <div class="callout callout-yellow">
+                        <div class="callout-label">⚡ Poin Penting (B1)</div>
+                        Pilihan model bergantung pada pertanyaan yang ingin
+                        dijawab. Identifikasi sub-pertanyaan
+                        <em>sebelum</em> menentukan model graf-mu.
+                    </div>
+                    <div
+                        style="
+                            display: flex;
+                            gap: 16px;
+                            flex-wrap: wrap;
+                            margin-top: 12px;
+                        "
+                    >
+                        <div
+                            style="
+                                background: var(--blue-light);
+                                border: 2px solid var(--blue);
+                                border-radius: 10px;
+                                padding: 12px 20px;
+                                font-family: monospace;
+                                font-size: 14px;
+                                color: var(--blue);
+                                font-weight: 700;
+                            "
+                        >
+                            Komponen 1: {L1, L3}
+                        </div>
+                        <div
+                            style="
+                                background: var(--green-light);
+                                border: 2px solid var(--green);
+                                border-radius: 10px;
+                                padding: 12px 20px;
+                                font-family: monospace;
+                                font-size: 14px;
+                                color: var(--green);
+                                font-weight: 700;
+                            "
+                        >
+                            Komponen 2: {L2, L4, L5}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-bacaan2')"
+                >
+                    Lanjut ke Bacaan Lanjutan →
+                </button>
+            </div>
+        </div>
+
+        <!-- ⑥ BACAAN LANJUTAN — Soal Berlapis + Pertemanan Ayam -->
+        <div id="p-bacaan2" class="panel">
+            <div class="section-badge blue">Bacaan Lanjutan</div>
+            <h2>Mengurai Soal Berlapis (B1) — Komponen Terhubung</h2>
+
+            <h3>Soal Berlapis: Satu Konteks, Banyak Sub-Pertanyaan</h3>
+            <p>
+                Salah satu tantangan terbesar di OSN-K adalah soal yang
+                disajikan dalam satu narasi panjang, tetapi berisi beberapa
+                sub-pertanyaan yang sebenarnya independen satu sama lain.
+                Keterampilan B1 adalah kemampuan memecah soal ini menjadi
+                potongan-potongan yang dapat dikerjakan satu per satu.
+            </p>
+
+            <h3>Soal 14–16: Pertemanan Ayam (OSN-K 2024)</h3>
+            <div class="callout callout-yellow">
+                <div class="callout-label">Konteks Soal</div>
+                <p style="margin-bottom: 8px">
+                    Pak Blangkon memiliki 15 ekor ayam: A, B, C, D, E, F, G, H,
+                    I, J, K, L, M, N, dan O. Terdapat hubungan pertemanan P(X,Y)
+                    yang berarti ayam X dan Y berteman. Jika Q berteman R dan R
+                    berteman S, maka Q, R, S berada dalam lingkaran pertemanan
+                    yang sama (sifat transitif).
+                </p>
+                <p style="margin-bottom: 8px">
+                    Pak Blangkon akan mengajak beberapa ayamnya dengan
+                    ketentuan: (1) Minimal satu ekor diajak, (2) Ayam-ayam yang
+                    diajak berasal dari lingkaran pertemanan yang
+                    <em>berbeda</em>.
+                </p>
+                <p style="margin-bottom: 0">
+                    <strong>Data pertemanan:</strong>
+                    <code
+                        >P(A,B) P(C,M) P(E,G) P(A,M) P(D,J) P(O,N) P(B,O) P(K,L)
+                        P(D,I) P(B,N) P(L,D) P(H,F)</code
+                    >
+                </p>
+            </div>
+
+            <div class="tbl-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sub-soal</th>
+                            <th>Pertanyaan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>14</strong></td>
+                            <td>Ada berapa banyak lingkaran pertemanan?</td>
+                        </tr>
+                        <tr>
+                            <td><strong>15</strong></td>
+                            <td>
+                                Jika setiap lingkaran wajib ada perwakilannya,
+                                berapa cara memilih?
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>16</strong></td>
+                            <td>
+                                Jika tidak harus ada perwakilan dari setiap
+                                lingkaran, berapa cara memilih? (minimal 1 ayam
+                                diajak)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Serangan Lima Langkah untuk Mengurai</h3>
+            <div class="flowchart-wrap" id="fc-ayam"></div>
+
+            <h3 style="margin-top: 32px">
+                Tabel Penelusuran Komponen — Simulasi Interaktif
+            </h3>
+            <p>
+                Klik "Proses Pasangan Berikutnya" untuk menelusuri satu per satu
+                bagaimana komponen bergabung.
+            </p>
+
+            <div class="explainer-card">
+                <div class="explainer-header">
+                    🔍 Simulasi Graf — Pertemanan Ayam
+                    <button class="reset-btn" onclick="resetUF()">
+                        ↺ Ulang
+                    </button>
+                </div>
+                <div class="explainer-body">
+                    <div class="step-prog">
+                        <div
+                            class="step-prog-fill"
+                            id="uf-prog"
+                            style="width: 0%"
+                        ></div>
+                    </div>
+                    <div
+                        id="uf-status"
+                        style="
+                            font-size: 13px;
+                            color: var(--muted);
+                            margin-bottom: 10px;
+                            font-family: monospace;
+                        "
+                    >
+                        Mulai dari 15 simpul — belum ada sisi
+                    </div>
+                    <div style="overflow-x: auto">
+                        <svg
+                            id="uf-svg"
+                            width="660"
+                            height="340"
+                            viewBox="0 0 660 340"
+                            style="
+                                display: block;
+                                background: #faf7f4;
+                                border-radius: 8px;
+                                border: 1px solid var(--border);
+                                min-width: 320px;
+                            "
+                        ></svg>
+                    </div>
+                    <div
+                        style="
+                            margin-top: 10px;
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 6px;
+                            align-items: center;
+                        "
+                        id="uf-legend"
+                    ></div>
+                    <div class="ctrl-row" style="margin-top: 12px">
+                        <button class="reveal-btn" onclick="stepUF()">
+                            ▶ Proses Pasangan Berikutnya
+                        </button>
+                        <span class="step-counter" id="uf-counter"
+                            >0 / 12 pasangan diproses</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="callout callout-accent"
+                id="uf-final"
+                style="display: none"
+            >
+                <div class="callout-label">✅ Komponen Akhir</div>
+                <p>
+                    Setelah semua 12 pasangan diproses, terbentuk
+                    <strong>4 komponen</strong>: {A,B,C,M,N,O} (6 ayam) ·
+                    {D,I,J,K,L} (5 ayam) · {E,G} (2 ayam) · {F,H} (2 ayam)
+                </p>
+                <p style="margin-bottom: 0">
+                    <strong>Jawaban Soal 14 = 4 lingkaran pertemanan.</strong>
+                </p>
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-mandiri')"
+                >
+                    Lanjut ke Latihan Mandiri →
+                </button>
+            </div>
+        </div>
+
+        <!-- ⑦ LATIHAN MANDIRI (You Do) -->
+        <div id="p-mandiri" class="panel">
+            <div class="section-badge purple">You Do — Latihan Mandiri</div>
+            <h2>Latihan Mandiri: Jaringan Kota Baru</h2>
+
+            <div class="callout callout-yellow">
+                <div class="callout-label">📋 Skenario</div>
+                <p style="margin-bottom: 8px">
+                    Kota Baru sedang membangun jaringan jalan antar-kecamatan.
+                    Ada 7 kecamatan:
+                    <strong
+                        >Anggrek, Bakung, Cempaka, Dahlia, Edelweis, Flamboyan,
+                        dan Gardenia</strong
+                    >. Jalan yang sudah dibangun:
+                </p>
+                <ul style="margin-bottom: 0">
+                    <li>Anggrek — Bakung</li>
+                    <li>Bakung — Cempaka</li>
+                    <li>Cempaka — Anggrek</li>
+                    <li>Dahlia — Edelweis</li>
+                    <li>Edelweis — Flamboyan</li>
+                    <li>Gardenia belum dihubungkan ke kecamatan mana pun</li>
+                </ul>
+            </div>
+
+            <h3>Pertanyaan 1</h3>
+            <p>
+                Gambarlah graf yang merepresentasikan jaringan jalan ini.
+                Gunakan lingkaran untuk kecamatan dan garis untuk jalan.
+                Deskripsikan atau jelaskan gambarmu di bawah.
+            </p>
+            <div class="answer-box">
+                <div class="answer-box-label">
+                    Jawaban Pertanyaan 1 — Deskripsi Graf
+                </div>
+                <textarea
+                    id="m1-gambar"
+                    rows="4"
+                    placeholder="Deskripsikan grafmu: berapa simpul, berapa sisi, bentuknya bagaimana? (Jika kamu menggambar di kertas, tuliskan deskripsinya di sini.)"
+                ></textarea>
+            </div>
+
+            <h3>Pertanyaan 2</h3>
+            <p>Berapa banyak komponen terhubung dalam jaringan ini?</p>
+            <div class="answer-box">
+                <div class="answer-box-label">Jawaban Pertanyaan 2</div>
+                <div class="final-answer-row">
+                    <label>Jumlah komponen terhubung:</label>
+                    <input
+                        type="text"
+                        id="m1-komponen"
+                        placeholder="angka"
+                        style="width: 80px"
+                    />
+                </div>
+                <textarea
+                    id="m1-komponen-alasan"
+                    rows="2"
+                    placeholder="Sebutkan kecamatan-kecamatan yang membentuk tiap komponen…"
+                    style="margin-top: 10px"
+                ></textarea>
+            </div>
+
+            <h3>Pertanyaan 3</h3>
+            <p>
+                Jika pemerintah ingin seluruh kecamatan terhubung (menjadi satu
+                komponen), berapa jalan tambahan minimal yang perlu dibangun?
+            </p>
+            <div class="answer-box">
+                <div class="answer-box-label">Jawaban Pertanyaan 3</div>
+                <div class="final-answer-row">
+                    <label>Jalan tambahan minimal:</label>
+                    <input
+                        type="text"
+                        id="m1-jalan"
+                        placeholder="angka"
+                        style="width: 80px"
+                    />
+                </div>
+                <textarea
+                    id="m1-jalan-alasan"
+                    rows="2"
+                    placeholder="Berikan alasanmu…"
+                    style="margin-top: 10px"
+                ></textarea>
+            </div>
+
+            <h3>Pertanyaan 4</h3>
+            <p>Isi tabel derajat di bawah ini.</p>
+            <div class="tbl-wrap">
+                <table class="th-green">
+                    <thead>
+                        <tr>
+                            <th>Kecamatan</th>
+                            <th>
+                                Derajat (jumlah sisi yang terhubung langsung)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Anggrek</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-anggrek"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bakung</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-bakung"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cempaka</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-cempaka"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dahlia</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-dahlia"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Edelweis</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-edelweis"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Flamboyan</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-flamboyan"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gardenia</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deg-gardenia"
+                                    placeholder="…"
+                                    style="
+                                        width: 60px;
+                                        text-align: center;
+                                        padding: 4px;
+                                    "
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-errorlog')"
+                >
+                    Lanjut ke Error Log →
+                </button>
+            </div>
+        </div>
+
+        <!-- ⑧ ERROR LOG -->
+        <div id="p-errorlog" class="panel">
+            <div class="section-badge">Error Log Digital</div>
+            <h2>Pengingat: Error Log Digital</h2>
+            <p>
+                Error Log diperkenalkan di Sesi 1. Mulai Sesi 2, kamu
+                menggunakannya secara mandiri setelah setiap sesi. Catat setiap
+                kesalahan yang kamu buat — baik di latihan terpandu maupun
+                latihan mandiri.
+            </p>
+
+            <div class="callout callout-blue">
+                <div class="callout-label">5 Tipe Kesalahan</div>
+                (1) Salah baca soal &nbsp;·&nbsp; (2) Model keliru &nbsp;·&nbsp;
+                (3) Kesalahan aritmetika &nbsp;·&nbsp; (4) Analisis kasus tidak
+                lengkap &nbsp;·&nbsp; (5) Kehabisan waktu
+            </div>
+
+            <div class="tbl-wrap" style="margin-top: 16px">
+                <table class="error-log-table" id="elTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sumber (latihan/soal apa)</th>
+                            <th>Jawaban Saya</th>
+                            <th>Jawaban Benar</th>
+                            <th>Di Mana Gagal</th>
+                            <th>Tipe Kesalahan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="errorLogBody"></tbody>
+                </table>
+            </div>
+            <button class="add-row-btn" onclick="addErrorRow()">
+                + Tambah Baris
+            </button>
+
+            <div class="callout callout-accent" style="margin-top: 20px">
+                <div class="callout-label">💡 Contoh Entri</div>
+                Sumber: <em>Latihan Terpandu S2 Sken.1</em> · Jawaban Saya:
+                <em>Hari = simpul</em> · Jawaban Benar:
+                <em>Kegiatan = simpul</em> · Di Mana Gagal:
+                <em>Salah mengidentifikasi simpul</em> · Tipe:
+                <em>Model keliru</em>
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-karcis')"
+                >
+                    Lanjut ke Karcis Keluar →
+                </button>
+            </div>
+        </div>
+
+        <!-- ⑨ KARCIS KELUAR -->
+        <div id="p-karcis" class="panel">
+            <div class="section-badge">Karcis Keluar</div>
+            <h2>Karcis Keluar — Sesi 2</h2>
+            <p>
+                Isi karcis keluar berikut di menit ke-105. Instruktur akan
+                membacanya sebelum Sesi 3.
+            </p>
+
+            <div class="exit-card">
+                <h3 style="margin-top: 0">Pertanyaan Karcis Keluar S2</h3>
+                <p>
+                    Berikan <strong>satu contoh skenario nyata</strong> (selain
+                    yang dibahas tadi) yang bisa direpresentasikan sebagai graf.
+                    Dalam jawaban kamu, sebutkan: (a) apa simpulnya, (b) apa
+                    sisinya, dan (c) apakah sisinya berarah atau tidak.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="kk-skenario"
+                    >Deskripsikan skenariomu (1–2 kalimat)</label
+                >
+                <textarea
+                    id="kk-skenario"
+                    rows="3"
+                    placeholder="Contoh: Jaringan media sosial di mana pengguna terhubung satu sama lain…"
+                ></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="kk-simpul"
+                    >Dalam skenario tersebut,
+                    <strong>simpulnya</strong> adalah…</label
+                >
+                <input type="text" id="kk-simpul" placeholder="…" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="kk-sisi"
+                    >Dalam skenario tersebut,
+                    <strong>sisinya</strong> adalah…</label
+                >
+                <input type="text" id="kk-sisi" placeholder="…" />
+            </div>
+            <div class="form-group">
+                <label class="form-label"
+                    >Apakah sisi dalam skenario tersebut
+                    <strong>berarah</strong> atau
+                    <strong>tidak berarah</strong>?</label
+                >
+                <div class="radio-group">
+                    <label class="radio-opt"
+                        ><input
+                            type="radio"
+                            name="kk-arah"
+                            id="kk-berarah"
+                            value="Berarah"
+                        />
+                        Berarah (satu arah)</label
+                    >
+                    <label class="radio-opt"
+                        ><input
+                            type="radio"
+                            name="kk-arah"
+                            id="kk-tidakberarah"
+                            value="Tidak berarah"
+                        />
+                        Tidak berarah (dua arah)</label
+                    >
+                </div>
+            </div>
+
+            <div style="margin-top: 32px">
+                <button
+                    class="reveal-btn"
+                    style="
+                        background: var(--accent);
+                        color: #fff;
+                        padding: 10px 24px;
+                        font-size: 15px;
+                    "
+                    onclick="goPanel('p-ringkasan')"
+                >
+                    Lanjut ke Ringkasan →
+                </button>
+            </div>
+        </div>
+
+        <!-- ⑩ RINGKASAN -->
+        <div id="p-ringkasan" class="panel">
+            <div class="section-badge green">Ringkasan</div>
+            <h2>Yang Dipelajari Hari Ini</h2>
+            <p>Klik setiap takeaway untuk membuka penjelasannya.</p>
+            <div class="flowchart-wrap" id="fc-ringkasan"></div>
+
+            <div class="callout callout-blue" style="margin-top: 32px">
+                <div class="callout-label">Preview Sesi 3</div>
+                Sesi 3 masuk ke Bagian C OSN-K:
+                <strong>membaca dan menelusuri kode tanpa komputer</strong>.
+                Perpindahan besar — dari "merepresentasikan masalah sebagai
+                struktur" ke "menelusuri eksekusi algoritma langkah demi
+                langkah". Siswa yang terbiasa membuat tabel simulasi dari Sesi 1
+                akan lebih mudah mengikuti. Ingat: Sesi 3 bukan tentang menulis
+                kode — ini tentang membaca resep dengan presisi.
+            </div>
+
+            <div class="download-section">
+                <h3>📥 Unduh Responsku</h3>
+                <p>
+                    Tombol ini akan mengunduh semua jawabanmu dari sesi ini —
+                    tabel graf, latihan mandiri, error log, dan karcis keluar —
+                    dalam satu file yang bisa diserahkan ke instruktur.
+                </p>
+                <button class="download-btn" onclick="downloadResponses()">
+                    ⬇ Unduh Respons Sesi 2
+                </button>
+                <div class="download-note">
+                    File akan diunduh sebagai .txt (Base64-encoded). Berikan
+                    file ini ke instrukturmu.
+                </div>
+            </div>
+        </div>
+
+        <script>
+            /* ─── PANEL NAV ─── */
+            const PANELS = [
+                "p-identitas",
+                "p-gambaran",
+                "p-bacaan",
+                "p-contoh",
+                "p-terpandu",
+                "p-bacaan2",
+                "p-mandiri",
+                "p-errorlog",
+                "p-karcis",
+                "p-ringkasan",
+            ];
+            function goPanel(id) {
+                document
+                    .querySelectorAll(".panel")
+                    .forEach((p) => p.classList.remove("active"));
+                document
+                    .querySelectorAll(".prog-btn")
+                    .forEach((b) => b.classList.remove("active"));
+                document.getElementById(id).classList.add("active");
+                document
+                    .querySelectorAll(".prog-btn")
+                    [PANELS.indexOf(id)].classList.add("active");
+                window.scrollTo(0, 0);
+            }
+
+            /* ─── SOLUTION TOGGLES ─── */
+            function toggleSol(id) {
+                const el = document.getElementById(id);
+                const chevId = id + "-chev";
+                const open = el.style.display === "none";
+                el.style.display = open ? "block" : "none";
+                document.getElementById(chevId).textContent = open
+                    ? "▲ Tutup"
+                    : "▼ Lihat Solusi";
+            }
+
+            /* ─── FLOWCHART BUILDER ─── */
+            function buildFlowchart(containerId, steps) {
+                const wrap = document.getElementById(containerId);
+                steps.forEach((step, i) => {
+                    const card = document.createElement("div");
+                    card.className = "flow-step";
+                    card.style.border = "2px solid var(--border)";
+                    card._open = false;
+                    card.innerHTML = `
+      <div class="flow-icon" style="background:${step.bg};border:2px solid ${step.color}">${step.icon}</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:${step.color};letter-spacing:1px;font-family:monospace">LANGKAH ${step.num}</div>
+        <div style="font-size:15px;font-weight:700;color:var(--ink)">${step.title}</div>
+      </div>
+      <div class="flow-chev">▼</div>`;
+                    const desc = document.createElement("div");
+                    desc.className = "flow-desc";
+                    desc.style.background = step.bg;
+                    desc.style.border = `1.5px solid ${step.color}40`;
+                    desc.innerHTML = step.desc;
+                    card.onclick = () => {
+                        card._open = !card._open;
+                        card.style.border = card._open
+                            ? `2px solid ${step.color}`
+                            : "2px solid var(--border)";
+                        card.style.background = card._open
+                            ? step.bg
+                            : "var(--card)";
+                        desc.style.display = card._open ? "block" : "none";
+                        card.querySelector(".flow-chev").style.opacity =
+                            card._open ? "1" : ".4";
+                        card.querySelector(".flow-chev").style.transform =
+                            card._open ? "rotate(180deg)" : "";
+                    };
+                    wrap.appendChild(card);
+                    wrap.appendChild(desc);
+                    if (i < steps.length - 1) {
+                        const conn = document.createElement("div");
+                        conn.className = "flow-connector";
+                        conn.innerHTML = `<div class="flow-line"></div><div class="flow-arrow">↓</div><div class="flow-line"></div>`;
+                        wrap.appendChild(conn);
+                    }
+                });
+            }
+
+            /* ─── LIMA LANGKAH — Parade Bebek ─── */
+            buildFlowchart("fc-parade", [
+                {
+                    num: 1,
+                    icon: "📖",
+                    color: "var(--s1)",
+                    bg: "var(--s1-bg)",
+                    title: "Baca Cermat",
+                    desc: 'Garis bawahi kata kunci: "semua jalan dilewati", "setiap jalan hanya maksimal satu kali", "minimal hari". Berapa syarat yang ada di soal ini? Baca ulang dengan sabar — jangan loncat langsung ke menjawab.',
+                },
+                {
+                    num: 2,
+                    icon: "🔎",
+                    color: "var(--s2)",
+                    bg: "var(--s2-bg)",
+                    title: "Identifikasi Tipe",
+                    desc: "Ada persimpangan, ada jalan, ada aturan melewati jalan — ini soal graf! Persimpangan = simpul, jalan = sisi. Pertanyaannya adalah tentang melewati semua sisi — ini sinyal Lintasan Euler (diperdalam Sesi 6).",
+                },
+                {
+                    num: 3,
+                    icon: "🔬",
+                    color: "var(--s3)",
+                    bg: "var(--s3-bg)",
+                    title: "Coba Kasus Kecil",
+                    desc: "Kalau kotanya hanya punya 4 persimpangan dan 4 jalan, berapa hari? Gambar ulang di kertas — coba simpul berderajat genap vs. ganjil. Visualisasi kecil sering langsung menunjukkan pola.",
+                },
+                {
+                    num: 4,
+                    icon: "⚙️",
+                    color: "var(--s4)",
+                    bg: "var(--s4-bg)",
+                    title: "Cari Invariant",
+                    desc: "Apa yang menentukan apakah satu parade cukup? Perhatikan simpul-simpul yang punya jumlah sisi ganjil — parade harus masuk DAN keluar dari setiap simpul kecuali titik awal dan akhir.",
+                },
+                {
+                    num: 5,
+                    icon: "🏁",
+                    color: "var(--s5)",
+                    bg: "var(--s5-bg)",
+                    title: "Periksa Kasus Tepi",
+                    desc: "Bagaimana jika semua simpul berderajat genap? → Satu parade Euler cukup (circuit). Bagaimana jika ada 4 simpul berderajat ganjil? → Butuh 2 parade. Selalu cek ekstrem sebelum menyimpulkan.",
+                },
+            ]);
+
+            /* ─── LIMA LANGKAH — Pertemanan Ayam ─── */
+            buildFlowchart("fc-ayam", [
+                {
+                    num: 1,
+                    icon: "📖",
+                    color: "var(--s1)",
+                    bg: "var(--s1-bg)",
+                    title: "Baca Cermat",
+                    desc: "Ada 15 ayam, relasi pertemanan transitif, aturan pemilihan. Perhatikan: ada TIGA sub-pertanyaan berbeda (14, 15, 16). Jangan langsung menjawab semua — urai dulu.",
+                },
+                {
+                    num: 2,
+                    icon: "🔎",
+                    color: "var(--s2)",
+                    bg: "var(--s2-bg)",
+                    title: "Identifikasi Tipe",
+                    desc: "Relasi pertemanan + transitivitas = Komponen Terhubung dalam Graf! Simpul = ayam, sisi = P(X,Y). Ini persis seperti Skenario 3 (Daftar Teman di Kelas), hanya 15 simpul.",
+                },
+                {
+                    num: 3,
+                    icon: "🔬",
+                    color: "var(--s3)",
+                    bg: "var(--s3-bg)",
+                    title: "Coba Kasus Kecil",
+                    desc: "Mulai dari 4 ayam dengan 2 hubungan. Gambar dulu — berapa komponen yang terbentuk? Kalau P(A,B) dan P(C,D), hasilnya 2 komponen. Kalau P(A,B) dan P(B,C), hasilnya 1 komponen.",
+                },
+                {
+                    num: 4,
+                    icon: "⚙️",
+                    color: "var(--s4)",
+                    bg: "var(--s4-bg)",
+                    title: "Cari Invariant",
+                    desc: "Komponen terhubung adalah himpunan tertutup di bawah transitivitas. Dua ayam satu komponen jika dan hanya jika ada jalur pertemanan di antara mereka.",
+                },
+                {
+                    num: 5,
+                    icon: "🏁",
+                    color: "var(--s5)",
+                    bg: "var(--s5-bg)",
+                    title: "Periksa Kasus Tepi",
+                    desc: "Ayam tanpa teman sama sekali — apakah ada? Periksa setiap ayam yang tidak muncul dalam data P(X,Y). Tiap ayam tanpa teman adalah komponen sendiri (isolated vertex).",
+                },
+            ]);
+
+            /* ─── UNION FIND GRAPH VISUALISER ─── */
+            const UF_PAIRS = [
+                ["A", "B"],
+                ["C", "M"],
+                ["E", "G"],
+                ["A", "M"],
+                ["D", "J"],
+                ["O", "N"],
+                ["B", "O"],
+                ["K", "L"],
+                ["D", "I"],
+                ["B", "N"],
+                ["L", "D"],
+                ["H", "F"],
+            ];
+            const ALL_NODES = "A B C D E F G H I J K L M N O".split(" ");
+
+            // Fixed positions arranged in a pleasant layout across the SVG (660×340)
+            const NODE_POS = {
+                A: { x: 120, y: 80 },
+                B: { x: 220, y: 60 },
+                C: { x: 100, y: 200 },
+                D: { x: 400, y: 80 },
+                E: { x: 550, y: 60 },
+                F: { x: 600, y: 200 },
+                G: { x: 620, y: 100 },
+                H: { x: 580, y: 280 },
+                I: { x: 460, y: 170 },
+                J: { x: 380, y: 200 },
+                K: { x: 320, y: 300 },
+                L: { x: 430, y: 300 },
+                M: { x: 160, y: 280 },
+                N: { x: 260, y: 180 },
+                O: { x: 300, y: 100 },
+            };
+
+            const COMP_COLORS = [
+                "#D4521A",
+                "#1B4F8A",
+                "#1F7A4A",
+                "#8B3A9C",
+                "#C8930A",
+                "#c2185b",
+                "#00838f",
+                "#558b2f",
+            ];
+
+            let ufStep = 0;
+            let ufParent = {};
+            let ufEdges = []; // [{a,b}] added so far
+            let ufNewEdge = null; // most recent edge for highlight
+
+            function ufReset() {
+                ufStep = 0;
+                ufEdges = [];
+                ufNewEdge = null;
+                ufParent = {};
+                ALL_NODES.forEach((n) => (ufParent[n] = n));
+            }
+
+            function ufFind(x) {
+                while (ufParent[x] !== x) {
+                    ufParent[x] = ufParent[ufParent[x]];
+                    x = ufParent[x];
+                }
+                return x;
+            }
+            function ufUnion(a, b) {
+                const ra = ufFind(a),
+                    rb = ufFind(b);
+                if (ra !== rb) ufParent[ra] = rb;
+                return ra !== rb;
+            }
+            function ufComponents() {
+                // returns Map: root -> [nodes]
+                const map = {};
+                ALL_NODES.forEach((n) => {
+                    const r = ufFind(n);
+                    if (!map[r]) map[r] = [];
+                    map[r].push(n);
+                });
+                // Sort components by size desc for stable color assignment
+                return Object.values(map).sort(
+                    (a, b) => b.length - a.length || a[0].localeCompare(b[0]),
+                );
+            }
+            function nodeColor(n, comps) {
+                for (let i = 0; i < comps.length; i++) {
+                    if (comps[i].includes(n))
+                        return COMP_COLORS[i % COMP_COLORS.length];
+                }
+                return "#aaa";
+            }
+
+            function renderUFGraph() {
+                const svg = document.getElementById("uf-svg");
+                const comps = ufComponents();
+
+                // Build node→color map
+                const colorOf = {};
+                comps.forEach((g, i) =>
+                    g.forEach(
+                        (n) =>
+                            (colorOf[n] = COMP_COLORS[i % COMP_COLORS.length]),
+                    ),
+                );
+
+                let html = "";
+
+                // Draw edges
+                ufEdges.forEach(({ a, b }) => {
+                    const pa = NODE_POS[a],
+                        pb = NODE_POS[b];
+                    const isNew =
+                        ufNewEdge && ufNewEdge.a === a && ufNewEdge.b === b;
+                    const col = colorOf[a];
+                    html += `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"
+      stroke="${col}" stroke-width="${isNew ? 4 : 2.5}" opacity="${isNew ? 1 : 0.7}"
+      ${isNew ? 'stroke-dasharray="none"' : ""} />`;
+                });
+
+                // Draw nodes
+                ALL_NODES.forEach((n) => {
+                    const { x, y } = NODE_POS[n];
+                    const col = colorOf[n];
+                    const isNew =
+                        ufNewEdge && (ufNewEdge.a === n || ufNewEdge.b === n);
+                    html += `<circle cx="${x}" cy="${y}" r="${isNew ? 20 : 17}" fill="${col}" opacity="0.15" />`;
+                    html += `<circle cx="${x}" cy="${y}" r="${isNew ? 20 : 17}" fill="none" stroke="${col}" stroke-width="${isNew ? 3 : 2}" />`;
+                    html += `<text x="${x}" y="${y + 5}" text-anchor="middle" font-family="'Courier New',monospace"
+      font-size="13" font-weight="700" fill="${col}">${n}</text>`;
+                });
+
+                svg.innerHTML = html;
+
+                // Render legend
+                const legend = document.getElementById("uf-legend");
+                legend.innerHTML = comps
+                    .map((g, i) => {
+                        const col = COMP_COLORS[i % COMP_COLORS.length];
+                        return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-family:monospace;padding:3px 8px;border-radius:12px;background:${col}18;border:1.5px solid ${col};color:${col};font-weight:700;">{${g.join(",")}}</span>`;
+                    })
+                    .join("");
+            }
+
+            function stepUF() {
+                if (ufStep >= UF_PAIRS.length) return;
+                const [a, b] = UF_PAIRS[ufStep];
+                const merged = ufUnion(a, b);
+                ufEdges.push({ a, b });
+                ufNewEdge = { a, b };
+                ufStep++;
+
+                const comps = ufComponents();
+                document.getElementById("uf-status").textContent = merged
+                    ? `➕ P(${a},${b}): sisi baru! ${a} dan ${b} kini satu komponen → ${comps.length} komponen`
+                    : `〰️ P(${a},${b}): sudah satu komponen — sisi ditambah tapi tidak mengubah jumlah`;
+                document.getElementById("uf-counter").textContent =
+                    `${ufStep} / 12 pasangan diproses`;
+                document.getElementById("uf-prog").style.width =
+                    (ufStep / 12) * 100 + "%";
+                renderUFGraph();
+                if (ufStep === UF_PAIRS.length) {
+                    document.getElementById("uf-final").style.display = "block";
+                }
+            }
+
+            function resetUF() {
+                ufReset();
+                document.getElementById("uf-status").textContent =
+                    "Mulai dari 15 simpul — belum ada sisi";
+                document.getElementById("uf-counter").textContent =
+                    "0 / 12 pasangan diproses";
+                document.getElementById("uf-prog").style.width = "0%";
+                document.getElementById("uf-final").style.display = "none";
+                renderUFGraph();
+            }
+
+            ufReset();
+            renderUFGraph();
+
+            /* ─── RINGKASAN FLOWCHART ─── */
+            buildFlowchart("fc-ringkasan", [
+                {
+                    num: 1,
+                    icon: "🔵",
+                    color: "var(--s1)",
+                    bg: "var(--s1-bg)",
+                    title: "Graf = Simpul + Sisi",
+                    desc: 'Simpul mewakili objek, sisi mewakili hubungan. Langkah pertama selalu: "Apa simpulnya? Apa sisinya? Berarah atau tidak?"',
+                },
+                {
+                    num: 2,
+                    icon: "🔗",
+                    color: "var(--s2)",
+                    bg: "var(--s2-bg)",
+                    title: "Komponen Terhubung",
+                    desc: "Komponen terhubung adalah kelompok simpul yang saling dapat dijangkau. Menghitung komponen adalah invariant penting (A4). Rumus: untuk menghubungkan k komponen menjadi satu, butuh minimal k−1 sisi tambahan.",
+                },
+                {
+                    num: 3,
+                    icon: "📐",
+                    color: "var(--s3)",
+                    bg: "var(--s3-bg)",
+                    title: "Derajat Simpul",
+                    desc: "Derajat simpul = jumlah sisi yang terhubung langsung. Properti pertama yang dihitung sebelum menjawab banyak pertanyaan tentang graf. Simpul berderajat 0 = isolated vertex.",
+                },
+                {
+                    num: 4,
+                    icon: "🔀",
+                    color: "var(--s4)",
+                    bg: "var(--s4-bg)",
+                    title: "Soal Berlapis (B1)",
+                    desc: "Langkah pertama menghadapi soal berlapis: kenali strukturnya sebagai graf, lalu jawab sub-pertanyaan satu per satu. Soal 14 (keterhubungan) adalah fondasi untuk Soal 15 dan 16.",
+                },
+                {
+                    num: 5,
+                    icon: "⚔️",
+                    color: "var(--s5)",
+                    bg: "var(--s5-bg)",
+                    title: "Serangan Lima Langkah",
+                    desc: 'Berlaku di semua soal termasuk soal graf. Jangan melompati "Identifikasi Tipe" (Langkah 2) — inilah yang membedakanmu dari siswa yang terjebak membaca ulang soal.',
+                },
+            ]);
+
+            /* ─── ERROR LOG ─── */
+            let errorRowCount = 0;
+            function addErrorRow() {
+                errorRowCount++;
+                const tbody = document.getElementById("errorLogBody");
+                const tr = document.createElement("tr");
+                tr.id = "erow-" + errorRowCount;
+                tr.innerHTML = `
+    <td>${errorRowCount}</td>
+    <td><input type="text" id="el-src-${errorRowCount}" placeholder="mis. Latihan Terpandu S2 Sken.1"/></td>
+    <td><input type="text" id="el-mine-${errorRowCount}" placeholder="jawaban yang kamu tulis"/></td>
+    <td><input type="text" id="el-correct-${errorRowCount}" placeholder="jawaban yang benar"/></td>
+    <td><input type="text" id="el-where-${errorRowCount}" placeholder="di langkah mana kamu salah?"/></td>
+    <td><select id="el-type-${errorRowCount}">
+      <option value="">— Pilih tipe —</option>
+      <option>Salah baca soal</option>
+      <option>Model keliru</option>
+      <option>Kesalahan aritmetika</option>
+      <option>Analisis kasus tidak lengkap</option>
+      <option>Kehabisan waktu</option>
+    </select></td>`;
+                tbody.appendChild(tr);
+            }
+            addErrorRow();
+
+            /* ─── COLLECT + DOWNLOAD ─── */
+            function collectResponses() {
+                const errorLog = [];
+                for (let r = 1; r <= errorRowCount; r++) {
+                    const row = {
+                        sumber:
+                            document.getElementById("el-src-" + r)?.value || "",
+                        jawaban_saya:
+                            document.getElementById("el-mine-" + r)?.value ||
+                            "",
+                        jawaban_benar:
+                            document.getElementById("el-correct-" + r)?.value ||
+                            "",
+                        di_mana_gagal:
+                            document.getElementById("el-where-" + r)?.value ||
+                            "",
+                        tipe_kesalahan:
+                            document.getElementById("el-type-" + r)?.value ||
+                            "",
+                    };
+                    if (Object.values(row).some((v) => v)) errorLog.push(row);
+                }
+
+                const kkArah = document.querySelector(
+                    'input[name="kk-arah"]:checked',
+                );
+
+                return {
+                    nama: document.getElementById("s-nama").value,
+                    email: document.getElementById("s-email").value,
+                    sesi: "Sesi 2",
+                    timestamp: new Date().toISOString(),
+
+                    latihan_terpandu: {
+                        skenario_1: {
+                            graf: document.getElementById("gq1-graf").value,
+                            simpul: document.getElementById("gq1-simpul").value,
+                            sisi: document.getElementById("gq1-sisi").value,
+                            berarah: document.getElementById("gq1-arah").value,
+                        },
+                        skenario_2: {
+                            graf: document.getElementById("gq2-graf").value,
+                            simpul: document.getElementById("gq2-simpul").value,
+                            sisi: document.getElementById("gq2-sisi").value,
+                            berarah: document.getElementById("gq2-arah").value,
+                        },
+                        skenario_3: {
+                            graf: document.getElementById("gq3-graf").value,
+                            simpul: document.getElementById("gq3-simpul").value,
+                            sisi: document.getElementById("gq3-sisi").value,
+                            berarah: document.getElementById("gq3-arah").value,
+                        },
+                        skenario_4: {
+                            graf: document.getElementById("gq4-graf").value,
+                            simpul: document.getElementById("gq4-simpul").value,
+                            sisi: document.getElementById("gq4-sisi").value,
+                            berarah: document.getElementById("gq4-arah").value,
+                        },
+                        skenario_5: {
+                            graf: document.getElementById("gq5-graf").value,
+                            simpul: document.getElementById("gq5-simpul").value,
+                            sisi: document.getElementById("gq5-sisi").value,
+                            berarah: document.getElementById("gq5-arah").value,
+                        },
+                    },
+
+                    latihan_mandiri: {
+                        deskripsi_graf:
+                            document.getElementById("m1-gambar").value,
+                        komponen_terhubung:
+                            document.getElementById("m1-komponen").value,
+                        alasan_komponen:
+                            document.getElementById("m1-komponen-alasan").value,
+                        jalan_tambahan:
+                            document.getElementById("m1-jalan").value,
+                        alasan_jalan:
+                            document.getElementById("m1-jalan-alasan").value,
+                        derajat: {
+                            Anggrek:
+                                document.getElementById("deg-anggrek").value,
+                            Bakung: document.getElementById("deg-bakung").value,
+                            Cempaka:
+                                document.getElementById("deg-cempaka").value,
+                            Dahlia: document.getElementById("deg-dahlia").value,
+                            Edelweis:
+                                document.getElementById("deg-edelweis").value,
+                            Flamboyan:
+                                document.getElementById("deg-flamboyan").value,
+                            Gardenia:
+                                document.getElementById("deg-gardenia").value,
+                        },
+                    },
+
+                    error_log: errorLog,
+
+                    karcis_keluar: {
+                        skenario: document.getElementById("kk-skenario").value,
+                        simpul: document.getElementById("kk-simpul").value,
+                        sisi: document.getElementById("kk-sisi").value,
+                        berarah: kkArah ? kkArah.value : "",
+                    },
+                };
+            }
+
+            function downloadResponses() {
+                const data = collectResponses();
+                const json = JSON.stringify(data, null, 2);
+                const encoded = btoa(unescape(encodeURIComponent(json)));
+                const output = [encoded].join("\n");
+                const blob = new Blob([output], {
+                    type: "text/plain;charset=utf-8",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `Sesi2_Respons_${(data.nama || "siswa").replace(/\s+/g, "_")}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>
