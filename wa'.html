@@ -1,0 +1,3124 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sesi 1 — Fondasi: Cara Membaca Soal</title>
+        <style>
+            :root {
+                --bg: #fdf8f2;
+                --card: #ffffff;
+                --border: #e8ddd0;
+                --ink: #1a1410;
+                --muted: #7a6a5a;
+                --accent: #d4521a;
+                --accent-light: #fdeee5;
+                --blue: #1b4f8a;
+                --blue-light: #e5edf7;
+                --green: #1f7a4a;
+                --green-light: #e5f4ec;
+                --yellow: #c8930a;
+                --yellow-light: #fef7e5;
+                --purple: #8b3a9c;
+                --purple-light: #f3e8f8;
+                --s1: #d4521a;
+                --s1-bg: #fdeee5;
+                --s2: #1b4f8a;
+                --s2-bg: #e5edf7;
+                --s3: #1f7a4a;
+                --s3-bg: #e5f4ec;
+                --s4: #8b3a9c;
+                --s4-bg: #f3e8f8;
+                --s5: #c8930a;
+                --s5-bg: #fef7e5;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                font-family: Georgia, "Times New Roman", serif;
+                color: var(--ink);
+                line-height: 1.7;
+            }
+            code,
+            .mono {
+                font-family: "Courier New", monospace;
+            }
+
+            /* SITE HEADER */
+            .site-header {
+                background: #1a1410;
+                padding: 16px 24px;
+            }
+            .site-header .eyebrow {
+                font-size: 11px;
+                color: #aaa;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+                font-family: monospace;
+            }
+            .site-header h1 {
+                font-size: 20px;
+                font-weight: 700;
+                color: #fff;
+                letter-spacing: -0.3px;
+            }
+
+            /* PROGRESS NAV */
+            .prog-nav {
+                background: var(--card);
+                border-bottom: 2px solid var(--border);
+                padding: 0 24px;
+                display: flex;
+                gap: 0;
+                overflow-x: auto;
+            }
+            .prog-btn {
+                padding: 12px 16px;
+                border: none;
+                background: transparent;
+                color: var(--muted);
+                font-family: Georgia, serif;
+                font-size: 12px;
+                cursor: pointer;
+                border-bottom: 3px solid transparent;
+                white-space: nowrap;
+                transition: all 0.2s;
+            }
+            .prog-btn.active {
+                color: var(--accent);
+                border-bottom-color: var(--accent);
+                font-weight: 700;
+            }
+            .prog-btn:not(.active):hover {
+                color: var(--ink);
+                background: var(--accent-light);
+            }
+
+            /* PANELS */
+            .panel {
+                display: none;
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 32px 24px 64px;
+            }
+            .panel.active {
+                display: block;
+            }
+
+            /* TYPOGRAPHY */
+            h2 {
+                font-size: 22px;
+                color: var(--accent);
+                margin-bottom: 8px;
+                margin-top: 32px;
+            }
+            h2:first-child {
+                margin-top: 0;
+            }
+            h3 {
+                font-size: 17px;
+                color: var(--ink);
+                margin: 24px 0 8px;
+                font-weight: 700;
+            }
+            h4 {
+                font-size: 14px;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin: 20px 0 6px;
+                font-family: monospace;
+            }
+            p {
+                margin-bottom: 14px;
+                font-size: 15px;
+            }
+            ul,
+            ol {
+                margin: 0 0 14px 22px;
+                font-size: 15px;
+            }
+            li {
+                margin-bottom: 4px;
+            }
+            strong {
+                color: var(--ink);
+            }
+
+            /* CALLOUT BOXES */
+            .callout {
+                border-radius: 8px;
+                padding: 14px 18px;
+                font-size: 14px;
+                line-height: 1.65;
+                margin: 16px 0;
+            }
+            .callout-yellow {
+                background: var(--yellow-light);
+                border: 1px solid #c8930a60;
+            }
+            .callout-blue {
+                background: var(--blue-light);
+                border: 1px solid #1b4f8a60;
+            }
+            .callout-green {
+                background: var(--green-light);
+                border: 1px solid #1f7a4a60;
+            }
+            .callout-purple {
+                background: var(--purple-light);
+                border: 1px solid #8b3a9c60;
+            }
+            .callout-accent {
+                background: var(--accent-light);
+                border: 1px solid #d4521a60;
+            }
+            .callout-label {
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            /* TABLES */
+            .tbl-wrap {
+                overflow-x: auto;
+                margin: 16px 0;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14px;
+            }
+            th {
+                background: var(--accent);
+                color: #fff;
+                padding: 9px 12px;
+                text-align: left;
+                font-weight: 700;
+            }
+            td {
+                padding: 8px 12px;
+                border-bottom: 1px solid var(--border);
+                vertical-align: top;
+            }
+            tr:nth-child(even) td {
+                background: #faf7f4;
+            }
+            tr:last-child td {
+                border-bottom: none;
+            }
+            .th-blue th {
+                background: var(--blue);
+            }
+            .th-green th {
+                background: var(--green);
+            }
+
+            /* SECTION LABEL */
+            .section-badge {
+                display: inline-block;
+                background: var(--accent);
+                color: #fff;
+                font-family: monospace;
+                font-size: 11px;
+                letter-spacing: 1px;
+                padding: 3px 10px;
+                border-radius: 20px;
+                margin-bottom: 12px;
+                text-transform: uppercase;
+            }
+            .section-badge.blue {
+                background: var(--blue);
+            }
+            .section-badge.green {
+                background: var(--green);
+            }
+            .section-badge.purple {
+                background: var(--purple);
+            }
+
+            /* FORM ELEMENTS */
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-label {
+                font-size: 14px;
+                font-weight: 700;
+                display: block;
+                margin-bottom: 6px;
+                color: var(--ink);
+            }
+            .form-sub {
+                font-size: 12px;
+                color: var(--muted);
+                margin-bottom: 6px;
+                display: block;
+            }
+            input[type="text"],
+            input[type="email"],
+            textarea,
+            select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1.5px solid var(--border);
+                border-radius: 6px;
+                font-family: Georgia, serif;
+                font-size: 14px;
+                background: #fff;
+                color: var(--ink);
+                transition: border-color 0.2s;
+            }
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            textarea:focus,
+            select:focus {
+                border-color: var(--accent);
+                outline: none;
+            }
+            textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+            .radio-group,
+            .check-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 6px;
+            }
+            .radio-opt,
+            .check-opt {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            .radio-opt input,
+            .check-opt input {
+                margin-top: 3px;
+                flex-shrink: 0;
+                accent-color: var(--accent);
+            }
+            .rating-row {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+                margin-top: 6px;
+            }
+            .rating-opt {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                cursor: pointer;
+            }
+            .rating-opt input {
+                accent-color: var(--accent);
+            }
+            .rating-opt span {
+                font-size: 12px;
+                color: var(--muted);
+            }
+
+            /* GRID TABLE for survey */
+            .grid-survey {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+            .grid-survey th {
+                background: var(--accent);
+                color: #fff;
+                padding: 8px 10px;
+                text-align: center;
+            }
+            .grid-survey th:first-child {
+                text-align: left;
+            }
+            .grid-survey td {
+                padding: 8px 10px;
+                border-bottom: 1px solid var(--border);
+                text-align: center;
+            }
+            .grid-survey td:first-child {
+                text-align: left;
+                font-weight: 500;
+            }
+            .grid-survey tr:nth-child(even) td {
+                background: #faf7f4;
+            }
+            .grid-survey input[type="radio"] {
+                accent-color: var(--accent);
+            }
+
+            /* SIMULATION TABLE */
+            .sim-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+                margin: 16px 0;
+            }
+            .sim-table th {
+                padding: 9px 14px;
+                text-align: center;
+                font-weight: 700;
+                color: #fff;
+            }
+            .sim-table td {
+                padding: 8px 12px;
+                border: 1px solid var(--border);
+                text-align: center;
+            }
+            .sim-table .row-label {
+                text-align: left;
+                font-weight: 600;
+                background: #faf7f4;
+                font-size: 13px;
+            }
+            .sim-table input.cell-input {
+                width: 60px;
+                padding: 6px;
+                border: 1.5px solid var(--border);
+                border-radius: 4px;
+                text-align: center;
+                font-family: monospace;
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                background: #fff;
+            }
+            .sim-table input.cell-input:focus {
+                border-color: var(--accent);
+                outline: none;
+            }
+            .sim-table .given {
+                background: var(--blue-light);
+                font-family: monospace;
+                font-weight: 700;
+                color: var(--blue);
+            }
+
+            /* STEP REVEAL */
+            .step-reveal-row {
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .step-reveal-row:hover td {
+                background: var(--accent-light);
+            }
+            .step-reveal-row td.hidden-cell {
+                opacity: 0.3;
+                font-style: italic;
+            }
+            .step-reveal-row.revealed td.hidden-cell {
+                opacity: 1;
+                font-style: normal;
+            }
+
+            /* INTERACTIVE EXPLAINER */
+            .explainer-card {
+                background: var(--card);
+                border: 2px solid var(--border);
+                border-radius: 12px;
+                overflow: hidden;
+                margin: 20px 0;
+            }
+            .explainer-header {
+                background: var(--accent);
+                color: #fff;
+                padding: 12px 20px;
+                font-weight: 700;
+                font-size: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .explainer-body {
+                padding: 20px;
+            }
+            .reveal-btn {
+                background: #fff;
+                color: var(--accent);
+                border: none;
+                padding: 7px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 13px;
+                font-weight: 700;
+                transition: all 0.2s;
+            }
+            .reveal-btn:hover {
+                background: var(--accent-light);
+            }
+            .reset-btn {
+                background: transparent;
+                color: #fff;
+                border: 1.5px solid #ffffff80;
+                padding: 6px 14px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 12px;
+                transition: all 0.2s;
+            }
+            .reset-btn:hover {
+                background: #ffffff20;
+            }
+            .ctrl-row {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-top: 16px;
+                flex-wrap: wrap;
+            }
+            .step-counter {
+                font-size: 12px;
+                color: var(--muted);
+                font-family: monospace;
+            }
+
+            /* FLOWCHART */
+            .flowchart-wrap {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+                margin: 16px 0;
+            }
+            .flow-step {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                background: var(--card);
+                border: 2px solid var(--border);
+                border-radius: 12px;
+                padding: 14px 20px;
+                cursor: pointer;
+                width: min(560px, 100%);
+                transition: all 0.25s;
+            }
+            .flow-step:hover {
+                border-color: var(--accent);
+                background: var(--accent-light);
+            }
+            .flow-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                flex-shrink: 0;
+            }
+            .flow-chev {
+                margin-left: auto;
+                font-size: 14px;
+                color: var(--muted);
+                opacity: 0.4;
+                transition: all 0.2s;
+            }
+            .flow-desc {
+                background: var(--accent-light);
+                border: 1.5px solid #d4521a40;
+                border-top: none;
+                border-radius: 0 0 10px 10px;
+                width: min(560px, 100%);
+                padding: 12px 20px 16px;
+                font-size: 14px;
+                line-height: 1.65;
+                display: none;
+            }
+            .flow-connector {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-left: 22px;
+            }
+            .flow-line {
+                width: 2px;
+                height: 12px;
+                background: var(--border);
+            }
+            .flow-arrow {
+                font-size: 16px;
+                color: var(--muted);
+            }
+
+            /* TOGGLE LAMP VIZ */
+            .lamp-row {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin: 12px 0;
+            }
+            .lamp {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                border: 3px solid;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                font-weight: 700;
+                font-family: monospace;
+                cursor: default;
+                transition: all 0.3s;
+            }
+            .lamp.on {
+                background: #ffe566;
+                border-color: #c8930a;
+                color: #7a5a00;
+            }
+            .lamp.off {
+                background: #e0e0e0;
+                border-color: #aaa;
+                color: #888;
+            }
+
+            /* DOWNLOAD SECTION */
+            .download-section {
+                background: #1a1410;
+                border-radius: 12px;
+                padding: 32px;
+                margin-top: 40px;
+                text-align: center;
+            }
+            .download-section h3 {
+                color: #fff;
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            .download-section p {
+                color: #aaa;
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            .download-btn {
+                background: var(--accent);
+                color: #fff;
+                border: none;
+                padding: 14px 32px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 16px;
+                font-weight: 700;
+                transition: background 0.2s;
+            }
+            .download-btn:hover {
+                background: #b84215;
+            }
+            .download-note {
+                font-size: 12px;
+                color: #888;
+                margin-top: 12px;
+            }
+
+            /* ANSWER INPUT SECTION */
+            .answer-box {
+                background: var(--card);
+                border: 2px dashed var(--accent);
+                border-radius: 10px;
+                padding: 20px;
+                margin: 16px 0;
+            }
+            .answer-box-label {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--accent);
+                font-family: monospace;
+                font-weight: 700;
+                margin-bottom: 10px;
+            }
+            .final-answer-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 12px;
+                flex-wrap: wrap;
+            }
+            .final-answer-row label {
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .final-answer-row input {
+                width: 140px;
+            }
+
+            /* ERROR LOG */
+            .error-log-table {
+                width: 100%;
+            }
+            .error-log-table td {
+                padding: 8px;
+                border: 1px solid var(--border);
+                vertical-align: top;
+            }
+            .error-log-table td:first-child {
+                width: 30px;
+                text-align: center;
+                color: var(--muted);
+                font-size: 13px;
+            }
+            .add-row-btn {
+                margin-top: 10px;
+                background: var(--green-light);
+                color: var(--green);
+                border: 1.5px solid var(--green);
+                padding: 7px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: Georgia, serif;
+                font-size: 13px;
+                font-weight: 700;
+            }
+            .add-row-btn:hover {
+                background: var(--green);
+                color: #fff;
+            }
+
+            /* KARCIS KELUAR */
+            .exit-card {
+                background: var(--accent-light);
+                border: 2px solid #d4521a60;
+                border-radius: 12px;
+                padding: 24px;
+                margin: 20px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="site-header">
+            <div class="eyebrow">OSN-K Informatika · Kursus Persiapan</div>
+            <h1>
+                Sesi 1 — Fondasi: Cara Membaca Soal dan Simulasi Langkah demi
+                Langkah
+            </h1>
+        </div>
+
+        <div class="prog-nav" id="progNav">
+            <button class="prog-btn active" onclick="goPanel('p-survey')">
+                ① Survei Awal
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-bacaan')">
+                ② Bacaan
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-contoh')">
+                ③ Contoh Soal
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-latihan1')">
+                ④ Latihan Terpandu
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-bacaan2')">
+                ⑤ Bacaan Lanjutan
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-latihan2')">
+                ⑥ Latihan Mandiri
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-errorlog')">
+                ⑦ Error Log
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-karcis')">
+                ⑧ Karcis Keluar
+            </button>
+            <button class="prog-btn" onclick="goPanel('p-ringkasan')">
+                ⑨ Ringkasan
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 1 — SURVEI PENGETAHUAN AWAL
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-survey" class="panel active">
+            <div class="section-badge">Asesmen Diagnostik · AS-D1</div>
+            <h2>Survei Pengetahuan Awal</h2>
+            <p>
+                Ini bukan tes dan tidak ada nilai. Jawablah dengan jujur — tidak
+                ada jawaban yang benar atau salah untuk bagian pertama.
+                Tujuannya agar instruktur bisa menyesuaikan materi sesuai
+                kondisimu sebenarnya. Estimasi waktu: 15–20 menit.
+            </p>
+
+            <div class="form-group">
+                <label class="form-label">Nama Lengkap *</label>
+                <input
+                    type="text"
+                    id="s-nama"
+                    placeholder="Tuliskan nama lengkapmu"
+                />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Alamat Email *</label>
+                <input
+                    type="email"
+                    id="s-email"
+                    placeholder="email@contoh.com"
+                />
+            </div>
+
+            <h3>Bagian 1 — Penilaian Diri Topik (Skala 0–3)</h3>
+            <div class="callout callout-blue">
+                <div class="callout-label" style="color: var(--blue)">
+                    📘 Panduan Skala
+                </div>
+                <strong>0 = Belum tahu</strong> — belum pernah mendengar topik
+                ini.<br />
+                <strong>1 = Pernah dengar</strong> — tahu istilahnya tapi tidak
+                bisa menjelaskan.<br />
+                <strong>2 = Paham konsep</strong> — bisa menjelaskan dan
+                mengerjakan contoh sederhana dengan petunjuk.<br />
+                <strong>3 = Bisa terapkan</strong> — bisa mengerjakan soal
+                secara mandiri.
+            </div>
+            <div class="tbl-wrap">
+                <table class="grid-survey" id="selfAssessTable">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 220px">Topik</th>
+                            <th>
+                                0<br /><span
+                                    style="font-weight: 400; font-size: 11px"
+                                    >Belum tahu</span
+                                >
+                            </th>
+                            <th>
+                                1<br /><span
+                                    style="font-weight: 400; font-size: 11px"
+                                    >Pernah dengar</span
+                                >
+                            </th>
+                            <th>
+                                2<br /><span
+                                    style="font-weight: 400; font-size: 11px"
+                                    >Paham konsep</span
+                                >
+                            </th>
+                            <th>
+                                3<br /><span
+                                    style="font-weight: 400; font-size: 11px"
+                                    >Bisa terapkan</span
+                                >
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="selfAssessBody"></tbody>
+                </table>
+            </div>
+
+            <h3>Bagian 2 — Dua Soal Terbuka "Serangan Dingin"</h3>
+            <div class="callout callout-yellow">
+                <div class="callout-label" style="color: var(--yellow)">
+                    ⚠️ Instruksi
+                </div>
+                Kerjakan dua soal berikut. Tidak ada ekspektasi bahwa kamu harus
+                menjawab dengan benar — yang lebih penting adalah menuliskan
+                proses berpikirmu secara jujur. Tulis "tidak tahu harus mulai
+                dari mana" jika memang demikian.
+            </div>
+
+            <div class="callout callout-accent" style="margin-top: 20px">
+                <div class="callout-label" style="color: var(--accent)">
+                    Soal Terbuka 1 — Simulasi
+                </div>
+                Lima kotak bernomor 1 sampai 5 disusun berjejer dari kiri ke
+                kanan. Setiap kotak awalnya berisi sebuah bola bernomor sama
+                dengan nomor kotaknya.<br /><br />
+                Pak Dengklek melakukan 4 gerakan berurutan:<br />
+                &nbsp;&nbsp;<strong>Gerakan 1:</strong> Tukar isi kotak 1 dan
+                kotak 3.<br />
+                &nbsp;&nbsp;<strong>Gerakan 2:</strong> Tukar isi kotak 2 dan
+                kotak 5.<br />
+                &nbsp;&nbsp;<strong>Gerakan 3:</strong> Tukar isi kotak 3 dan
+                kotak 4.<br />
+                &nbsp;&nbsp;<strong>Gerakan 4:</strong> Tukar isi kotak 1 dan
+                kotak 5.<br /><br />
+                Setelah keempat gerakan tersebut, di kotak nomor berapakah bola
+                yang semula ada di <strong>kotak 2</strong> sekarang berada?<br />
+                <em>Tuliskan jawaban dalam bentuk ANGKA.</em>
+            </div>
+            <div class="form-group">
+                <label class="form-label">(a) Jawaban kamu (angka):</label>
+                <input
+                    type="text"
+                    id="s-open1-ans"
+                    style="max-width: 120px"
+                    placeholder="Angka"
+                />
+            </div>
+            <div class="form-group">
+                <label class="form-label"
+                    >(b) Proses berpikirmu (tulis langkah-langkahmu, meskipun
+                    tidak sampai dapat jawaban):</label
+                >
+                <textarea
+                    id="s-open1-process"
+                    rows="5"
+                    placeholder="Tuliskan cara kamu mendekati soal ini..."
+                ></textarea>
+            </div>
+
+            <div class="callout callout-accent" style="margin-top: 24px">
+                <div class="callout-label" style="color: var(--accent)">
+                    Soal Terbuka 2 — Penelusuran Kode
+                </div>
+                Perhatikan potongan algoritma berikut:<br /><br />
+                <code
+                    style="
+                        display: block;
+                        background: #fff3ee;
+                        padding: 12px;
+                        border-radius: 6px;
+                        line-height: 2;
+                        font-size: 13px;
+                    "
+                >
+                    x ← 10<br />
+                    y ← 3<br />
+                    z ← 0<br />
+                    ULANGI 4 KALI:<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;z ← z + x<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;x ← x - y<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;y ← y + 1<br />
+                    CETAK z </code
+                ><br />
+                Tanpa menjalankan program ini di komputer, berapakah nilai yang
+                dicetak?<br />
+                <em>Tuliskan jawaban dalam bentuk ANGKA.</em>
+            </div>
+            <div class="form-group">
+                <label class="form-label">(a) Jawaban kamu (angka):</label>
+                <input
+                    type="text"
+                    id="s-open2-ans"
+                    style="max-width: 120px"
+                    placeholder="Angka"
+                />
+            </div>
+            <div class="form-group">
+                <label class="form-label"
+                    >(b) Proses berpikirmu (tulis cara kamu menelusuri kode
+                    ini):</label
+                >
+                <textarea
+                    id="s-open2-process"
+                    rows="5"
+                    placeholder="Tuliskan cara kamu menelusuri kode ini..."
+                ></textarea>
+            </div>
+
+            <h3>Bagian 3 — Pertanyaan Strategi</h3>
+            <div class="form-group">
+                <label class="form-label"
+                    >3.1 — Ketika kamu menghadapi soal yang tidak bisa kamu
+                    kerjakan, apa yang biasanya kamu lakukan? (Pilih semua yang
+                    berlaku)</label
+                >
+                <div class="check-group" id="strat-check">
+                    <label class="check-opt"
+                        ><input type="checkbox" value="baca_ulang" /> Baca ulang
+                        soalnya beberapa kali</label
+                    >
+                    <label class="check-opt"
+                        ><input type="checkbox" value="kasus_kecil" /> Coba
+                        kasus yang lebih kecil atau lebih sederhana</label
+                    >
+                    <label class="check-opt"
+                        ><input type="checkbox" value="lewati" /> Lewati dan
+                        lanjut ke soal berikutnya, lalu kembali lagi</label
+                    >
+                    <label class="check-opt"
+                        ><input type="checkbox" value="tebak" /> Tebak jawaban
+                        dan lanjut</label
+                    >
+                    <label class="check-opt"
+                        ><input type="checkbox" value="bantuan" /> Minta bantuan
+                        teman atau instruktur</label
+                    >
+                    <label class="check-opt"
+                        ><input type="checkbox" value="biarkan" /> Biarkan
+                        kosong dan tidak lanjut</label
+                    >
+                    <label class="check-opt"
+                        ><input type="checkbox" value="lainnya" />
+                        Lainnya:</label
+                    >
+                </div>
+                <input
+                    type="text"
+                    id="strat-other"
+                    style="margin-top: 6px; max-width: 400px"
+                    placeholder="Tuliskan jika lainnya..."
+                />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"
+                    >3.2 — Di bagian mana OSN-K yang kamu rasa paling lemah saat
+                    ini? (Pilih satu)</label
+                >
+                <div class="radio-group">
+                    <label class="radio-opt"
+                        ><input type="radio" name="bagian-lemah" value="A" />
+                        Bagian A — Berpikir Komputasional (logika, simulasi,
+                        graf)</label
+                    >
+                    <label class="radio-opt"
+                        ><input type="radio" name="bagian-lemah" value="B" />
+                        Bagian B — Matematika Diskret (kombinatorik, teori
+                        bilangan, peluang)</label
+                    >
+                    <label class="radio-opt"
+                        ><input type="radio" name="bagian-lemah" value="C" />
+                        Bagian C — Analisis Algoritma dan Kode</label
+                    >
+                    <label class="radio-opt"
+                        ><input
+                            type="radio"
+                            name="bagian-lemah"
+                            value="belum_tahu"
+                        />
+                        Saya belum tahu perbedaan ketiga bagian ini</label
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"
+                    >3.3 — Apa satu hal yang paling ingin kamu pelajari atau
+                    tingkatkan dari kursus ini?</label
+                >
+                <span class="form-sub"
+                    >Tulis bebas, tidak ada jawaban yang salah.</span
+                >
+                <textarea
+                    id="s-harapan"
+                    rows="3"
+                    placeholder="Tuliskan harapanmu..."
+                ></textarea>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 8px"
+                onclick="goPanel('p-bacaan')"
+            >
+                Lanjut ke Bacaan →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 2 — BACAAN
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-bacaan" class="panel">
+            <div class="section-badge blue">Bacaan</div>
+            <h2>Cara Membaca Soal OSN-K</h2>
+
+            <h3>2.1 — Mengapa Cara Membaca Soal Itu Penting?</h3>
+            <p>
+                Banyak siswa yang gagal di OSN-K bukan karena tidak tahu
+                konsepnya, melainkan karena
+                <strong>salah memahami apa yang sebenarnya ditanya</strong>.
+                Soal OSN-K, terutama Bagian A, sering ditulis dalam format
+                naratif yang panjang. Soal ini biasanya melibatkan tokoh
+                (biasanya Pak Dengklek dan bebek-bebeknya), kondisi awal yang
+                spesifik, dan pertanyaan yang tersembunyi di balik deskripsi
+                yang kaya.
+            </p>
+            <p>
+                Kemampuan membaca soal secara analitis adalah keahlian pertama
+                yang harus dibangun, dan ini bisa dilatih secara eksplisit.
+            </p>
+
+            <h3>2.2 — Struktur OSN-K Bidang Informatika</h3>
+            <p>
+                Sebelum bisa membaca soal dengan baik, kamu perlu tahu dulu apa
+                yang kamu hadapi. OSN-K Informatika terdiri dari:
+            </p>
+            <div class="tbl-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bagian</th>
+                            <th>Jumlah Soal</th>
+                            <th>Topik</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Bagian A</strong> — Berpikir
+                                Komputasional
+                            </td>
+                            <td>~20 soal</td>
+                            <td>
+                                Logika, simulasi, penghitungan, pola, struktur
+                                data dasar. Jawaban: satu angka, kata, atau
+                                pilihan.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Bagian B</strong> — Matematika Diskret
+                            </td>
+                            <td>~10 soal</td>
+                            <td>
+                                Kombinatorik, graf, teori bilangan dasar,
+                                peluang. Memerlukan penalaran lebih dalam.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Bagian C</strong> — Analisis Algoritma
+                                dan Kode
+                            </td>
+                            <td>~10 soal</td>
+                            <td>
+                                Membaca dan menganalisis pseudocode atau
+                                potongan kode.
+                                <em>Tidak perlu menulis kode.</em>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout callout-yellow">
+                <div class="callout-label" style="color: var(--yellow)">
+                    ⏱️ Durasi Total
+                </div>
+                40 soal dikerjakan dalam <strong>150 menit</strong>. Sesi 1 ini
+                berfokus pada Bagian A, khususnya soal-soal
+                <strong>simulasi</strong> — di mana kamu perlu menjalankan
+                sebuah proses langkah demi langkah untuk menemukan kondisi
+                akhirnya.
+            </div>
+
+            <h3>2.3 — Serangan Lima Langkah</h3>
+            <p>
+                Ini adalah rutinitas yang akan kamu gunakan di
+                <strong>setiap soal</strong> yang kamu hadapi, sepanjang kursus
+                ini dan di ujian OSN-K yang sebenarnya. Langkah-langkah ini
+                bukanlah urutan yang kaku, tetapi membantumu berpikir sebelum
+                "nyemplung" ke dalam perhitungan.
+            </p>
+
+            <!-- FLOWCHART for Lima Langkah -->
+            <div class="flowchart-wrap" id="flowchartLima"></div>
+
+            <div class="callout callout-yellow" style="margin-top: 16px">
+                <div class="callout-label" style="color: var(--yellow)">
+                    ⚠️ Penting
+                </div>
+                Kelima langkah ini tidak harus dilakukan secara linier —
+                terkadang kamu akan melakukan Langkah 3 (coba kasus kecil) untuk
+                membantu Langkah 1 (baca cermat). Yang penting adalah kamu
+                <strong>tidak melewati</strong> "baca cermat" dan "identifikasi
+                tipe" dengan terburu-buru.
+            </div>
+
+            <h3>2.4 — Teknik Melacak Status: Tabel Simulasi</h3>
+            <p>
+                Ketika sebuah soal meminta kamu untuk mensimulasikan sebuah
+                proses (misalnya: beberapa objek yang statusnya berubah setelah
+                suatu aksi), cara paling efektif adalah membuat
+                <strong>tabel status</strong>.
+            </p>
+            <div class="tbl-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Elemen Tabel</th>
+                            <th>Isi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Baris</strong></td>
+                            <td>
+                                Langkah atau aksi yang terjadi (satu per baris)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kolom</strong></td>
+                            <td>
+                                Setiap objek atau variabel yang statusnya
+                                berubah
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Isi sel</strong></td>
+                            <td>Status objek tersebut pada langkah tersebut</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>
+                Dengan tabel, kamu bisa menelusuri proses secara sistematis
+                tanpa harus mengingat semua status di kepala — dan kamu bisa
+                memeriksa kembali langkah mana yang salah jika hasil akhirnya
+                tidak sesuai.
+            </p>
+
+            <button
+                class="download-btn"
+                style="margin-top: 16px"
+                onclick="goPanel('p-contoh')"
+            >
+                Lanjut ke Contoh Soal →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 3 — CONTOH SOAL (I DO — INTERACTIVE)
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-contoh" class="panel">
+            <div class="section-badge">Contoh Soal · Demonstrasi</div>
+            <h2>Soal 4 OSN-K 2024 — "Bebek dan Lampu"</h2>
+
+            <div class="callout callout-accent">
+                <div class="callout-label" style="color: var(--accent)">
+                    📋 Teks Soal
+                </div>
+                Terdapat 8 buah lampu yang berjejer dari kiri ke kanan dan
+                dilabeli dengan huruf
+                <strong>A, B, C, D, E, F, G, dan H</strong>. Pada awalnya,
+                setiap lampu dalam kondisi <strong>mati</strong>.<br /><br />
+                Terdapat 10 bebek Pak Dengklek yang ingin bermain dengan
+                lampu-lampu tersebut. Masing-masing memiliki lampu favorit. Pak
+                Dengklek memilih <strong>9 dari 10</strong> bebeknya. Untuk
+                setiap bebek yang terpilih, satu per satu, ia akan mengganti
+                seluruh status lampu-lampu favoritnya: jika sebelumnya mati →
+                menyala; jika sebelumnya menyala → mati.<br /><br />
+                Jika kondisi akhirnya adalah
+                <strong>hanya lampu A dan G yang menyala</strong>, bebek nomor
+                berapakah yang <strong>tidak dipilih</strong> oleh Pak
+                Dengklek?<br /><br />
+                <em>Tuliskan jawaban dalam bentuk ANGKA.</em>
+            </div>
+
+            <h3>Tabel Lampu Favorit Setiap Bebek</h3>
+            <div class="tbl-wrap">
+                <table id="lampuTbl">
+                    <thead>
+                        <tr>
+                            <th>Bebek</th>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>C</th>
+                            <th>D</th>
+                            <th>E</th>
+                            <th>F</th>
+                            <th>G</th>
+                            <th>H</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lampuTblBody"></tbody>
+                </table>
+            </div>
+
+            <h3>Penerapan Serangan Lima Langkah</h3>
+            <p>Klik setiap langkah untuk melihat analisisnya.</p>
+            <div id="limaLangkahContoh"></div>
+
+            <h3 style="margin-top: 32px">
+                Penyelesaian Interaktif — Toggle Semua 10 Bebek
+            </h3>
+            <p>
+                Kita akan menghitung berapa kali setiap lampu di-toggle jika
+                <strong>semua 10 bebek</strong> dijalankan, lalu mencari siapa
+                yang harus dihilangkan.
+            </p>
+
+            <div class="explainer-card">
+                <div class="explainer-header">
+                    <span>🔢 Hitung Toggle Per Lampu (Semua 10 Bebek)</span>
+                    <button class="reset-btn" onclick="resetToggleSim()">
+                        ↺ Reset
+                    </button>
+                </div>
+                <div class="explainer-body">
+                    <p style="font-size: 14px; margin-bottom: 16px">
+                        Ungkap satu lampu sekaligus. Setiap kolom baru
+                        menunjukkan bebek mana yang menyukai lampu tersebut.
+                        Perhatikan jumlah toggle dan hasilnya di dua baris
+                        terakhir.
+                    </p>
+                    <div class="tbl-wrap">
+                        <table
+                            style="border-collapse: collapse; font-size: 13px"
+                            id="toggleTransposedTable"
+                        ></table>
+                    </div>
+                    <div class="ctrl-row" style="margin-top: 12px">
+                        <button
+                            class="reveal-btn"
+                            style="background: var(--accent); color: #fff"
+                            onclick="revealNextLamp()"
+                        >
+                            Ungkap Lampu Berikutnya ▶
+                        </button>
+                        <span class="step-counter" id="toggleCounter"
+                            >0 / 8 lampu</span
+                        >
+                    </div>
+                    <div
+                        id="toggleResult"
+                        style="display: none; margin-top: 16px"
+                    ></div>
+                </div>
+            </div>
+
+            <div class="explainer-card" style="margin-top: 24px">
+                <div class="explainer-header">
+                    <span>🎯 Cari Bebek yang Dihilangkan</span>
+                    <button class="reset-btn" onclick="resetBebekSim()">
+                        ↺ Reset
+                    </button>
+                </div>
+                <div class="explainer-body">
+                    <p style="font-size: 14px; margin-bottom: 4px">
+                        Hasil jika <strong>semua 10 bebek</strong> dijalankan:
+                        lampu <strong>B, D, E, H</strong> menyala. Target kita:
+                        hanya <strong>A dan G</strong> menyala.
+                    </p>
+                    <p style="font-size: 14px; margin-bottom: 16px">
+                        Pilih bebek yang dihilangkan. Tabel di bawah menunjukkan
+                        tiga baris lampu: kondisi semua-10, kondisi setelah
+                        bebek dipilih dihilangkan, dan kondisi target.
+                    </p>
+
+                    <!-- BEBEK SELECTOR -->
+                    <div
+                        style="
+                            display: flex;
+                            gap: 6px;
+                            flex-wrap: wrap;
+                            margin-bottom: 20px;
+                        "
+                        id="bebekBtnRow"
+                    ></div>
+
+                    <!-- ROW-OF-LIGHTS TABLE -->
+                    <div class="tbl-wrap">
+                        <table
+                            style="
+                                border-collapse: collapse;
+                                font-size: 13px;
+                                min-width: 500px;
+                            "
+                            id="bebekLightTable"
+                        >
+                            <thead>
+                                <tr id="bebekLightHeader"></tr>
+                            </thead>
+                            <tbody id="bebekLightBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="bebekVerdict" style="margin-top: 14px"></div>
+                </div>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 16px"
+                onclick="goPanel('p-latihan1')"
+            >
+                Lanjut ke Latihan Terpandu →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 4 — LATIHAN TERPANDU (WE DO — INTERACTIVE)
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-latihan1" class="panel">
+            <div class="section-badge green">
+                Latihan Terpandu · Think-Pair-Share
+            </div>
+            <h2>Soal Latihan 1 — Tiga Lampu (Toggle)</h2>
+
+            <div class="callout callout-accent">
+                <div class="callout-label" style="color: var(--accent)">
+                    📋 Soal
+                </div>
+                Ada 3 lampu (X, Y, Z) yang awalnya semuanya
+                <strong>mati</strong>. Ada 4 tombol:<br />
+                &nbsp;&nbsp;<strong>Tombol 1</strong>: men-toggle X dan Y<br />
+                &nbsp;&nbsp;<strong>Tombol 2</strong>: men-toggle Y dan Z<br />
+                &nbsp;&nbsp;<strong>Tombol 3</strong>: men-toggle X dan Z<br />
+                &nbsp;&nbsp;<strong>Tombol 4</strong>: men-toggle X, Y, dan Z<br /><br />
+                Jika tombol ditekan dalam urutan:
+                <strong>1, 2, 1, 3, 4, 2, 3</strong> — apa kondisi akhir setiap
+                lampu? Tuliskan <strong>H (hidup)</strong> atau
+                <strong>M (mati)</strong>.
+            </div>
+
+            <div class="callout callout-yellow" style="margin-top: 12px">
+                <div class="callout-label" style="color: var(--yellow)">
+                    💡 Petunjuk Think-Pair-Share
+                </div>
+                <strong>Think (3 menit):</strong> Kerjakan sendiri terlebih
+                dahulu.<br />
+                <strong>Pair (5 menit):</strong> Diskusikan dengan
+                pasanganmu.<br />
+                <strong>Share:</strong> Bandingkan jawaban dengan kelas.
+            </div>
+
+            <h3>Tabel Simulasi</h3>
+            <p style="font-size: 14px">
+                Isi tabel berikut baris per baris. Telusuri status setiap lampu
+                setelah setiap penekanan tombol.
+            </p>
+
+            <div class="tbl-wrap">
+                <table class="sim-table">
+                    <thead>
+                        <tr>
+                            <th
+                                style="
+                                    background: var(--muted);
+                                    text-align: left;
+                                    padding-left: 12px;
+                                "
+                            >
+                                Langkah / Tombol
+                            </th>
+                            <th style="background: var(--s1)">X</th>
+                            <th style="background: var(--s2)">Y</th>
+                            <th style="background: var(--s3)">Z</th>
+                        </tr>
+                    </thead>
+                    <tbody id="latTbl1Body">
+                        <tr>
+                            <td class="row-label">Awal</td>
+                            <td class="given">M</td>
+                            <td class="given">M</td>
+                            <td class="given">M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="answer-box">
+                <div class="answer-box-label">Jawaban Akhir</div>
+                <div class="final-answer-row">
+                    <label>X =</label
+                    ><input
+                        type="text"
+                        id="lat1-x"
+                        style="width: 80px"
+                        placeholder="H/M"
+                    />
+                    <label>Y =</label
+                    ><input
+                        type="text"
+                        id="lat1-y"
+                        style="width: 80px"
+                        placeholder="H/M"
+                    />
+                    <label>Z =</label
+                    ><input
+                        type="text"
+                        id="lat1-z"
+                        style="width: 80px"
+                        placeholder="H/M"
+                    />
+                </div>
+            </div>
+
+            <!-- INTERACTIVE SOLUTION EXPLAINER -->
+            <div class="explainer-card" style="margin-top: 24px">
+                <div class="explainer-header">
+                    <span>📖 Solusi Langkah demi Langkah</span>
+                    <button class="reset-btn" onclick="resetLat1Sim()">
+                        ↺ Reset
+                    </button>
+                </div>
+                <div class="explainer-body">
+                    <p style="font-size: 14px; margin-bottom: 8px">
+                        Kerjakan sendiri dulu sebelum melihat solusi. Klik
+                        <strong>Ungkap Langkah Berikutnya</strong> untuk
+                        menelusuri baris per baris.
+                    </p>
+                    <div class="lamp-row" id="lat1LampRow">
+                        <div class="lamp off" id="lat1-lX">X</div>
+                        <div class="lamp off" id="lat1-lY">Y</div>
+                        <div class="lamp off" id="lat1-lZ">Z</div>
+                    </div>
+                    <div
+                        id="lat1StepInfo"
+                        style="
+                            font-size: 13px;
+                            color: var(--muted);
+                            font-family: monospace;
+                            margin: 8px 0;
+                        "
+                    >
+                        Kondisi awal: X=M, Y=M, Z=M
+                    </div>
+                    <div class="ctrl-row">
+                        <button
+                            class="reveal-btn"
+                            style="background: var(--accent); color: #fff"
+                            onclick="revealLat1Step()"
+                        >
+                            Ungkap Langkah Berikutnya ▶
+                        </button>
+                        <span class="step-counter" id="lat1Counter"
+                            >Langkah 0 / 7</span
+                        >
+                    </div>
+                    <div
+                        id="lat1FinalNote"
+                        style="display: none; margin-top: 16px"
+                    ></div>
+                </div>
+            </div>
+
+            <!-- INVARIANT INSIGHT -->
+            <div class="explainer-card" style="margin-top: 20px">
+                <div class="explainer-header">
+                    <span
+                        >🔍 Cara Lebih Cepat: Mencari Invariant (Langkah
+                        4)</span
+                    >
+                </div>
+                <div class="explainer-body">
+                    <p style="font-size: 14px; margin-bottom: 12px">
+                        Tanpa mengisi tabel, kita bisa menjawab lebih cepat
+                        dengan menghitung berapa kali setiap lampu di-toggle:
+                    </p>
+                    <div id="invariantViz"></div>
+                    <div class="callout callout-green" style="margin-top: 14px">
+                        <div class="callout-label" style="color: var(--green)">
+                            ✅ Aturan Toggle
+                        </div>
+                        Jika sebuah lampu di-toggle <strong>ganjil</strong> kali
+                        → akhirnya <strong>Hidup (H)</strong><br />
+                        Jika di-toggle <strong>genap</strong> kali → akhirnya
+                        <strong>Mati (M)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 16px"
+                onclick="goPanel('p-bacaan2')"
+            >
+                Lanjut ke Bacaan Lanjutan →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 5 — BACAAN LANJUTAN
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-bacaan2" class="panel">
+            <div class="section-badge blue">Bacaan Lanjutan</div>
+            <h2>Kapan dan Bagaimana Menggunakan Tabel Simulasi</h2>
+
+            <h3>4.1 — Kapan Tabel Simulasi Diperlukan?</h3>
+            <p>
+                Tidak semua soal Bagian A memerlukan tabel simulasi. Gunakan
+                tabel ketika soal memiliki:
+            </p>
+            <ul>
+                <li>
+                    Beberapa objek yang statusnya berubah secara berurutan
+                    (seperti lampu yang di-toggle, kursi yang diduduki, item
+                    yang dipindah)
+                </li>
+                <li>
+                    Kondisi akhir yang harus dicapai, dan kita perlu menelusuri
+                    prosesnya untuk menemukan kondisi tersebut
+                </li>
+                <li>
+                    Banyak langkah atau urutan yang bisa menyebabkan kesalahan
+                    jika hanya dikerjakan di kepala
+                </li>
+            </ul>
+            <div class="callout callout-yellow">
+                <div class="callout-label" style="color: var(--yellow)">
+                    💡 Catatan
+                </div>
+                Untuk soal yang lebih sederhana (misalnya menghitung jumlah
+                objek, atau soal pilihan langsung), tabel tidak diperlukan dan
+                justru membuang waktu.
+            </div>
+
+            <h3>4.2 — Variasi Format Tabel</h3>
+            <p>
+                Tabel simulasi tidak harus selalu baris = langkah, kolom =
+                objek. Sesuaikan dengan soalnya:
+            </p>
+            <ul>
+                <li>
+                    Jika yang berubah adalah posisi satu objek, cukup satu kolom
+                    "posisi saat ini".
+                </li>
+                <li>
+                    Jika ada beberapa variabel yang saling mempengaruhi, buat
+                    kolom untuk setiap variabel.
+                </li>
+                <li>
+                    Jika prosesnya bercabang (kondisi IF-THEN), tandai di kolom
+                    "kondisi" sebelum menentukan apa yang berubah.
+                </li>
+            </ul>
+
+            <h3>
+                4.3 — Contoh Kedua: Soal 23–25 OSN-K 2024 — "Permainan Kursi di
+                Kelas"
+            </h3>
+            <div class="callout callout-accent">
+                <div class="callout-label" style="color: var(--accent)">
+                    📋 Soal
+                </div>
+                Terdapat 31 kursi dalam lingkaran, diberi nomor 1 hingga 31.
+                Siswa masuk satu per satu dan duduk di kursi sesuai tanggal
+                lahirnya. Jika kursi yang dituju sudah terisi, ia berjalan
+                searah jarum jam sampai menemukan kursi kosong.<br /><br />
+                Ada 6 siswa: Andi (kursi 11), Benny (kursi 12), Chacha (kursi
+                14), David (kursi 11), Ela (kursi 13), Fatima (kursi 12).<br />
+                Jika mereka masuk dalam urutan:
+                <strong>Andi, Benny, Chacha, David, Ela, Fatima</strong> — di
+                kursi nomor berapakah masing-masing duduk?
+            </div>
+
+            <div class="explainer-card" style="margin-top: 16px">
+                <div class="explainer-header">
+                    <span>📖 Simulasi Kursi — Baris per Baris</span>
+                    <button class="reset-btn" onclick="resetKursiSim()">
+                        ↺ Reset
+                    </button>
+                </div>
+                <div class="explainer-body">
+                    <p style="font-size: 14px; margin-bottom: 12px">
+                        Klik <strong>Ungkap Siswa Berikutnya</strong> untuk
+                        melihat proses duduk satu per satu.
+                    </p>
+                    <div class="tbl-wrap">
+                        <table class="sim-table" id="kursiTable">
+                            <thead>
+                                <tr>
+                                    <th
+                                        style="
+                                            background: var(--muted);
+                                            text-align: left;
+                                            padding: 9px 12px;
+                                        "
+                                    >
+                                        Siswa
+                                    </th>
+                                    <th style="background: var(--s2)">
+                                        Kursi Target
+                                    </th>
+                                    <th style="background: var(--s1)">
+                                        Kursi Aktual
+                                    </th>
+                                    <th
+                                        style="
+                                            background: var(--muted);
+                                            min-width: 150px;
+                                        "
+                                    >
+                                        Alasan
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="kursiBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="ctrl-row">
+                        <button
+                            class="reveal-btn"
+                            style="background: var(--accent); color: #fff"
+                            onclick="revealKursiStep()"
+                        >
+                            Ungkap Siswa Berikutnya ▶
+                        </button>
+                        <span class="step-counter" id="kursiCounter"
+                            >0 / 6 siswa</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 16px"
+                onclick="goPanel('p-latihan2')"
+            >
+                Lanjut ke Latihan Mandiri →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 6 — LATIHAN MANDIRI (YOU DO — BLANK FIELDS)
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-latihan2" class="panel">
+            <div class="section-badge purple">Latihan Mandiri</div>
+            <h2>Soal Latihan 2 — Antrian Bebek</h2>
+
+            <div class="callout callout-accent">
+                <div class="callout-label" style="color: var(--accent)">
+                    📋 Soal
+                </div>
+                Lima bebek (P, Q, R, S, T) mengantri dari depan ke belakang
+                dalam urutan itu. Mereka memainkan permainan berikut: setiap
+                ronde, bebek paling depan melempar koin.<br /><br />
+                &nbsp;&nbsp;Jika koin menunjukkan <strong>"kepala" (K)</strong>:
+                bebek paling depan pindah ke posisi
+                <strong>kedua dari belakang</strong>.<br />
+                &nbsp;&nbsp;Jika koin menunjukkan <strong>"ekor" (E)</strong>:
+                bebek paling depan pindah ke posisi
+                <strong>paling belakang</strong>.<br /><br />
+                Hasil lemparan koin 6 ronde pertama adalah:
+                <strong>K, E, K, K, E, K</strong><br /><br />
+                Setelah 6 ronde, siapakah yang berada di posisi paling depan?
+                <strong
+                    >Tuliskan urutan antrian lengkap dari depan ke belakang
+                    setelah 6 ronde.</strong
+                >
+            </div>
+
+            <div class="callout callout-yellow">
+                <div class="callout-label" style="color: var(--yellow)">
+                    💡 Petunjuk
+                </div>
+                Gambarlah tabel simulasi. Baris = setiap ronde. Kolom = posisi 1
+                (depan) sampai posisi 5 (belakang). Kerjakan secara mandiri.
+            </div>
+
+            <h3>Tabel Simulasimu</h3>
+            <div class="tbl-wrap">
+                <table class="sim-table">
+                    <thead>
+                        <tr>
+                            <th
+                                style="
+                                    background: var(--muted);
+                                    text-align: left;
+                                    padding-left: 12px;
+                                "
+                            >
+                                Ronde
+                            </th>
+                            <th style="background: var(--s1)">Pos 1 (depan)</th>
+                            <th style="background: var(--s2)">Pos 2</th>
+                            <th style="background: var(--s3)">Pos 3</th>
+                            <th style="background: var(--s4)">Pos 4</th>
+                            <th style="background: var(--s5)">
+                                Pos 5 (belakang)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="lat2TblBody">
+                        <tr>
+                            <td class="row-label">Awal</td>
+                            <td class="given">P</td>
+                            <td class="given">Q</td>
+                            <td class="given">R</td>
+                            <td class="given">S</td>
+                            <td class="given">T</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="answer-box">
+                <div class="answer-box-label">Jawaban Akhir</div>
+                <div style="font-size: 14px; margin-bottom: 10px">
+                    Urutan akhir (depan ke belakang):
+                </div>
+                <div class="final-answer-row">
+                    <label>Pos 1:</label
+                    ><input
+                        type="text"
+                        id="lat2-p1"
+                        style="width: 70px"
+                        placeholder="Bebek"
+                    />
+                    <label>Pos 2:</label
+                    ><input
+                        type="text"
+                        id="lat2-p2"
+                        style="width: 70px"
+                        placeholder="Bebek"
+                    />
+                    <label>Pos 3:</label
+                    ><input
+                        type="text"
+                        id="lat2-p3"
+                        style="width: 70px"
+                        placeholder="Bebek"
+                    />
+                    <label>Pos 4:</label
+                    ><input
+                        type="text"
+                        id="lat2-p4"
+                        style="width: 70px"
+                        placeholder="Bebek"
+                    />
+                    <label>Pos 5:</label
+                    ><input
+                        type="text"
+                        id="lat2-p5"
+                        style="width: 70px"
+                        placeholder="Bebek"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px">
+                <label class="form-label"
+                    >Catatan proses berpikirmu (opsional):</label
+                >
+                <span class="form-sub"
+                    >Tuliskan strategi atau langkah-langkah yang kamu
+                    gunakan.</span
+                >
+                <textarea
+                    id="lat2-notes"
+                    rows="4"
+                    placeholder="Misalnya: Saya membuat tabel dengan... Saya menemukan pola bahwa..."
+                ></textarea>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 8px"
+                onclick="goPanel('p-errorlog')"
+            >
+                Lanjut ke Error Log →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 7 — ERROR LOG
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-errorlog" class="panel">
+            <div class="section-badge">Error Log · AS-F2</div>
+            <h2>Error Log — Catatan Kesalahan Pribadi</h2>
+
+            <h3>Apa Itu Error Log?</h3>
+            <p>
+                Error Log adalah catatan kesalahan pribadimu. Setiap kali kamu
+                mengerjakan soal dan hasilnya salah (atau benar tapi kamu tidak
+                yakin), catat satu baris di Error Log.
+            </p>
+            <div class="callout callout-green">
+                <div class="callout-label" style="color: var(--green)">
+                    ✅ Mengapa Error Log Penting?
+                </div>
+                Error Log bukan hukuman. Ini adalah
+                <strong>alat diagnosis</strong>: semakin baik kamu memahami
+                MENGAPA kamu salah, semakin cepat kamu bisa memperbaikinya.
+                Tanpa Error Log, kamu akan terus membuat kesalahan yang sama
+                tanpa sadar.
+            </div>
+
+            <h3>Lima Tipe Kesalahan</h3>
+            <div class="tbl-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipe Kesalahan</th>
+                            <th>Contoh Konkret</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Salah baca soal</strong></td>
+                            <td>
+                                Mengira yang ditanya adalah jumlah lampu yang
+                                menyala, padahal yang ditanya adalah nomor bebek
+                                yang tidak dipilih.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Model keliru</strong></td>
+                            <td>Menganggap urutan bebek mempengaruhi hasil.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kesalahan aritmetika</strong></td>
+                            <td>
+                                Salah menghitung nilai toggle: lupa bahwa lampu
+                                yang sudah menyala kembali mati jika di-toggle
+                                lagi.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Analisis kasus tidak lengkap</strong>
+                            </td>
+                            <td>
+                                Hanya mencari lampu yang harus menyala, tidak
+                                mempertimbangkan bahwa soal meminta lampu
+                                lainnya harus mati.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kehabisan waktu</strong></td>
+                            <td>
+                                Menghabiskan 20 menit di satu soal tanpa membuat
+                                kemajuan nyata sebelum beralih.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Isi Error Log Sesimu</h3>
+            <div class="callout callout-yellow">
+                <div class="callout-label" style="color: var(--yellow)">
+                    ⏰ Penting
+                </div>
+                Isi Error Log ini <strong>sekarang</strong>, selagi ingatan
+                masih segar. Isi minimal <strong>1 baris</strong> berdasarkan
+                soal yang kamu kerjakan di sesi ini (Latihan 1 atau Latihan 2).
+                Jika tidak ada yang salah, tulis langkah mana yang paling sulit
+                atau memakan waktu paling lama.
+            </div>
+
+            <div style="margin-top: 16px" id="errorLogContainer">
+                <table
+                    class="error-log-table"
+                    id="errorLogTable"
+                    style="border-collapse: collapse; width: 100%"
+                >
+                    <thead>
+                        <tr>
+                            <td
+                                style="
+                                    padding: 6px 8px;
+                                    background: var(--accent);
+                                    color: #fff;
+                                    font-weight: 700;
+                                    font-size: 12px;
+                                    width: 30px;
+                                    text-align: center;
+                                "
+                            >
+                                #
+                            </td>
+                            <td
+                                style="
+                                    padding: 6px 8px;
+                                    background: var(--accent);
+                                    color: #fff;
+                                    font-weight: 700;
+                                    font-size: 12px;
+                                "
+                            >
+                                Sumber Soal
+                            </td>
+                            <td
+                                style="
+                                    padding: 6px 8px;
+                                    background: var(--accent);
+                                    color: #fff;
+                                    font-weight: 700;
+                                    font-size: 12px;
+                                "
+                            >
+                                Jawaban Saya
+                            </td>
+                            <td
+                                style="
+                                    padding: 6px 8px;
+                                    background: var(--accent);
+                                    color: #fff;
+                                    font-weight: 700;
+                                    font-size: 12px;
+                                "
+                            >
+                                Jawaban Benar
+                            </td>
+                            <td
+                                style="
+                                    padding: 6px 8px;
+                                    background: var(--accent);
+                                    color: #fff;
+                                    font-weight: 700;
+                                    font-size: 12px;
+                                "
+                            >
+                                Di Mana Gagal (spesifik)
+                            </td>
+                            <td
+                                style="
+                                    padding: 6px 8px;
+                                    background: var(--accent);
+                                    color: #fff;
+                                    font-weight: 700;
+                                    font-size: 12px;
+                                "
+                            >
+                                Tipe Kesalahan
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody id="errorLogBody"></tbody>
+                </table>
+                <button class="add-row-btn" onclick="addErrorRow()">
+                    + Tambah Baris
+                </button>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 20px"
+                onclick="goPanel('p-karcis')"
+            >
+                Lanjut ke Karcis Keluar →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 8 — KARCIS KELUAR
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-karcis" class="panel">
+            <div class="section-badge">Karcis Keluar · AS-F1</div>
+            <h2>Karcis Keluar — Sesi 1</h2>
+            <p>
+                Isi form ini sebelum sesi berakhir. Jawaban jujur sangat
+                membantu instruktur mempersiapkan sesi berikutnya.
+            </p>
+
+            <div class="exit-card">
+                <h3 style="margin-top: 0; color: var(--accent)">
+                    Pertanyaan 1 (Wajib)
+                </h3>
+                <p style="font-size: 15px; margin-bottom: 16px">
+                    <em
+                        >"Tuliskan satu langkah dari Serangan Lima Langkah yang
+                        paling sulit kamu terapkan tadi, dan kenapa langkah itu
+                        terasa sulit."</em
+                    >
+                </p>
+                <div class="form-group">
+                    <label class="form-label">Langkah yang paling sulit:</label>
+                    <div class="radio-group">
+                        <label class="radio-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-langkah"
+                                value="1"
+                            />
+                            Langkah 1 — Baca cermat</label
+                        >
+                        <label class="radio-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-langkah"
+                                value="2"
+                            />
+                            Langkah 2 — Identifikasi tipe</label
+                        >
+                        <label class="radio-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-langkah"
+                                value="3"
+                            />
+                            Langkah 3 — Coba kasus kecil</label
+                        >
+                        <label class="radio-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-langkah"
+                                value="4"
+                            />
+                            Langkah 4 — Cari invariant</label
+                        >
+                        <label class="radio-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-langkah"
+                                value="5"
+                            />
+                            Langkah 5 — Periksa kasus tepi</label
+                        >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"
+                        >Kenapa langkah itu terasa sulit?</label
+                    >
+                    <textarea
+                        id="karcis-alasan"
+                        rows="4"
+                        placeholder="Jelaskan dengan kata-katamu sendiri..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="exit-card" style="margin-top: 20px">
+                <h3 style="margin-top: 0; color: var(--accent)">
+                    Pertanyaan 2 (Opsional)
+                </h3>
+                <p style="font-size: 15px; margin-bottom: 16px">
+                    <em
+                        >"Seberapa jelas penjelasan tentang cara mengisi Error
+                        Log?"</em
+                    >
+                </p>
+                <div class="form-group">
+                    <label class="form-label"
+                        >Skala 1 (sangat tidak jelas) → 5 (sangat jelas):</label
+                    >
+                    <div class="rating-row">
+                        <label class="rating-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-errorlog"
+                                value="1"
+                            /><span>1</span></label
+                        >
+                        <label class="rating-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-errorlog"
+                                value="2"
+                            /><span>2</span></label
+                        >
+                        <label class="rating-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-errorlog"
+                                value="3"
+                            /><span>3</span></label
+                        >
+                        <label class="rating-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-errorlog"
+                                value="4"
+                            /><span>4</span></label
+                        >
+                        <label class="rating-opt"
+                            ><input
+                                type="radio"
+                                name="karcis-errorlog"
+                                value="5"
+                            /><span>5</span></label
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <button
+                class="download-btn"
+                style="margin-top: 16px"
+                onclick="goPanel('p-ringkasan')"
+            >
+                Lanjut ke Ringkasan →
+            </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+     PANEL 9 — RINGKASAN + DOWNLOAD
+     ═══════════════════════════════════════════════════════════ -->
+        <div id="p-ringkasan" class="panel">
+            <div class="section-badge green">Ringkasan</div>
+            <h2>Yang Dipelajari Hari Ini</h2>
+
+            <div class="callout callout-green">
+                <div class="callout-label" style="color: var(--green)">
+                    ✅ Tiga Kebiasaan Sesi 1
+                </div>
+                Ketiga kebiasaan berikut akan dijalankan di
+                <strong>setiap sesi berikutnya</strong> — bukan hanya hari ini.
+            </div>
+
+            <div class="flowchart-wrap" id="ringkasanFlow"></div>
+
+            <h3 style="margin-top: 32px">Preview Sesi 2</h3>
+            <div class="callout callout-blue">
+                <div class="callout-label" style="color: var(--blue)">
+                    🔮 Sesi Berikutnya — Graf
+                </div>
+                Sesi berikutnya akan memperkenalkan <strong>Graf</strong> — cara
+                merepresentasikan relasi dan koneksi antar objek. Graf adalah
+                salah satu struktur paling sering muncul di OSN-K dan akan kita
+                temui di hampir semua sesi berikutnya.<br /><br />
+                <strong>Sebelum Sesi 2:</strong> pastikan Error Log kamu sudah
+                diisi minimal 1 baris berdasarkan soal di sesi ini.
+            </div>
+
+            <!-- DOWNLOAD SECTION -->
+            <div class="download-section">
+                <h3>📥 Unduh Responsku</h3>
+                <p>
+                    Tombol ini akan mengunduh semua jawabanmu dari sesi ini
+                    (survei awal, latihan mandiri, error log, dan karcis keluar)
+                    dalam satu file terstruktur yang dapat dibaca oleh
+                    instruktur.
+                </p>
+                <button class="download-btn" onclick="downloadResponses()">
+                    ⬇ Unduh Respons Sesi 1
+                </button>
+                <div class="download-note">
+                    File akan diunduh sebagai .txt (Base64-encoded). Sampaikan
+                    ke instruktur untuk ditinjau.
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // ════════════════════════════════════════════════
+            // NAVIGATION
+            // ════════════════════════════════════════════════
+            const PANELS = [
+                "p-survey",
+                "p-bacaan",
+                "p-contoh",
+                "p-latihan1",
+                "p-bacaan2",
+                "p-latihan2",
+                "p-errorlog",
+                "p-karcis",
+                "p-ringkasan",
+            ];
+            function goPanel(id) {
+                document
+                    .querySelectorAll(".panel")
+                    .forEach((p) => p.classList.remove("active"));
+                document
+                    .querySelectorAll(".prog-btn")
+                    .forEach((b) => b.classList.remove("active"));
+                document.getElementById(id).classList.add("active");
+                const idx = PANELS.indexOf(id);
+                document
+                    .querySelectorAll(".prog-btn")
+                    [idx].classList.add("active");
+                window.scrollTo(0, 0);
+            }
+
+            // ════════════════════════════════════════════════
+            // SURVEI SELF-ASSESSMENT TABLE
+            // ════════════════════════════════════════════════
+            const TOPICS = [
+                {
+                    id: "A",
+                    label: "Logika Boolean (AND, OR, NOT, tabel kebenaran)",
+                },
+                {
+                    id: "B",
+                    label: "Simulasi proses bertahap (melacak status objek langkah demi langkah)",
+                },
+                {
+                    id: "C",
+                    label: "Graf: simpul, sisi, keterhubungan, komponen",
+                },
+                {
+                    id: "D",
+                    label: "Permutasi dan kombinasi (menghitung cara memilih atau menyusun)",
+                },
+                {
+                    id: "E",
+                    label: "Membaca dan mengikuti pseudocode atau kode sederhana",
+                },
+                {
+                    id: "F",
+                    label: "Penelusuran kode: memprediksi nilai variabel langkah demi langkah",
+                },
+                {
+                    id: "G",
+                    label: "Aritmetika modular (sisa bagi, siklus, KPK)",
+                },
+                {
+                    id: "H",
+                    label: "Strategi mengerjakan soal pilihan ganda di bawah tekanan waktu",
+                },
+            ];
+            (function buildSurveyTable() {
+                const tbody = document.getElementById("selfAssessBody");
+                TOPICS.forEach((t) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML =
+                        `<td style="font-weight:500">${t.id}. ${t.label}</td>` +
+                        [0, 1, 2, 3]
+                            .map(
+                                (v) =>
+                                    `<td><input type="radio" name="topic-${t.id}" value="${v}"></td>`,
+                            )
+                            .join("");
+                    tbody.appendChild(tr);
+                });
+            })();
+
+            // ════════════════════════════════════════════════
+            // BEBEK-LAMPU TABLE
+            // ════════════════════════════════════════════════
+            const BEBEK_DATA = [
+                [1, 0, 1, 1, 0, 1, 0, 1],
+                [0, 1, 1, 0, 1, 0, 1, 1],
+                [1, 0, 0, 1, 0, 1, 0, 1],
+                [0, 1, 1, 0, 0, 1, 1, 0],
+                [1, 0, 1, 0, 1, 1, 0, 0],
+                [0, 0, 1, 1, 0, 1, 1, 1],
+                [1, 1, 0, 1, 1, 0, 1, 1],
+                [1, 1, 0, 0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 1, 0, 0, 0],
+                [1, 0, 1, 0, 0, 1, 1, 0],
+            ];
+            const LAMPU_LABELS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+            (function buildBebekTable() {
+                const tbody = document.getElementById("lampuTblBody");
+                BEBEK_DATA.forEach((row, i) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML =
+                        `<td><strong>${i + 1}</strong></td>` +
+                        row.map((v) => `<td>${v ? "✓" : ""}</td>`).join("");
+                    tbody.appendChild(tr);
+                });
+            })();
+
+            // ════════════════════════════════════════════════
+            // FLOWCHART — LIMA LANGKAH
+            // ════════════════════════════════════════════════
+            const LIMA_LANGKAH = [
+                {
+                    num: 1,
+                    icon: "📖",
+                    title: "Baca Cermat",
+                    color: "var(--s1)",
+                    bg: "var(--s1-bg)",
+                    desc: "Baca soal dua kali. Garis bawahi: APA yang ditanya? APA kondisi awal? APA yang berubah? Jangan asumsi — baca kata per kata.",
+                },
+                {
+                    num: 2,
+                    icon: "🏷️",
+                    title: "Identifikasi Tipe",
+                    color: "var(--s2)",
+                    bg: "var(--s2-bg)",
+                    desc: "Soal ini bertipe apa? Simulasi? Graf? Kombinatorik? Penelusuran kode? Pengenalan tipe menentukan alat yang digunakan.",
+                },
+                {
+                    num: 3,
+                    icon: "🔬",
+                    title: "Coba Kasus Kecil",
+                    color: "var(--s3)",
+                    bg: "var(--s3-bg)",
+                    desc: "Sederhanakan: kurangi jumlah elemen, kurangi ukuran. Kerjakan dengan tangan. Tujuannya memahami pola, belum langsung menjawab.",
+                },
+                {
+                    num: 4,
+                    icon: "🔍",
+                    title: "Cari Invariant",
+                    color: "var(--s4)",
+                    bg: "var(--s4-bg)",
+                    desc: "Ada properti apa yang tidak berubah sepanjang proses? Ada simetri? Ada siklus? Invariant adalah kunci menjawab soal besar dengan efisien.",
+                },
+                {
+                    num: 5,
+                    icon: "⚠️",
+                    title: "Periksa Kasus Tepi",
+                    color: "var(--s5)",
+                    bg: "var(--s5-bg)",
+                    desc: "Apakah jawaban masih benar jika: nilai 0 atau 1? Nilai sangat besar? Semua elemen sama? Kondisi batas lainnya?",
+                },
+            ];
+            function buildFlowchart(containerId, steps) {
+                const wrap = document.getElementById(containerId);
+                steps.forEach((step, i) => {
+                    const card = document.createElement("div");
+                    card.className = "flow-step";
+                    card.style.border = `2px solid var(--border)`;
+                    card.innerHTML = `
+      <div class="flow-icon" style="background:${step.bg};border:2px solid ${step.color}">${step.icon}</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:${step.color};letter-spacing:1px;font-family:monospace">LANGKAH ${step.num}</div>
+        <div style="font-size:15px;font-weight:700;color:var(--ink)">${step.title}</div>
+      </div>
+      <div class="flow-chev">▼</div>`;
+                    const desc = document.createElement("div");
+                    desc.className = "flow-desc";
+                    desc.style.background = step.bg;
+                    desc.style.border = `1.5px solid ${step.color}40`;
+                    desc.textContent = step.desc;
+                    card.onclick = () => {
+                        const open = (card._open = !card._open);
+                        card.style.border = open
+                            ? `2px solid ${step.color}`
+                            : "2px solid var(--border)";
+                        card.style.background = open ? step.bg : "var(--card)";
+                        desc.style.display = open ? "block" : "none";
+                        card.querySelector(".flow-chev").style.opacity = open
+                            ? "1"
+                            : ".4";
+                        card.querySelector(".flow-chev").style.transform = open
+                            ? "rotate(180deg)"
+                            : "";
+                    };
+                    wrap.appendChild(card);
+                    wrap.appendChild(desc);
+                    if (i < steps.length - 1) {
+                        const conn = document.createElement("div");
+                        conn.className = "flow-connector";
+                        conn.innerHTML = `<div class="flow-line"></div><div class="flow-arrow">⇅</div><div class="flow-line"></div>`;
+                        wrap.appendChild(conn);
+                    }
+                });
+            }
+            buildFlowchart("flowchartLima", LIMA_LANGKAH);
+
+            // ════════════════════════════════════════════════
+            // LIMA LANGKAH CONTOH (SOAL OSN-K 2024)
+            // ════════════════════════════════════════════════
+            const LIMA_LANGKAH_CONTOH = [
+                {
+                    num: 1,
+                    icon: "📖",
+                    title: "Baca Cermat",
+                    color: "var(--s1)",
+                    bg: "var(--s1-bg)",
+                    desc: "Yang ditanya: nomor bebek yang tidak dipilih. Kondisi awal: semua lampu mati. Proses: 9 dari 10 bebek masing-masing men-toggle lampu favorit mereka. Kondisi akhir yang diinginkan: hanya A dan G menyala.",
+                },
+                {
+                    num: 2,
+                    icon: "🏷️",
+                    title: "Identifikasi Tipe",
+                    color: "var(--s2)",
+                    bg: "var(--s2-bg)",
+                    desc: "Soal simulasi dengan operasi toggle (XOR). Ada juga elemen pencarian — kita harus menemukan satu bebek yang dihilangkan. Pendekatan: eliminasi, atau temukan invariant yang lebih cerdas.",
+                },
+                {
+                    num: 3,
+                    icon: "🔬",
+                    title: "Coba Kasus Kecil",
+                    color: "var(--s3)",
+                    bg: "var(--s3-bg)",
+                    desc: 'Misalkan hanya 3 bebek dan 3 lampu. Bebek 1: [A,B], Bebek 2: [B,C], Bebek 3: [A,C]. Jika Bebek 2 dihilangkan, Bebek 1+3 menghasilkan: A→2x (mati), B→1x (hidup), C→1x (hidup). Lalu "bertanya balik": kalau target adalah [A,C], bebek mana yang harus dihilangkan?',
+                },
+                {
+                    num: 4,
+                    icon: "🔍",
+                    title: "Cari Invariant",
+                    color: "var(--s4)",
+                    bg: "var(--s4-bg)",
+                    desc: 'Kunci penting: status akhir setiap lampu hanya bergantung pada apakah ia di-toggle genap atau ganjil kali. Menghilangkan bebek X berarti toggle lampu-lampu favorit X "dibatalkan" dari hasil semua 10 bebek.',
+                },
+                {
+                    num: 5,
+                    icon: "⚠️",
+                    title: "Periksa Kasus Tepi",
+                    color: "var(--s5)",
+                    bg: "var(--s5-bg)",
+                    desc: "Urutan 9 bebek yang dipilih TIDAK mempengaruhi kondisi akhir — karena toggle adalah operasi komutatif (XOR). Kita tidak perlu mencoba semua urutan — ini sangat mempercepat pencarian!",
+                },
+            ];
+            buildFlowchart("limaLangkahContoh", LIMA_LANGKAH_CONTOH);
+
+            // ════════════════════════════════════════════════
+            // TOGGLE SIMULATOR (PANEL 3) — reveal sum rows column by column
+            // ════════════════════════════════════════════════
+            let toggleStep = 0;
+
+            const TOGGLE_COUNTS = LAMPU_LABELS.map((_, li) =>
+                BEBEK_DATA.reduce((sum, row) => sum + row[li], 0),
+            );
+            const ALL10_STATE = TOGGLE_COUNTS.map((c) => c % 2 === 1);
+
+            const CELL_BASE = `text-align:center;padding:5px 10px;border:1px solid var(--border);font-family:monospace;`;
+            const CELL_ROW_LABEL = `padding:5px 10px;border:1px solid var(--border);font-size:13px;font-weight:700;white-space:nowrap;background:var(--card);`;
+
+            function initToggleTable() {
+                const tbl = document.getElementById("toggleTransposedTable");
+                tbl.innerHTML = "";
+
+                // thead
+                const thead = document.createElement("thead");
+                const hdrRow = document.createElement("tr");
+                hdrRow.innerHTML =
+                    `<th style="${CELL_ROW_LABEL}background:var(--accent);color:#fff;">Bebek</th>` +
+                    LAMPU_LABELS.map(
+                        (l) =>
+                            `<th style="background:var(--accent);color:#fff;padding:5px 12px;border:1px solid var(--border);font-family:monospace;">${l}</th>`,
+                    ).join("");
+                thead.appendChild(hdrRow);
+                tbl.appendChild(thead);
+
+                // tbody
+                const tbody = document.createElement("tbody");
+
+                // Bebek rows — all fully visible
+                BEBEK_DATA.forEach((row, b) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML =
+                        `<td style="${CELL_ROW_LABEL}">${b + 1}</td>` +
+                        row
+                            .map(
+                                (v) =>
+                                    `<td style="${CELL_BASE}${v ? "background:#fff8f0;color:var(--accent);font-weight:700;" : "background:#fafafa;color:var(--muted);"}">${v ? "✓" : ""}</td>`,
+                            )
+                            .join("");
+                    tbody.appendChild(tr);
+                });
+
+                // Jumlah row — cells start hidden
+                const trJml = document.createElement("tr");
+                trJml.innerHTML =
+                    `<td style="${CELL_ROW_LABEL}color:var(--blue);border-top:2px solid var(--blue);">Jumlah toggle</td>` +
+                    TOGGLE_COUNTS.map(
+                        (c, li) =>
+                            `<td id="tcell-jml-${li}" style="${CELL_BASE}background:var(--blue-light);color:var(--blue);font-weight:700;border-top:2px solid var(--blue);visibility:hidden;">${c}</td>`,
+                    ).join("");
+                tbody.appendChild(trJml);
+
+                // Hasil row — cells start hidden
+                const trHasil = document.createElement("tr");
+                trHasil.innerHTML =
+                    `<td style="${CELL_ROW_LABEL}color:var(--yellow);border-top:2px solid var(--yellow);">Hasil</td>` +
+                    ALL10_STATE.map(
+                        (on, li) =>
+                            `<td id="tcell-hasil-${li}" style="${CELL_BASE}background:${on ? "#FFE566" : "var(--blue-light)"};color:${on ? "#7a5a00" : "var(--blue)"};font-weight:700;border-top:2px solid var(--yellow);visibility:hidden;">${on ? "Ganjil ☀️" : "Genap 🌑"}</td>`,
+                    ).join("");
+                tbody.appendChild(trHasil);
+
+                tbl.appendChild(tbody);
+            }
+            initToggleTable();
+
+            function revealNextLamp() {
+                if (toggleStep >= 8) return;
+                document.getElementById(
+                    `tcell-jml-${toggleStep}`,
+                ).style.visibility = "visible";
+                document.getElementById(
+                    `tcell-hasil-${toggleStep}`,
+                ).style.visibility = "visible";
+                toggleStep++;
+                document.getElementById("toggleCounter").textContent =
+                    `${toggleStep} / 8 lampu`;
+                if (toggleStep === 8) {
+                    const on = LAMPU_LABELS.filter((_, i) => ALL10_STATE[i]);
+                    document.getElementById("toggleResult").style.display =
+                        "block";
+                    document.getElementById("toggleResult").innerHTML = `
+      <div class="callout callout-yellow">
+        <div class="callout-label" style="color:var(--yellow)">📊 Hasil Jika Semua 10 Bebek Dijalankan</div>
+        Lampu yang menyala (toggle ganjil): <strong>${on.join(", ")}</strong> — tapi target kita adalah <strong>A dan G saja</strong>.<br>
+        Lanjut ke simulator berikutnya untuk mencari bebek yang harus dihilangkan!
+      </div>`;
+                }
+            }
+
+            function resetToggleSim() {
+                toggleStep = 0;
+                document.getElementById("toggleCounter").textContent =
+                    "0 / 8 lampu";
+                document.getElementById("toggleResult").style.display = "none";
+                initToggleTable();
+            }
+
+            // ════════════════════════════════════════════════
+            // BEBEK SEARCH SIM (PANEL 3) — rows of light states
+            // ════════════════════════════════════════════════
+            const TARGET_STATE = [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+            ];
+
+            function lampCell(on, toggled, matchesTarget) {
+                const bg = on ? "#FFE566" : "#e8e8e8";
+                const col = on ? "#7a5a00" : "#888";
+                const ring = toggled
+                    ? `outline:2px solid var(--accent);outline-offset:1px;`
+                    : "";
+                const icon = on ? "☀️" : "🌑";
+                return `<td style="padding:6px 8px;border:1px solid var(--border);text-align:center;">
+    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:2px;">
+      <div style="width:36px;height:36px;border-radius:50%;background:${bg};color:${col};
+        display:flex;align-items:center;justify-content:center;font-size:14px;
+        font-weight:700;font-family:monospace;${ring}">${icon}</div>
+      ${toggled ? `<div style="font-size:9px;font-family:monospace;color:var(--accent);letter-spacing:.5px;">toggle</div>` : ""}
+      ${
+          matchesTarget !== null
+              ? `<div style="font-size:10px;font-weight:700;color:${matchesTarget ? "var(--green)" : "var(--accent)"}">${matchesTarget ? "✓" : "✗"}</div>`
+              : ""
+      }
+    </div>
+  </td>`;
+            }
+
+            function initBebekLightTable() {
+                // Header row: row-label col + one col per lamp
+                const hdr = document.getElementById("bebekLightHeader");
+                hdr.innerHTML =
+                    `<th style="background:var(--muted);color:#fff;padding:6px 12px;text-align:left;border:1px solid var(--border);font-size:12px;white-space:nowrap;min-width:140px;">Kondisi</th>` +
+                    LAMPU_LABELS.map(
+                        (l) =>
+                            `<th style="background:var(--muted);color:#fff;padding:6px 10px;border:1px solid var(--border);font-family:monospace;">${l}</th>`,
+                    ).join("");
+
+                // Row 1: semua 10 bebek (always visible)
+                const tbody = document.getElementById("bebekLightBody");
+                tbody.innerHTML = "";
+
+                const trAll = document.createElement("tr");
+                trAll.innerHTML =
+                    `<td style="padding:6px 10px;border:1px solid var(--border);font-size:12px;font-weight:700;background:var(--card);">Semua 10 bebek</td>` +
+                    ALL10_STATE.map((on) => lampCell(on, false, null)).join("");
+                tbody.appendChild(trAll);
+
+                // Row 2: placeholder for selected bebek (hidden until chosen)
+                const trSel = document.createElement("tr");
+                trSel.id = "bebekSelRow";
+                trSel.style.display = "none";
+                tbody.appendChild(trSel);
+
+                // Row 3: target (always visible)
+                const trTarget = document.createElement("tr");
+                trTarget.innerHTML =
+                    `<td style="padding:6px 10px;border:1px solid var(--border);font-size:12px;font-weight:700;background:var(--green-light);color:var(--green);">🎯 Target</td>` +
+                    TARGET_STATE.map((on) => lampCell(on, false, null)).join(
+                        "",
+                    );
+                tbody.appendChild(trTarget);
+            }
+
+            function buildBebekBtns() {
+                const row = document.getElementById("bebekBtnRow");
+                for (let b = 1; b <= 10; b++) {
+                    const btn = document.createElement("button");
+                    btn.id = "bbtn-" + b;
+                    btn.style.cssText = `padding:8px 18px;border:2px solid var(--border);border-radius:8px;
+      background:var(--card);cursor:pointer;font-family:Georgia,serif;font-size:14px;
+      font-weight:700;transition:all .2s;color:var(--ink);`;
+                    btn.textContent = "Bebek " + b;
+                    btn.onclick = () => showBebekDiff(b);
+                    row.appendChild(btn);
+                }
+            }
+
+            function showBebekDiff(b) {
+                // Reset buttons
+                for (let i = 1; i <= 10; i++) {
+                    const btn = document.getElementById("bbtn-" + i);
+                    btn.style.background = "var(--card)";
+                    btn.style.borderColor = "var(--border)";
+                    btn.style.color = "var(--ink)";
+                }
+
+                const bebekRow = BEBEK_DATA[b - 1];
+                const newState = ALL10_STATE.map((s, i) =>
+                    bebekRow[i] ? !s : s,
+                );
+                const isCorrect = newState.every(
+                    (s, i) => s === TARGET_STATE[i],
+                );
+
+                // Highlight button
+                const selBtn = document.getElementById("bbtn-" + b);
+                selBtn.style.background = isCorrect
+                    ? "var(--green)"
+                    : "var(--accent-light)";
+                selBtn.style.borderColor = isCorrect
+                    ? "var(--green)"
+                    : "var(--accent)";
+                selBtn.style.color = isCorrect ? "#fff" : "var(--accent)";
+
+                // Build "jika bebek b dihilangkan" row — middle row between all-10 and target
+                const trSel = document.getElementById("bebekSelRow");
+                trSel.style.display = "";
+                trSel.innerHTML =
+                    `<td style="padding:6px 10px;border:1px solid var(--border);font-size:12px;font-weight:700;
+      background:${isCorrect ? "var(--green-light)" : "var(--accent-light)"};
+      color:${isCorrect ? "var(--green)" : "var(--accent)"};">
+      Jika bebek ${b} dihilangkan</td>` +
+                    newState
+                        .map((on, li) => {
+                            const toggled = bebekRow[li] === 1;
+                            const matchesTarget = on === TARGET_STATE[li];
+                            return lampCell(on, toggled, matchesTarget);
+                        })
+                        .join("");
+
+                // Verdict
+                document.getElementById("bebekVerdict").innerHTML = isCorrect
+                    ? `<div class="callout callout-green">
+        <div class="callout-label" style="color:var(--green)">✅ Bebek ${b} adalah jawabannya!</div>
+        Favorit Bebek ${b}: lampu <strong>${LAMPU_LABELS.filter((_, i) => bebekRow[i]).join(", ")}</strong>.
+        Menghilangkan bebek ini membalik tepat lampu-lampu yang perlu berubah — semua ✓ sesuai target.
+      </div>`
+                    : `<div class="callout callout-accent">
+        <div class="callout-label" style="color:var(--accent)">✗ Bukan Bebek ${b}</div>
+        Lampu bertanda ✗ belum sesuai target. Coba bebek lain!
+      </div>`;
+            }
+
+            function resetBebekSim() {
+                for (let i = 1; i <= 10; i++) {
+                    const btn = document.getElementById("bbtn-" + i);
+                    btn.style.background = "var(--card)";
+                    btn.style.borderColor = "var(--border)";
+                    btn.style.color = "var(--ink)";
+                }
+                initBebekLightTable();
+                document.getElementById("bebekVerdict").innerHTML = "";
+            }
+
+            buildBebekBtns();
+            initBebekLightTable();
+
+            // ════════════════════════════════════════════════
+            // LATIHAN 1 — STEP REVEAL (PANEL 4)
+            // ════════════════════════════════════════════════
+            // Table rows
+            const LAT1_ROWS = [
+                {
+                    label: "Tombol 1 (toggle X, Y)",
+                    toggles: [true, true, false],
+                },
+                {
+                    label: "Tombol 2 (toggle Y, Z)",
+                    toggles: [false, true, true],
+                },
+                {
+                    label: "Tombol 1 (toggle X, Y)",
+                    toggles: [true, true, false],
+                },
+                {
+                    label: "Tombol 3 (toggle X, Z)",
+                    toggles: [true, false, true],
+                },
+                {
+                    label: "Tombol 4 (toggle X, Y, Z)",
+                    toggles: [true, true, true],
+                },
+                {
+                    label: "Tombol 2 (toggle Y, Z)",
+                    toggles: [false, true, true],
+                },
+                {
+                    label: "Tombol 3 (toggle X, Z)",
+                    toggles: [true, false, true],
+                },
+            ];
+            (function buildLat1Table() {
+                const tbody = document.getElementById("latTbl1Body");
+                LAT1_ROWS.forEach((r, i) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML =
+                        `<td class="row-label">${r.label}</td>` +
+                        [
+                            "lat1-inp-X-" + i,
+                            "lat1-inp-Y-" + i,
+                            "lat1-inp-Z-" + i,
+                        ]
+                            .map(
+                                (id, ci) =>
+                                    `<td><input class="cell-input" id="${id}" placeholder="?" style="width:60px;"/></td>`,
+                            )
+                            .join("");
+                    tbody.appendChild(tr);
+                });
+            })();
+
+            let lat1Step = 0;
+            let lat1State = [false, false, false]; // X, Y, Z
+            const LAT1_LAMPS = ["lat1-lX", "lat1-lY", "lat1-lZ"];
+            const LAT1_LABELS = ["X", "Y", "Z"];
+
+            function updateLat1Lamps() {
+                lat1State.forEach((s, i) => {
+                    const el = document.getElementById(LAT1_LAMPS[i]);
+                    el.className = "lamp " + (s ? "on" : "off");
+                    el.textContent = LAT1_LABELS[i];
+                });
+            }
+
+            function revealLat1Step() {
+                if (lat1Step >= LAT1_ROWS.length) return;
+                const row = LAT1_ROWS[lat1Step];
+                // toggle
+                row.toggles.forEach((t, i) => {
+                    if (t) lat1State[i] = !lat1State[i];
+                });
+                updateLat1Lamps();
+                // fill table cells
+                ["X", "Y", "Z"].forEach((l, i) => {
+                    const cell = document.getElementById(
+                        `lat1-inp-${l}-${lat1Step}`,
+                    );
+                    if (cell) {
+                        cell.value = lat1State[i] ? "H" : "M";
+                        cell.style.background = lat1State[i]
+                            ? "#FFE566"
+                            : "#f0f0f0";
+                        cell.style.color = lat1State[i] ? "#7a5a00" : "#555";
+                        cell.readOnly = true;
+                    }
+                });
+                document.getElementById("lat1StepInfo").textContent =
+                    `Setelah ${row.label}: X=${lat1State[0] ? "H" : "M"}, Y=${lat1State[1] ? "H" : "M"}, Z=${lat1State[2] ? "H" : "M"}`;
+                lat1Step++;
+                document.getElementById("lat1Counter").textContent =
+                    `Langkah ${lat1Step} / ${LAT1_ROWS.length}`;
+                if (lat1Step === LAT1_ROWS.length) {
+                    document.getElementById("lat1FinalNote").style.display =
+                        "block";
+                    document.getElementById("lat1FinalNote").innerHTML = `
+      <div class="callout callout-green">
+        <div class="callout-label" style="color:var(--green)">✅ Jawaban: X=H, Y=H, Z=H</div>
+        Ketiga lampu menyala! Setiap lampu di-toggle 5 kali → ganjil → Hidup.
+      </div>`;
+                }
+            }
+
+            function resetLat1Sim() {
+                lat1Step = 0;
+                lat1State = [false, false, false];
+                updateLat1Lamps();
+                document.getElementById("lat1StepInfo").textContent =
+                    "Kondisi awal: X=M, Y=M, Z=M";
+                document.getElementById("lat1Counter").textContent =
+                    "Langkah 0 / 7";
+                document.getElementById("lat1FinalNote").style.display = "none";
+                ["X", "Y", "Z"].forEach((l) => {
+                    LAT1_ROWS.forEach((_, i) => {
+                        const cell = document.getElementById(
+                            `lat1-inp-${l}-${i}`,
+                        );
+                        if (cell) {
+                            cell.value = "";
+                            cell.style.background = "#fff";
+                            cell.style.color = "var(--ink)";
+                            cell.readOnly = false;
+                        }
+                    });
+                });
+            }
+
+            // Invariant viz
+            (function buildInvariantViz() {
+                const toggleMap = { X: 0, Y: 0, Z: 0 };
+                LAT1_ROWS.forEach((r) => {
+                    if (r.toggles[0]) toggleMap.X++;
+                    if (r.toggles[1]) toggleMap.Y++;
+                    if (r.toggles[2]) toggleMap.Z++;
+                });
+                const container = document.getElementById("invariantViz");
+                const html = Object.entries(toggleMap)
+                    .map(
+                        ([lamp, count]) => `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+      <div class="lamp ${count % 2 === 1 ? "on" : "off"}" style="width:44px;height:44px;">${lamp}</div>
+      <div style="font-size:14px;">Di-toggle <strong>${count}×</strong> → ${count % 2 === 1 ? '<strong style="color:var(--green)">Ganjil → HIDUP ✓</strong>' : '<strong style="color:var(--accent)">Genap → MATI</strong>'}</div>
+      <div style="font-size:12px;color:var(--muted);font-family:monospace;">[${LAT1_ROWS.map(
+          (r, i) =>
+              r.toggles[["X", "Y", "Z"].indexOf(lamp)] ? "T" + (i + 1) : null,
+      )
+          .filter(Boolean)
+          .join(", ")}]</div>
+    </div>`,
+                    )
+                    .join("");
+                container.innerHTML = html;
+            })();
+
+            // ════════════════════════════════════════════════
+            // KURSI SIMULATOR (PANEL 5)
+            // ════════════════════════════════════════════════
+            const KURSI_DATA = [
+                {
+                    nama: "Andi",
+                    target: 11,
+                    actual: 11,
+                    alasan: "Kosong → langsung duduk",
+                },
+                {
+                    nama: "Benny",
+                    target: 12,
+                    actual: 12,
+                    alasan: "Kosong → langsung duduk",
+                },
+                {
+                    nama: "Chacha",
+                    target: 14,
+                    actual: 14,
+                    alasan: "Kosong → langsung duduk",
+                },
+                {
+                    nama: "David",
+                    target: 11,
+                    actual: 13,
+                    alasan: "11 terisi (Andi) → 12 terisi (Benny) → 13 kosong",
+                },
+                {
+                    nama: "Ela",
+                    target: 13,
+                    actual: 15,
+                    alasan: "13 terisi (David) → 14 terisi (Chacha) → 15 kosong",
+                },
+                {
+                    nama: "Fatima",
+                    target: 12,
+                    actual: 16,
+                    alasan: "12→13→14→15 semua terisi → 16 kosong",
+                },
+            ];
+            let kursiStep = 0;
+            function revealKursiStep() {
+                if (kursiStep >= KURSI_DATA.length) return;
+                const d = KURSI_DATA[kursiStep];
+                const tbody = document.getElementById("kursiBody");
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td style="font-weight:700">${d.nama}</td>
+    <td style="text-align:center;font-family:monospace;font-weight:700;color:var(--blue)">${d.target}</td>
+    <td style="text-align:center;font-family:monospace;font-weight:700;color:${d.target === d.actual ? "var(--green)" : "var(--accent)"}">${d.actual}</td>
+    <td style="font-size:13px;color:var(--muted)">${d.alasan}</td>`;
+                tbody.appendChild(tr);
+                kursiStep++;
+                document.getElementById("kursiCounter").textContent =
+                    `${kursiStep} / 6 siswa`;
+            }
+            function resetKursiSim() {
+                kursiStep = 0;
+                document.getElementById("kursiBody").innerHTML = "";
+                document.getElementById("kursiCounter").textContent =
+                    "0 / 6 siswa";
+            }
+
+            // ════════════════════════════════════════════════
+            // LATIHAN 2 TABLE (PANEL 6)
+            // ════════════════════════════════════════════════
+            (function buildLat2Table() {
+                const tbody = document.getElementById("lat2TblBody");
+                const rondes = [
+                    { label: "Ronde 1 (K — Kepala)" },
+                    { label: "Ronde 2 (E — Ekor)" },
+                    { label: "Ronde 3 (K — Kepala)" },
+                    { label: "Ronde 4 (K — Kepala)" },
+                    { label: "Ronde 5 (E — Ekor)" },
+                    { label: "Ronde 6 (K — Kepala)" },
+                ];
+                rondes.forEach((r, i) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML =
+                        `<td class="row-label">${r.label}</td>` +
+                        [0, 1, 2, 3, 4]
+                            .map(
+                                (j) =>
+                                    `<td><input class="cell-input" id="lat2-r${i}-p${j}" placeholder="?" style="width:65px;"/></td>`,
+                            )
+                            .join("");
+                    tbody.appendChild(tr);
+                });
+            })();
+
+            // ════════════════════════════════════════════════
+            // ERROR LOG
+            // ════════════════════════════════════════════════
+            let errorRowCount = 0;
+            function addErrorRow() {
+                errorRowCount++;
+                const tbody = document.getElementById("errorLogBody");
+                const tr = document.createElement("tr");
+                tr.id = "erow-" + errorRowCount;
+                tr.innerHTML = `
+    <td style="text-align:center;color:var(--muted);font-size:13px;border:1px solid var(--border)">${errorRowCount}</td>
+    <td style="border:1px solid var(--border)"><input type="text" id="el-src-${errorRowCount}" placeholder="OSN-K 2024 Soal 4" style="width:100%;border:none;padding:4px;font-size:13px;"/></td>
+    <td style="border:1px solid var(--border)"><input type="text" id="el-mine-${errorRowCount}" placeholder="Jawaban saya" style="width:100%;border:none;padding:4px;font-size:13px;"/></td>
+    <td style="border:1px solid var(--border)"><input type="text" id="el-correct-${errorRowCount}" placeholder="Jawaban benar" style="width:100%;border:none;padding:4px;font-size:13px;"/></td>
+    <td style="border:1px solid var(--border)"><input type="text" id="el-where-${errorRowCount}" placeholder="Di mana gagal secara spesifik..." style="width:100%;border:none;padding:4px;font-size:13px;"/></td>
+    <td style="border:1px solid var(--border)"><select id="el-type-${errorRowCount}" style="width:100%;border:none;padding:4px;font-size:13px;font-family:Georgia,serif;">
+      <option value="">— Pilih tipe —</option>
+      <option>Salah baca soal</option>
+      <option>Model keliru</option>
+      <option>Kesalahan aritmetika</option>
+      <option>Analisis kasus tidak lengkap</option>
+      <option>Kehabisan waktu</option>
+    </select></td>`;
+                tbody.appendChild(tr);
+            }
+            addErrorRow(); // Start with one row
+
+            // ════════════════════════════════════════════════
+            // RINGKASAN FLOWCHART
+            // ════════════════════════════════════════════════
+            const RINGKASAN_STEPS = [
+                {
+                    num: 1,
+                    icon: "⚔️",
+                    title: "Serangan Lima Langkah",
+                    color: "var(--s1)",
+                    bg: "var(--s1-bg)",
+                    desc: "Rutinitas wajib untuk setiap soal: Baca Cermat → Identifikasi Tipe → Coba Kasus Kecil → Cari Invariant → Periksa Kasus Tepi.",
+                },
+                {
+                    num: 2,
+                    icon: "📊",
+                    title: "Tabel Simulasi",
+                    color: "var(--s2)",
+                    bg: "var(--s2-bg)",
+                    desc: "Cara melacak status banyak objek yang berubah secara berurutan. Baris = langkah, Kolom = objek, Isi = status.",
+                },
+                {
+                    num: 3,
+                    icon: "📝",
+                    title: "Error Log",
+                    color: "var(--s3)",
+                    bg: "var(--s3-bg)",
+                    desc: "Alat refleksi pasca-pengerjaan. Isi segera setelah selesai. Lima tipe: Salah baca soal / Model keliru / Kesalahan aritmetika / Analisis tidak lengkap / Kehabisan waktu.",
+                },
+            ];
+            buildFlowchart("ringkasanFlow", RINGKASAN_STEPS);
+
+            // ════════════════════════════════════════════════
+            // COLLECT & DOWNLOAD RESPONSES
+            // ════════════════════════════════════════════════
+            function collectResponses() {
+                const data = {};
+
+                // Identity
+                data.nama = document.getElementById("s-nama").value;
+                data.email = document.getElementById("s-email").value;
+                data.sesi = "Sesi 1";
+                data.timestamp = new Date().toISOString();
+
+                // Self-assessment
+                data.self_assessment = {};
+                TOPICS.forEach((t) => {
+                    const sel = document.querySelector(
+                        `input[name="topic-${t.id}"]:checked`,
+                    );
+                    data.self_assessment[t.id] = sel ? sel.value : null;
+                });
+
+                // Open questions
+                data.soal_terbuka_1 = {
+                    jawaban: document.getElementById("s-open1-ans").value,
+                    proses: document.getElementById("s-open1-process").value,
+                };
+                data.soal_terbuka_2 = {
+                    jawaban: document.getElementById("s-open2-ans").value,
+                    proses: document.getElementById("s-open2-process").value,
+                };
+
+                // Strategy questions
+                const checked = Array.from(
+                    document.querySelectorAll("#strat-check input:checked"),
+                ).map((x) => x.value);
+                data.strategi = {
+                    pilihan: checked,
+                    lainnya: document.getElementById("strat-other").value,
+                };
+                const bagianLemah = document.querySelector(
+                    'input[name="bagian-lemah"]:checked',
+                );
+                data.bagian_lemah = bagianLemah ? bagianLemah.value : null;
+                data.harapan = document.getElementById("s-harapan").value;
+
+                // Latihan 1
+                data.latihan_1 = {
+                    jawaban_x: document.getElementById("lat1-x").value,
+                    jawaban_y: document.getElementById("lat1-y").value,
+                    jawaban_z: document.getElementById("lat1-z").value,
+                };
+
+                // Latihan 2 (table cells)
+                const lat2Table = {};
+                for (let i = 0; i < 6; i++) {
+                    lat2Table["ronde_" + (i + 1)] = [0, 1, 2, 3, 4].map((j) => {
+                        const el = document.getElementById(`lat2-r${i}-p${j}`);
+                        return el ? el.value : "";
+                    });
+                }
+                data.latihan_2 = {
+                    tabel: lat2Table,
+                    jawaban_akhir: {
+                        pos1: document.getElementById("lat2-p1").value,
+                        pos2: document.getElementById("lat2-p2").value,
+                        pos3: document.getElementById("lat2-p3").value,
+                        pos4: document.getElementById("lat2-p4").value,
+                        pos5: document.getElementById("lat2-p5").value,
+                    },
+                    catatan: document.getElementById("lat2-notes").value,
+                };
+
+                // Error Log
+                data.error_log = [];
+                for (let r = 1; r <= errorRowCount; r++) {
+                    const row = {
+                        sumber:
+                            document.getElementById("el-src-" + r)?.value || "",
+                        jawaban_saya:
+                            document.getElementById("el-mine-" + r)?.value ||
+                            "",
+                        jawaban_benar:
+                            document.getElementById("el-correct-" + r)?.value ||
+                            "",
+                        di_mana_gagal:
+                            document.getElementById("el-where-" + r)?.value ||
+                            "",
+                        tipe_kesalahan:
+                            document.getElementById("el-type-" + r)?.value ||
+                            "",
+                    };
+                    if (Object.values(row).some((v) => v))
+                        data.error_log.push(row);
+                }
+
+                // Karcis Keluar
+                const karcisLangkah = document.querySelector(
+                    'input[name="karcis-langkah"]:checked',
+                );
+                const karcisRating = document.querySelector(
+                    'input[name="karcis-errorlog"]:checked',
+                );
+                data.karcis_keluar = {
+                    langkah_tersulit: karcisLangkah
+                        ? karcisLangkah.value
+                        : null,
+                    alasan: document.getElementById("karcis-alasan").value,
+                    rating_errorlog: karcisRating ? karcisRating.value : null,
+                };
+
+                return data;
+            }
+
+            function downloadResponses() {
+                const data = collectResponses();
+                const json = JSON.stringify(data, null, 2);
+                const encoded = btoa(unescape(encodeURIComponent(json)));
+                const output = [
+                    "=== RESPONS SISWA OSN-K INFORMATIKA ===",
+                    "=== Sesi 1: Fondasi ===",
+                    "=== Format: Base64-encoded JSON ===",
+                    "=== Untuk instruktur: decode dengan atob() atau base64 decoder ===",
+                    "",
+                    encoded,
+                ].join("\n");
+
+                const blob = new Blob([output], {
+                    type: "text/plain;charset=utf-8",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                const nama = data.nama.replace(/\s+/g, "_") || "siswa";
+                a.href = url;
+                a.download = `Sesi1_Respons_${nama}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>
