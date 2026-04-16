@@ -32,17 +32,20 @@
                 --s5: #c8930a;
                 --s5-bg: #fef7e5;
             }
+
             * {
                 box-sizing: border-box;
                 margin: 0;
                 padding: 0;
             }
+
             body {
                 background: var(--bg);
                 font-family: Georgia, "Times New Roman", serif;
                 color: var(--ink);
                 line-height: 1.7;
             }
+
             code,
             .mono {
                 font-family: "Courier New", monospace;
@@ -53,6 +56,7 @@
                 background: #1a1410;
                 padding: 16px 24px;
             }
+
             .site-header .eyebrow {
                 font-size: 11px;
                 color: #aaa;
@@ -61,6 +65,7 @@
                 margin-bottom: 4px;
                 font-family: monospace;
             }
+
             .site-header h1 {
                 font-size: 20px;
                 font-weight: 700;
@@ -77,6 +82,7 @@
                 gap: 0;
                 overflow-x: auto;
             }
+
             .prog-btn {
                 padding: 12px 16px;
                 border: none;
@@ -89,11 +95,13 @@
                 white-space: nowrap;
                 transition: all 0.2s;
             }
+
             .prog-btn.active {
                 color: var(--accent);
                 border-bottom-color: var(--accent);
                 font-weight: 700;
             }
+
             .prog-btn:not(.active):hover {
                 color: var(--ink);
                 background: var(--accent-light);
@@ -106,6 +114,7 @@
                 margin: 0 auto;
                 padding: 32px 24px 64px;
             }
+
             .panel.active {
                 display: block;
             }
@@ -117,15 +126,18 @@
                 margin-bottom: 8px;
                 margin-top: 32px;
             }
+
             h2:first-child {
                 margin-top: 0;
             }
+
             h3 {
                 font-size: 17px;
                 color: var(--ink);
                 margin: 24px 0 8px;
                 font-weight: 700;
             }
+
             h4 {
                 font-size: 14px;
                 color: var(--muted);
@@ -134,18 +146,22 @@
                 margin: 20px 0 6px;
                 font-family: monospace;
             }
+
             p {
                 margin-bottom: 14px;
                 font-size: 15px;
             }
+
             ul,
             ol {
                 margin: 0 0 14px 22px;
                 font-size: 15px;
             }
+
             li {
                 margin-bottom: 4px;
             }
+
             strong {
                 color: var(--ink);
             }
@@ -158,26 +174,32 @@
                 line-height: 1.65;
                 margin: 16px 0;
             }
+
             .callout-yellow {
                 background: var(--yellow-light);
                 border: 1px solid #c8930a60;
             }
+
             .callout-blue {
                 background: var(--blue-light);
                 border: 1px solid #1b4f8a60;
             }
+
             .callout-green {
                 background: var(--green-light);
                 border: 1px solid #1f7a4a60;
             }
+
             .callout-purple {
                 background: var(--purple-light);
                 border: 1px solid #8b3a9c60;
             }
+
             .callout-accent {
                 background: var(--accent-light);
                 border: 1px solid #d4521a60;
             }
+
             .callout-label {
                 font-weight: 700;
                 margin-bottom: 4px;
@@ -188,11 +210,13 @@
                 overflow-x: auto;
                 margin: 16px 0;
             }
+
             table {
                 border-collapse: collapse;
                 width: 100%;
                 font-size: 14px;
             }
+
             th {
                 background: var(--accent);
                 color: #fff;
@@ -200,20 +224,25 @@
                 text-align: left;
                 font-weight: 700;
             }
+
             td {
                 padding: 8px 12px;
                 border-bottom: 1px solid var(--border);
                 vertical-align: top;
             }
+
             tr:nth-child(even) td {
                 background: #faf7f4;
             }
+
             tr:last-child td {
                 border-bottom: none;
             }
+
             .th-blue th {
                 background: var(--blue);
             }
+
             .th-green th {
                 background: var(--green);
             }
@@ -231,12 +260,15 @@
                 margin-bottom: 12px;
                 text-transform: uppercase;
             }
+
             .section-badge.blue {
                 background: var(--blue);
             }
+
             .section-badge.green {
                 background: var(--green);
             }
+
             .section-badge.purple {
                 background: var(--purple);
             }
@@ -245,6 +277,7 @@
             .form-group {
                 margin-bottom: 20px;
             }
+
             .form-label {
                 font-size: 14px;
                 font-weight: 700;
@@ -252,12 +285,14 @@
                 margin-bottom: 6px;
                 color: var(--ink);
             }
+
             .form-sub {
                 font-size: 12px;
                 color: var(--muted);
                 margin-bottom: 6px;
                 display: block;
             }
+
             input[type="text"],
             input[type="email"],
             textarea,
@@ -272,6 +307,7 @@
                 color: var(--ink);
                 transition: border-color 0.2s;
             }
+
             input[type="text"]:focus,
             input[type="email"]:focus,
             textarea:focus,
@@ -279,10 +315,12 @@
                 border-color: var(--accent);
                 outline: none;
             }
+
             textarea {
                 resize: vertical;
                 min-height: 80px;
             }
+
             .radio-group,
             .check-group {
                 display: flex;
@@ -290,6 +328,7 @@
                 gap: 8px;
                 margin-top: 6px;
             }
+
             .radio-opt,
             .check-opt {
                 display: flex;
@@ -298,18 +337,21 @@
                 cursor: pointer;
                 font-size: 14px;
             }
+
             .radio-opt input,
             .check-opt input {
                 margin-top: 3px;
                 flex-shrink: 0;
                 accent-color: var(--accent);
             }
+
             .rating-row {
                 display: flex;
                 gap: 6px;
                 flex-wrap: wrap;
                 margin-top: 6px;
             }
+
             .rating-opt {
                 display: flex;
                 flex-direction: column;
@@ -317,9 +359,11 @@
                 gap: 4px;
                 cursor: pointer;
             }
+
             .rating-opt input {
                 accent-color: var(--accent);
             }
+
             .rating-opt span {
                 font-size: 12px;
                 color: var(--muted);
@@ -331,27 +375,33 @@
                 border-collapse: collapse;
                 font-size: 13px;
             }
+
             .grid-survey th {
                 background: var(--accent);
                 color: #fff;
                 padding: 8px 10px;
                 text-align: center;
             }
+
             .grid-survey th:first-child {
                 text-align: left;
             }
+
             .grid-survey td {
                 padding: 8px 10px;
                 border-bottom: 1px solid var(--border);
                 text-align: center;
             }
+
             .grid-survey td:first-child {
                 text-align: left;
                 font-weight: 500;
             }
+
             .grid-survey tr:nth-child(even) td {
                 background: #faf7f4;
             }
+
             .grid-survey input[type="radio"] {
                 accent-color: var(--accent);
             }
@@ -363,23 +413,27 @@
                 font-size: 14px;
                 margin: 16px 0;
             }
+
             .sim-table th {
                 padding: 9px 14px;
                 text-align: center;
                 font-weight: 700;
                 color: #fff;
             }
+
             .sim-table td {
                 padding: 8px 12px;
                 border: 1px solid var(--border);
                 text-align: center;
             }
+
             .sim-table .row-label {
                 text-align: left;
                 font-weight: 600;
                 background: #faf7f4;
                 font-size: 13px;
             }
+
             .sim-table input.cell-input {
                 width: 60px;
                 padding: 6px;
@@ -392,10 +446,12 @@
                 text-transform: uppercase;
                 background: #fff;
             }
+
             .sim-table input.cell-input:focus {
                 border-color: var(--accent);
                 outline: none;
             }
+
             .sim-table .given {
                 background: var(--blue-light);
                 font-family: monospace;
@@ -408,13 +464,16 @@
                 cursor: pointer;
                 transition: all 0.2s;
             }
+
             .step-reveal-row:hover td {
                 background: var(--accent-light);
             }
+
             .step-reveal-row td.hidden-cell {
                 opacity: 0.3;
                 font-style: italic;
             }
+
             .step-reveal-row.revealed td.hidden-cell {
                 opacity: 1;
                 font-style: normal;
@@ -428,6 +487,7 @@
                 overflow: hidden;
                 margin: 20px 0;
             }
+
             .explainer-header {
                 background: var(--accent);
                 color: #fff;
@@ -438,9 +498,11 @@
                 justify-content: space-between;
                 align-items: center;
             }
+
             .explainer-body {
                 padding: 20px;
             }
+
             .reveal-btn {
                 background: #fff;
                 color: var(--accent);
@@ -453,9 +515,11 @@
                 font-weight: 700;
                 transition: all 0.2s;
             }
+
             .reveal-btn:hover {
                 background: var(--accent-light);
             }
+
             .reset-btn {
                 background: transparent;
                 color: #fff;
@@ -467,9 +531,11 @@
                 font-size: 12px;
                 transition: all 0.2s;
             }
+
             .reset-btn:hover {
                 background: #ffffff20;
             }
+
             .ctrl-row {
                 display: flex;
                 gap: 8px;
@@ -477,6 +543,7 @@
                 margin-top: 16px;
                 flex-wrap: wrap;
             }
+
             .step-counter {
                 font-size: 12px;
                 color: var(--muted);
@@ -491,6 +558,7 @@
                 gap: 0;
                 margin: 16px 0;
             }
+
             .flow-step {
                 display: flex;
                 align-items: center;
@@ -502,11 +570,14 @@
                 cursor: pointer;
                 width: min(560px, 100%);
                 transition: all 0.25s;
+                z-index: 1;
             }
+
             .flow-step:hover {
                 border-color: var(--accent);
                 background: var(--accent-light);
             }
+
             .flow-icon {
                 width: 44px;
                 height: 44px;
@@ -517,6 +588,7 @@
                 font-size: 22px;
                 flex-shrink: 0;
             }
+
             .flow-chev {
                 margin-left: auto;
                 font-size: 14px;
@@ -524,28 +596,34 @@
                 opacity: 0.4;
                 transition: all 0.2s;
             }
+
             .flow-desc {
                 background: var(--accent-light);
                 border: 1.5px solid #d4521a40;
                 border-top: none;
                 border-radius: 0 0 10px 10px;
                 width: min(560px, 100%);
-                padding: 12px 20px 16px;
+                padding: 24px 20px 16px;
+                margin-top: -12px;
                 font-size: 14px;
                 line-height: 1.65;
                 display: none;
+                z-index: 0;
             }
+
             .flow-connector {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 margin-left: 22px;
             }
+
             .flow-line {
                 width: 2px;
                 height: 12px;
                 background: var(--border);
             }
+
             .flow-arrow {
                 font-size: 16px;
                 color: var(--muted);
@@ -558,6 +636,7 @@
                 flex-wrap: wrap;
                 margin: 12px 0;
             }
+
             .lamp {
                 width: 48px;
                 height: 48px;
@@ -572,11 +651,13 @@
                 cursor: default;
                 transition: all 0.3s;
             }
+
             .lamp.on {
                 background: #ffe566;
                 border-color: #c8930a;
                 color: #7a5a00;
             }
+
             .lamp.off {
                 background: #e0e0e0;
                 border-color: #aaa;
@@ -591,16 +672,19 @@
                 margin-top: 40px;
                 text-align: center;
             }
+
             .download-section h3 {
                 color: #fff;
                 font-size: 18px;
                 margin-bottom: 8px;
             }
+
             .download-section p {
                 color: #aaa;
                 font-size: 14px;
                 margin-bottom: 20px;
             }
+
             .download-btn {
                 background: var(--accent);
                 color: #fff;
@@ -613,9 +697,11 @@
                 font-weight: 700;
                 transition: background 0.2s;
             }
+
             .download-btn:hover {
                 background: #b84215;
             }
+
             .download-note {
                 font-size: 12px;
                 color: #888;
@@ -630,6 +716,7 @@
                 padding: 20px;
                 margin: 16px 0;
             }
+
             .answer-box-label {
                 font-size: 11px;
                 text-transform: uppercase;
@@ -639,6 +726,7 @@
                 font-weight: 700;
                 margin-bottom: 10px;
             }
+
             .final-answer-row {
                 display: flex;
                 align-items: center;
@@ -646,10 +734,12 @@
                 margin-top: 12px;
                 flex-wrap: wrap;
             }
+
             .final-answer-row label {
                 font-size: 14px;
                 font-weight: 700;
             }
+
             .final-answer-row input {
                 width: 140px;
             }
@@ -658,17 +748,20 @@
             .error-log-table {
                 width: 100%;
             }
+
             .error-log-table td {
                 padding: 8px;
                 border: 1px solid var(--border);
                 vertical-align: top;
             }
+
             .error-log-table td:first-child {
                 width: 30px;
                 text-align: center;
                 color: var(--muted);
                 font-size: 13px;
             }
+
             .add-row-btn {
                 margin-top: 10px;
                 background: var(--green-light);
@@ -681,6 +774,7 @@
                 font-size: 13px;
                 font-weight: 700;
             }
+
             .add-row-btn:hover {
                 background: var(--green);
                 color: #fff;
@@ -696,6 +790,7 @@
             }
         </style>
     </head>
+
     <body>
         <div class="site-header">
             <div class="eyebrow">OSN-K Informatika · Kursus Persiapan</div>
@@ -736,13 +831,13 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 1 — SURVEI PENGETAHUAN AWAL
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 1 — SURVEI PENGETAHUAN AWAL
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-survey" class="panel active">
             <div class="section-badge">Asesmen Diagnostik · AS-D1</div>
             <h2>Survei Pengetahuan Awal</h2>
             <p>
-                Ini bukan tes dan tidak ada nilai. Jawablah dengan jujur — tidak
+                Ini bukan tes dan tidak ada nilai. Jawablah dengan jujur; tidak
                 ada jawaban yang benar atau salah untuk bagian pertama.
                 Tujuannya agar instruktur bisa menyesuaikan materi sesuai
                 kondisimu sebenarnya. Estimasi waktu: 15–20 menit.
@@ -820,7 +915,7 @@
                     ⚠️ Instruksi
                 </div>
                 Kerjakan dua soal berikut. Tidak ada ekspektasi bahwa kamu harus
-                menjawab dengan benar — yang lebih penting adalah menuliskan
+                menjawab dengan benar, yang lebih penting adalah menuliskan
                 proses berpikirmu secara jujur. Tulis "tidak tahu harus mulai
                 dari mana" jika memang demikian.
             </div>
@@ -1016,8 +1111,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 2 — BACAAN
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 2 — BACAAN
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-bacaan" class="panel">
             <div class="section-badge blue">Bacaan</div>
             <h2>Cara Membaca Soal OSN-K</h2>
@@ -1096,9 +1191,8 @@
                 </div>
                 40 soal dikerjakan dalam <strong>150 menit</strong>. Sesi 1 ini
                 berfokus pada Bagian A, khususnya soal-soal
-                <strong>simulasi</strong> — di mana kamu perlu menjalankan
-                sebuah proses langkah demi langkah untuk menemukan kondisi
-                akhirnya.
+                <strong>simulasi</strong>, di mana kamu perlu menjalankan sebuah
+                proses langkah demi langkah untuk menemukan kondisi akhirnya.
             </div>
 
             <h3>2.3 — Serangan Lima Langkah</h3>
@@ -1117,8 +1211,8 @@
                 <div class="callout-label" style="color: var(--yellow)">
                     ⚠️ Penting
                 </div>
-                Kelima langkah ini tidak harus dilakukan secara linier —
-                terkadang kamu akan melakukan Langkah 3 (coba kasus kecil) untuk
+                Kelima langkah ini tidak harus dilakukan secara linier.
+                Terkadang kamu akan melakukan Langkah 3 (coba kasus kecil) untuk
                 membantu Langkah 1 (baca cermat). Yang penting adalah kamu
                 <strong>tidak melewati</strong> "baca cermat" dan "identifikasi
                 tipe" dengan terburu-buru.
@@ -1162,7 +1256,7 @@
             </div>
             <p>
                 Dengan tabel, kamu bisa menelusuri proses secara sistematis
-                tanpa harus mengingat semua status di kepala — dan kamu bisa
+                tanpa harus mengingat semua status di kepala, dan kamu bisa
                 memeriksa kembali langkah mana yang salah jika hasil akhirnya
                 tidak sesuai.
             </p>
@@ -1177,8 +1271,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 3 — CONTOH SOAL (I DO — INTERACTIVE)
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 3 — CONTOH SOAL (I DO — INTERACTIVE)
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-contoh" class="panel">
             <div class="section-badge">Contoh Soal · Demonstrasi</div>
             <h2>Soal 4 OSN-K 2024 — "Bebek dan Lampu"</h2>
@@ -1226,7 +1320,7 @@
 
             <h3>Penerapan Serangan Lima Langkah</h3>
             <p>Klik setiap langkah untuk melihat analisisnya.</p>
-            <div id="limaLangkahContoh"></div>
+            <div id="limaLangkahContoh" class="flowchart-wrap"></div>
 
             <h3 style="margin-top: 32px">
                 Penyelesaian Interaktif — Toggle Semua 10 Bebek
@@ -1337,8 +1431,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 4 — LATIHAN TERPANDU (WE DO — INTERACTIVE)
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 4 — LATIHAN TERPANDU (WE DO — INTERACTIVE)
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-latihan1" class="panel">
             <div class="section-badge green">
                 Latihan Terpandu · Think-Pair-Share
@@ -1356,7 +1450,7 @@
                 &nbsp;&nbsp;<strong>Tombol 3</strong>: men-toggle X dan Z<br />
                 &nbsp;&nbsp;<strong>Tombol 4</strong>: men-toggle X, Y, dan Z<br /><br />
                 Jika tombol ditekan dalam urutan:
-                <strong>1, 2, 1, 3, 4, 2, 3</strong> — apa kondisi akhir setiap
+                <strong>1, 2, 1, 3, 4, 2, 3</strong>—apa kondisi akhir setiap
                 lampu? Tuliskan <strong>H (hidup)</strong> atau
                 <strong>M (mati)</strong>.
             </div>
@@ -1519,8 +1613,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 5 — BACAAN LANJUTAN
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 5 — BACAAN LANJUTAN
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-bacaan2" class="panel">
             <div class="section-badge blue">Bacaan Lanjutan</div>
             <h2>Kapan dan Bagaimana Menggunakan Tabel Simulasi</h2>
@@ -1582,14 +1676,16 @@
                 <div class="callout-label" style="color: var(--accent)">
                     📋 Soal
                 </div>
-                Terdapat 31 kursi dalam lingkaran, diberi nomor 1 hingga 31.
-                Siswa masuk satu per satu dan duduk di kursi sesuai tanggal
-                lahirnya. Jika kursi yang dituju sudah terisi, ia berjalan
-                searah jarum jam sampai menemukan kursi kosong.<br /><br />
-                Ada 6 siswa: Andi (kursi 11), Benny (kursi 12), Chacha (kursi
-                14), David (kursi 11), Ela (kursi 13), Fatima (kursi 12).<br />
-                Jika mereka masuk dalam urutan:
-                <strong>Andi, Benny, Chacha, David, Ela, Fatima</strong> — di
+                Terdapat 31 kursi yang disusun dalam formasi lingkaran di ruang
+                kelas, diberi nomor 1 hingga 31 searah jarum jam. Siswa masuk
+                satu per satu dan duduk di kursi sesuai tanggal lahirnya. Jika
+                kursi yang dituju sudah terisi, ia berjalan searah jarum jam
+                dari kursi tersebut sampai menemukan kursi kosong.<br /><br />
+                Ada 6 siswa: Andi (tanggal lahir: 11 Mei), Benny (12 Feb),
+                Chacha (14 Sep), David (11 Ags), Ela (13 Apr), Fatima (12
+                Jul).<br />
+                Jika mereka masuk ke kelas dengan urutan:
+                <strong>Andi, Benny, Chacha, David, Ela, Fatima</strong>—di
                 kursi nomor berapakah masing-masing duduk?
             </div>
 
@@ -1662,8 +1758,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 6 — LATIHAN MANDIRI (YOU DO — BLANK FIELDS)
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 6 — LATIHAN MANDIRI (YOU DO — BLANK FIELDS)
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-latihan2" class="panel">
             <div class="section-badge purple">Latihan Mandiri</div>
             <h2>Soal Latihan 2 — Antrian Bebek</h2>
@@ -1803,8 +1899,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 7 — ERROR LOG
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 7 — ERROR LOG
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-errorlog" class="panel">
             <div class="section-badge">Error Log · AS-F2</div>
             <h2>Error Log — Catatan Kesalahan Pribadi</h2>
@@ -1984,8 +2080,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 8 — KARCIS KELUAR
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 8 — KARCIS KELUAR
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-karcis" class="panel">
             <div class="section-badge">Karcis Keluar · AS-F1</div>
             <h2>Karcis Keluar — Sesi 1</h2>
@@ -2126,8 +2222,8 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-     PANEL 9 — RINGKASAN + DOWNLOAD
-     ═══════════════════════════════════════════════════════════ -->
+        PANEL 9 — RINGKASAN + DOWNLOAD
+        ═══════════════════════════════════════════════════════════ -->
         <div id="p-ringkasan" class="panel">
             <div class="section-badge green">Ringkasan</div>
             <h2>Yang Dipelajari Hari Ini</h2>
@@ -2168,8 +2264,8 @@
                     ⬇ Unduh Respons Sesi 1
                 </button>
                 <div class="download-note">
-                    File akan diunduh sebagai .txt (Base64-encoded). Sampaikan
-                    ke instruktur untuk ditinjau.
+                    File akan diunduh sebagai txt. Sampaikan ke instruktur untuk
+                    ditinjau.
                 </div>
             </div>
         </div>
@@ -2189,7 +2285,7 @@
                 "p-karcis",
                 "p-ringkasan",
             ];
-            function goPanel(id) {
+            function goPanel(id, pushHistory = true) {
                 document
                     .querySelectorAll(".panel")
                     .forEach((p) => p.classList.remove("active"));
@@ -2201,8 +2297,23 @@
                 document
                     .querySelectorAll(".prog-btn")
                     [idx].classList.add("active");
+                if (pushHistory) {
+                    history.pushState(null, null, "#" + id);
+                }
                 window.scrollTo(0, 0);
             }
+
+            // Sync panel with URL hash
+            function syncPanelFromHash() {
+                var hash = window.location.hash.substring(1);
+                if (PANELS.includes(hash)) {
+                    goPanel(hash, false);
+                } else if (!window.location.hash && PANELS.length > 0) {
+                    goPanel(PANELS[0], false);
+                }
+            }
+            window.addEventListener("DOMContentLoaded", syncPanelFromHash);
+            window.addEventListener("hashchange", syncPanelFromHash);
 
             // ════════════════════════════════════════════════
             // SURVEI SELF-ASSESSMENT TABLE
@@ -3112,6 +3223,44 @@
                 a.click();
                 URL.revokeObjectURL(url);
             }
+
+            // ════════════════════════════════════════════════
+            // HEADING NAVIGATION
+            // ════════════════════════════════════════════════
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+                    if (
+                        e.target.tagName === "INPUT" ||
+                        e.target.tagName === "TEXTAREA" ||
+                        e.target.tagName === "SELECT" ||
+                        e.target.isContentEditable
+                    )
+                        return;
+
+                    const headings = Array.from(
+                        document.querySelectorAll("h1, h2, h3, h4, h5, h6"),
+                    );
+                    const visibleHeadings = headings.filter(
+                        (h) => h.offsetWidth > 0 && h.offsetHeight > 0,
+                    );
+
+                    let targetHeading = null;
+                    if (e.key === "ArrowRight") {
+                        targetHeading = visibleHeadings.find(
+                            (h) => h.getBoundingClientRect().top > 10,
+                        );
+                    } else if (e.key === "ArrowLeft") {
+                        targetHeading = [...visibleHeadings]
+                            .reverse()
+                            .find((h) => h.getBoundingClientRect().top < -10);
+                    }
+
+                    if (targetHeading) {
+                        targetHeading.scrollIntoView({ behavior: "smooth" });
+                        e.preventDefault();
+                    }
+                }
+            });
         </script>
     </body>
 </html>
