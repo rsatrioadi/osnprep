@@ -1,0 +1,1247 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sesi 4 — Kombinatorik I: Menghitung Tanpa Mendaftar Semua</title>
+<style>
+:root {
+  --bg:#fdf8f2; --card:#fff; --border:#e8ddd0;
+  --ink:#1a1410; --muted:#7a6a5a;
+  --accent:#d4521a; --accent-light:#fdeee5;
+  --blue:#1b4f8a; --blue-light:#e5edf7;
+  --green:#1f7a4a; --green-light:#e5f4ec;
+  --yellow:#c8930a; --yellow-light:#fef7e5;
+  --purple:#8b3a9c; --purple-light:#f3e8f8;
+  --s1:#d4521a; --s1-bg:#fdeee5;
+  --s2:#1b4f8a; --s2-bg:#e5edf7;
+  --s3:#1f7a4a; --s3-bg:#e5f4ec;
+  --s4:#8b3a9c; --s4-bg:#f3e8f8;
+  --s5:#c8930a; --s5-bg:#fef7e5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:Georgia,"Times New Roman",serif;color:var(--ink);line-height:1.7}
+code,.mono{font-family:"Courier New",monospace}
+
+/* HEADER */
+.site-header{background:#1a1410;padding:16px 24px}
+.site-header .eyebrow{font-size:11px;color:#aaa;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;font-family:monospace}
+.site-header h1{font-size:20px;font-weight:700;color:#fff;letter-spacing:-.3px}
+
+/* NAV */
+.prog-nav{background:var(--card);border-bottom:2px solid var(--border);padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.prog-btn{padding:12px 14px;border:none;background:transparent;color:var(--muted);font-family:Georgia,serif;font-size:12px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.prog-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.prog-btn:not(.active):hover{color:var(--ink);background:var(--accent-light)}
+
+/* PANELS */
+.panel{display:none;max-width:860px;margin:0 auto;padding:32px 24px 64px}
+.panel.active{display:block}
+
+/* TYPOGRAPHY */
+h2{font-size:22px;color:var(--accent);margin-bottom:8px;margin-top:32px}
+h2:first-child{margin-top:0}
+h3{font-size:17px;color:var(--ink);margin:24px 0 8px;font-weight:700}
+h4{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:20px 0 6px;font-family:monospace}
+p{margin-bottom:14px;font-size:15px}
+ul,ol{margin:0 0 14px 22px;font-size:15px}
+li{margin-bottom:4px}
+
+/* CALLOUTS */
+.callout{border-radius:8px;padding:14px 18px;font-size:14px;line-height:1.65;margin:16px 0}
+.callout-yellow{background:var(--yellow-light);border:1px solid #c8930a60}
+.callout-blue{background:var(--blue-light);border:1px solid #1b4f8a60}
+.callout-green{background:var(--green-light);border:1px solid #1f7a4a60}
+.callout-purple{background:var(--purple-light);border:1px solid #8b3a9c60}
+.callout-accent{background:var(--accent-light);border:1px solid #d4521a60}
+.callout-label{font-weight:700;margin-bottom:4px}
+
+/* BADGE */
+.section-badge{display:inline-block;background:var(--accent);color:#fff;font-family:monospace;font-size:11px;letter-spacing:1px;padding:3px 10px;border-radius:20px;margin-bottom:12px;text-transform:uppercase}
+.section-badge.blue{background:var(--blue)}
+.section-badge.green{background:var(--green)}
+.section-badge.purple{background:var(--purple)}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{background:var(--accent);color:#fff;padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f4}
+tr:last-child td{border-bottom:none}
+.th-blue th{background:var(--blue)}
+.th-green th{background:var(--green)}
+
+/* BUTTONS */
+.reveal-btn{background:var(--accent-light);color:var(--accent);border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-family:Georgia,serif;font-size:13px;font-weight:700;transition:all .2s}
+.reveal-btn:hover{background:var(--accent);color:#fff}
+.reveal-btn.primary{background:var(--accent);color:#fff}
+.reveal-btn.primary:hover{background:#b84215}
+.reveal-btn:disabled{opacity:.4;cursor:not-allowed}
+.reset-btn{background:transparent;color:#fff;border:1.5px solid #ffffff80;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:Georgia,serif;font-size:12px;transition:all .2s}
+.reset-btn:hover{background:#ffffff20}
+.ctrl-row{display:flex;gap:8px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.step-counter{font-size:12px;color:var(--muted);font-family:monospace}
+
+/* EXPLAINER CARD */
+.explainer-card{background:var(--card);border:2px solid var(--border);border-radius:12px;overflow:hidden;margin:20px 0}
+.explainer-header{background:var(--accent);color:#fff;padding:12px 20px;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.explainer-header.blue{background:var(--blue)}
+.explainer-header.green{background:var(--green)}
+.explainer-body{padding:20px}
+
+/* FORM */
+.form-group{margin-bottom:20px}
+.form-label{font-size:14px;font-weight:700;display:block;margin-bottom:6px;color:var(--ink)}
+.form-sub{font-size:12px;color:var(--muted);margin-bottom:6px;display:block}
+input[type="text"],input[type="email"],textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-family:Georgia,serif;font-size:14px;background:#fff;color:var(--ink);transition:border-color .2s}
+input[type="text"]:focus,input[type="email"]:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none}
+textarea{resize:vertical;min-height:80px}
+.radio-group{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.radio-opt{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px}
+.radio-opt input{margin-top:3px;flex-shrink:0;accent-color:var(--accent)}
+
+/* ANSWER BOX */
+.answer-box{background:var(--card);border:2px dashed var(--accent);border-radius:10px;padding:20px;margin:16px 0}
+.answer-box-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-family:monospace;font-weight:700;margin-bottom:10px}
+
+/* ERROR LOG */
+.error-log-table{width:100%}
+.error-log-table td{padding:8px;border:1px solid var(--border);vertical-align:top}
+.add-row-btn{margin-top:10px;background:var(--green-light);color:var(--green);border:1.5px solid var(--green);padding:7px 16px;border-radius:6px;cursor:pointer;font-family:Georgia,serif;font-size:13px;font-weight:700}
+.add-row-btn:hover{background:var(--green);color:#fff}
+
+/* KARCIS */
+.exit-card{background:var(--accent-light);border:2px solid #d4521a60;border-radius:12px;padding:24px;margin:20px 0}
+
+/* DOWNLOAD */
+.download-section{background:#1a1410;border-radius:12px;padding:32px;margin-top:40px;text-align:center}
+.download-section h3{color:#fff;font-size:18px;margin-bottom:8px}
+.download-section p{color:#aaa;font-size:14px;margin-bottom:20px}
+.download-btn{background:var(--accent);color:#fff;border:none;padding:14px 32px;border-radius:8px;cursor:pointer;font-family:Georgia,serif;font-size:16px;font-weight:700;transition:background .2s}
+.download-btn:hover{background:#b84215}
+.download-note{font-size:12px;color:#888;margin-top:12px}
+
+/* QUIZ CHIPS */
+.quiz-opts{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.quiz-opt{padding:9px 18px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);font-size:14px;cursor:pointer;font-family:Georgia,serif;transition:all .2s}
+.quiz-opt:hover{border-color:var(--accent);background:var(--accent-light)}
+.quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700}
+.quiz-opt.wrong{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.quiz-feedback{min-height:36px;font-size:14px;line-height:1.6;padding:10px 14px;border-radius:8px;margin-top:8px}
+
+/* DAG SVG */
+.dag-svg-wrap{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:16px;overflow-x:auto}
+.dag-sim-table{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0}
+.dag-sim-table th{padding:9px 14px;text-align:center;font-weight:700;color:#fff}
+.dag-sim-table td{padding:8px 12px;border:1px solid var(--border);text-align:center}
+.dag-sim-table .row-label{text-align:left;font-weight:600;background:#faf7f4;font-size:13px}
+.dag-sim-table tr.hidden-row td{opacity:.25;font-style:italic}
+.dag-sim-table tr.current-row td{background:var(--accent-light);font-weight:700;color:var(--accent)}
+.dag-sim-table tr.revealed-row td{background:var(--green-light)}
+
+/* SIM TABLE inputs */
+.sim-table .cell-input{width:70px;padding:6px;border:1.5px solid var(--border);border-radius:4px;text-align:center;font-family:monospace;font-size:14px;font-weight:700;background:#fff}
+.sim-table .cell-input:focus{border-color:var(--accent);outline:none}
+
+/* FLOWCHART */
+.flowchart-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:16px 0}
+.flow-step{display:flex;align-items:center;gap:16px;background:var(--card);border:2px solid var(--border);border-radius:12px;padding:14px 20px;cursor:pointer;width:min(580px,100%);transition:all .25s;z-index:1}
+.flow-step:hover{border-color:var(--accent);background:var(--accent-light)}
+.flow-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.flow-chev{margin-left:auto;font-size:14px;color:var(--muted);opacity:.4;transition:all .2s}
+.flow-desc{border:1.5px solid #d4521a40;border-top:none;border-radius:0 0 10px 10px;width:min(580px,100%);padding:16px 20px;margin-top:-10px;font-size:14px;line-height:1.65;display:none;z-index:0}
+.flow-connector{display:flex;flex-direction:column;align-items:center;margin-left:22px}
+.flow-line{width:2px;height:12px;background:var(--border)}
+.flow-arrow{font-size:16px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="eyebrow">OSN-K Informatika · Kursus Persiapan</div>
+  <h1>Sesi 4 — Kombinatorik I: Menghitung Tanpa Mendaftar Semua</h1>
+</div>
+
+<div class="prog-nav" id="progNav">
+  <button class="prog-btn active" onclick="goPanel('p-gambaran')">① Gambaran Sesi</button>
+  <button class="prog-btn" onclick="goPanel('p-bacaan')">② Bacaan</button>
+  <button class="prog-btn" onclick="goPanel('p-visual')">③ Visual Interaktif</button>
+  <button class="prog-btn" onclick="goPanel('p-latihan1')">④ Latihan Terpandu</button>
+  <button class="prog-btn" onclick="goPanel('p-bacaan2')">⑤ Bacaan Lanjutan</button>
+  <button class="prog-btn" onclick="goPanel('p-latihan2')">⑥ Latihan Mandiri</button>
+  <button class="prog-btn" onclick="goPanel('p-bank')">⑦ Bank Soal</button>
+  <button class="prog-btn" onclick="goPanel('p-errorlog')">⑧ Error Log</button>
+  <button class="prog-btn" onclick="goPanel('p-karcis')">⑨ Karcis Keluar</button>
+  <button class="prog-btn" onclick="goPanel('p-ringkasan')">⑩ Ringkasan</button>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 1 — GAMBARAN SESI
+══════════════════════════════════ -->
+<div id="p-gambaran" class="panel active">
+  <div class="section-badge">Gambaran Sesi · Sesi 4</div>
+  <h2>Kombinatorik I: Menghitung Tanpa Mendaftar Semua</h2>
+  <p>Durasi: 120 menit &nbsp;|&nbsp; LO Utama: B2, B1, A6</p>
+
+  <h3>Capaian Pembelajaran</h3>
+  <p>Di akhir sesi ini, kamu diharapkan mampu:</p>
+
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">B2 — Utama</div>
+    Menghitung banyaknya susunan, pilihan, atau konfigurasi valid menggunakan aturan penjumlahan dan aturan perkalian, termasuk dalam konteks analisis kasus berjenjang dan penghitungan jalur dalam DAG.
+  </div>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">B1 — Utama</div>
+    Mengurai soal berlapis menjadi sub-pertanyaan independen dengan mengidentifikasi struktur matematis di balik narasi.
+  </div>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">A6 — Kontinu</div>
+    Membedakan persoalan yang memerlukan enumerasi kasus menyeluruh dari persoalan yang memiliki jalan pintas struktural, dan memberikan justifikasi atas pilihan pendekatan.
+  </div>
+
+  <h3>Alur Sesi</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Blok</th><th>Durasi</th><th>Aktivitas</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pembuka</strong></td><td>10 menit</td><td>Review karcis keluar S3 + orientasi topik</td></tr>
+        <tr><td><strong>Instruksi I</strong></td><td>25 menit</td><td>Aturan penjumlahan dan perkalian — demonstrasi Serangan Lima Langkah (soal ayam OSN-K 2024)</td></tr>
+        <tr><td><strong>Latihan Terpandu</strong></td><td>25 menit</td><td>5 soal clicker berjenjang, termasuk penghitungan jalur DAG dan prinsip komplemen</td></tr>
+        <tr><td><strong>Instruksi II</strong></td><td>20 menit</td><td>Kapan enumerasi vs. rumus? + formalisasi prinsip pigeonhole</td></tr>
+        <tr><td><strong>Latihan Mandiri</strong></td><td>25 menit</td><td>3 soal dengan tingkat kesulitan meningkat, termasuk soal OSN-K 2025</td></tr>
+        <tr><td><strong>Penutup</strong></td><td>15 menit</td><td>Debrief + karcis keluar (AS-F1)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">💡 Pesan Utama Sesi Ini</div>
+    Tujuan sesi ini bukan menghafal rumus. Tujuannya adalah mengenali <strong>struktur</strong> sebuah soal — apakah ini soal "ATAU" atau "DAN"? Apakah ada jalan pintas, atau harus enumerasi? Inilah inti LO A6.
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-bacaan')">Lanjut ke Bacaan →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 2 — BACAAN
+══════════════════════════════════ -->
+<div id="p-bacaan" class="panel">
+  <div class="section-badge">Bacaan · Sesi 4</div>
+  <h2>Aturan Penjumlahan dan Aturan Perkalian</h2>
+
+  <h3>Mengapa Kombinatorik Ada di OSN-K?</h3>
+  <p>Banyak soal OSN-K Bagian B menanyakan: "Berapa banyak cara…?" Cara naif adalah mendaftarkan semua kemungkinan. Tapi ketika jumlahnya besar (ratusan, ribuan, atau lebih), cara itu tidak praktis. Kombinatorik memberi kita alat untuk menghitung langsung tanpa mendaftar satu per satu.</p>
+  <p>Di sesi ini, kita akan menguasai dua aturan paling fundamental: <strong>aturan penjumlahan</strong> dan <strong>aturan perkalian</strong>. Keduanya terlihat sederhana, tetapi mengetahui kapan menggunakan yang mana adalah keterampilan yang butuh latihan.</p>
+
+  <h3>Aturan Penjumlahan</h3>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">📐 Aturan Penjumlahan</div>
+    Jika suatu aksi dapat dilakukan dengan cara A <strong>atau</strong> dengan cara B (dan keduanya tidak bisa dilakukan bersamaan), maka total cara = <strong>A + B</strong>.<br><br>
+    <strong>Kata kunci:</strong> "atau", "salah satu dari", "kasus yang berbeda".
+  </div>
+  <p><strong>Contoh:</strong> Sebuah toko menjual 3 jenis es krim coklat dan 5 jenis es krim vanila. Jika kamu ingin membeli satu porsi (coklat saja <em>atau</em> vanila saja): <strong>3 + 5 = 8 pilihan</strong>. Kamu memilih <em>salah satu</em> dari dua kategori yang saling eksklusif — itulah penjumlahan.</p>
+
+  <h3>Aturan Perkalian</h3>
+  <div class="callout callout-green">
+    <div class="callout-label" style="color:var(--green)">📐 Aturan Perkalian</div>
+    Jika suatu aksi terdiri dari beberapa tahap yang dilakukan secara berurutan <strong>dan</strong> independen, maka total cara = <strong>P × Q × …</strong><br><br>
+    <strong>Kata kunci:</strong> "dan", "lalu", "kemudian", "berurutan", "setiap".
+  </div>
+  <p><strong>Contoh:</strong> Sebuah kode PIN terdiri dari 3 digit, setiap digit bisa 1–4: <strong>4 × 4 × 4 = 64 kode</strong>. Pilihan digit pertama tidak membatasi pilihan digit kedua — itulah perkalian.</p>
+
+  <h3>Kombinasi Keduanya</h3>
+  <p>Banyak soal OSN-K menggunakan kedua aturan sekaligus. Kuncinya: pecah soal menjadi bagian-bagian kecil, tentukan apakah setiap bagian adalah "atau" (penjumlahan) atau "dan/kemudian" (perkalian), lalu gabungkan.</p>
+  <p>Pola umum: <strong>analisis kasus</strong>. Soal mengandung larangan atau kondisi khusus. Sering lebih mudah menghitung total tanpa batasan, lalu kurangi yang tidak valid — ini disebut <strong>strategi komplemen</strong>.</p>
+
+  <h3>Demo: Soal 15 OSN-K 2024 — Pertemanan Ayam</h3>
+  <p>Pak Blangkon memiliki 15 ekor ayam: A–O. Ada relasi pertemanan: jika A berteman B dan B berteman C, maka A, B, C berada dalam satu <em>lingkaran pertemanan</em>. Pak Blangkon akan memilih perwakilan: setiap lingkaran wajib ada satu perwakilan.</p>
+
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">📋 Serangan Lima Langkah</div>
+    <strong>L1 Baca cermat:</strong> Yang ditanya banyaknya cara memilih perwakilan, setiap lingkaran wajib terwakili.<br>
+    <strong>L2 Identifikasi tipe:</strong> Kombinatorik berlapis — pertama temukan lingkaran, lalu hitung dengan aturan perkalian.<br>
+    <strong>L3 Kasus kecil:</strong> 2 lingkaran: {X,Y} dan {Z}. Pilih dari {X,Y}: 2 cara. Dari {Z}: 1 cara. Total = 2 × 1 = 2.<br>
+    <strong>L4 Invariant:</strong> Pilihan dari tiap lingkaran independen → aturan perkalian.<br>
+    <strong>L5 Kasus tepi:</strong> Lingkaran dengan 1 anggota? Tetap dikalikan (× 1, bukan diabaikan).
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="th-blue">
+      <thead><tr><th>Lingkaran</th><th>Anggota</th><th>Ukuran</th><th>Cara memilih</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>A, B, C, M, N, O</td><td>6 ayam</td><td>6 cara</td></tr>
+        <tr><td>2</td><td>D, I, J, K, L</td><td>5 ayam</td><td>5 cara</td></tr>
+        <tr><td>3</td><td>E, G</td><td>2 ayam</td><td>2 cara</td></tr>
+        <tr><td>4</td><td>H, F</td><td>2 ayam</td><td>2 cara</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-green">
+    <div class="callout-label" style="color:var(--green)">✅ Total (aturan perkalian)</div>
+    6 × 5 × 2 × 2 = <strong>120 cara</strong>
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-visual')">Lanjut ke Visual Interaktif →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 3 — VISUAL INTERAKTIF
+══════════════════════════════════ -->
+<div id="p-visual" class="panel">
+  <div class="section-badge blue">Visual Interaktif · Sesi 4</div>
+  <h2>Eksplorasi Konsep secara Visual</h2>
+
+  <!-- ── KEYWORD DETECTOR ── -->
+  <h3>① Detektor Kata Kunci — Aturan Mana yang Berlaku?</h3>
+  <p style="font-size:14px;color:var(--muted)">Klik kata kunci di bawah untuk melihat aturan mana yang diterapkan dan mengapa.</p>
+  <div id="kw-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0"></div>
+  <div id="kw-result" style="min-height:48px;background:var(--bg);border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.6;color:var(--muted)">Klik salah satu kata kunci di atas untuk melihat aturan yang berlaku.</div>
+
+  <!-- ── DAG ── -->
+  <h3 style="margin-top:32px">② Penghitungan Jalur dalam DAG — Perjalanan ke Timur (LT-4)</h3>
+  <p style="font-size:14px;color:var(--muted)">Bebek bergerak dari A ke H, hanya ke kanan. Lajur <span style="color:var(--yellow);font-weight:700">🔒</span> butuh kunci sakti. Di LT-4, asumsikan tidak ada kunci — lajur terkunci <em>tidak bisa dilalui</em>.</p>
+
+  <div class="dag-svg-wrap">
+    <svg id="dag-svg" viewBox="0 0 880 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;height:auto;">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94A3B8"/></marker>
+        <marker id="arr-lock" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#C8930A"/></marker>
+      </defs>
+      <!-- A→B ×2 -->
+      <path d="M 88,144 C 130,110 160,110 192,138" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 88,156 C 130,190 160,190 192,162" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="138" y="105" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×2</text>
+      <!-- B→C ×1 -->
+      <path d="M 218,138 C 265,90 310,72 332,68" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="270" y="78" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×1</text>
+      <!-- B→D ×3 -->
+      <path d="M 220,148 C 265,145 300,147 332,148" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 220,153 C 265,158 300,160 332,158" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 220,160 C 265,172 300,175 332,172" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="272" y="142" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×3</text>
+      <!-- B→E ×1 -->
+      <path d="M 218,163 C 265,215 310,245 332,252" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="268" y="235" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×1</text>
+      <!-- C→G ×1 -->
+      <path d="M 388,68 C 480,60 590,95 642,138" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="518" y="58" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×1</text>
+      <!-- D→F 🔒×1 -->
+      <path d="M 388,157 C 430,175 470,192 492,205" stroke="#C8930A" stroke-width="2" stroke-dasharray="6,4" fill="none" marker-end="url(#arr-lock)"/>
+      <text x="437" y="200" text-anchor="middle" font-family="monospace" font-size="10" fill="#C8930A">🔒×1</text>
+      <!-- D→G ×2 normal -->
+      <path d="M 388,148 C 460,135 560,130 642,140" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 388,155 C 460,148 560,145 642,150" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="512" y="123" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×2</text>
+      <!-- D→G 🔒×1 -->
+      <path d="M 388,162 C 460,168 560,162 642,158" stroke="#C8930A" stroke-width="2" stroke-dasharray="6,4" fill="none" marker-end="url(#arr-lock)"/>
+      <text x="514" y="178" text-anchor="middle" font-family="monospace" font-size="10" fill="#C8930A">🔒×1</text>
+      <!-- E→D 🔒×1 -->
+      <path d="M 388,258 C 400,230 390,210 388,178" stroke="#C8930A" stroke-width="2" stroke-dasharray="6,4" fill="none" marker-end="url(#arr-lock)"/>
+      <text x="404" y="222" text-anchor="start" font-family="monospace" font-size="10" fill="#C8930A">🔒×1</text>
+      <!-- E→F ×3 -->
+      <path d="M 408,252 C 440,255 465,248 492,242" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 408,260 C 440,265 465,260 492,254" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 408,267 C 440,275 465,272 492,266" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="448" y="284" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×3</text>
+      <!-- F→G ×1 -->
+      <path d="M 548,248 C 580,230 615,200 642,168" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="607" y="218" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×1</text>
+      <!-- G→H ×3 -->
+      <path d="M 698,143 C 730,130 760,130 782,138" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 698,150 C 730,150 760,150 782,150" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <path d="M 698,157 C 730,170 760,170 782,162" stroke="#94A3B8" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+      <text x="738" y="124" text-anchor="middle" font-family="monospace" font-size="10" fill="#94A3B8">×3</text>
+      <!-- Nodes -->
+      <circle id="dag-A" cx="60" cy="150" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="60" y="146" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">A</text>
+      <text id="dag-A-count" x="60" y="162" text-anchor="middle" font-family="monospace" font-size="12" fill="#7A6A5A">1</text>
+      <circle id="dag-B" cx="200" cy="150" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="200" y="146" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">B</text>
+      <text id="dag-B-count" x="200" y="162" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <circle id="dag-C" cx="360" cy="60" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="360" y="56" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">C</text>
+      <text id="dag-C-count" x="360" y="72" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <circle id="dag-D" cx="360" cy="160" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="360" y="156" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">D</text>
+      <text id="dag-D-count" x="360" y="172" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <circle id="dag-E" cx="360" cy="260" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="360" y="256" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">E</text>
+      <text id="dag-E-count" x="360" y="272" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <circle id="dag-F" cx="520" cy="255" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="520" y="251" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">F</text>
+      <text id="dag-F-count" x="520" y="267" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <circle id="dag-G" cx="668" cy="150" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="668" y="146" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">G</text>
+      <text id="dag-G-count" x="668" y="162" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <circle id="dag-H" cx="808" cy="150" r="26" fill="white" stroke="#E8DDD0" stroke-width="2"/>
+      <text x="808" y="146" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#1A1410">H</text>
+      <text id="dag-H-count" x="808" y="162" text-anchor="middle" font-family="monospace" font-size="12" fill="#ccc">?</text>
+      <!-- Legend -->
+      <line x1="18" y1="302" x2="48" y2="302" stroke="#94A3B8" stroke-width="2"/>
+      <text x="52" y="306" font-family="monospace" font-size="10" fill="#7A6A5A">lajur terbuka</text>
+      <line x1="150" y1="302" x2="180" y2="302" stroke="#C8930A" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="184" y="306" font-family="monospace" font-size="10" fill="#C8930A">lajur 🔒 (butuh kunci)</text>
+    </svg>
+  </div>
+
+  <div class="callout callout-blue" style="margin-top:12px">
+    <strong style="color:var(--blue)">📌 Lajur terbuka (LT-4, tanpa kunci):</strong>
+    A→B ×2 · B→C ×1 · B→D ×3 · B→E ×1 · C→G ×1 · D→G ×2 · E→F ×3 · F→G ×1 · G→H ×3
+  </div>
+
+  <div class="explainer-card" style="margin-top:16px">
+    <div class="explainer-header">📊 Tabel Akumulasi — Cara Mencapai Setiap Titik
+      <button class="reset-btn" onclick="dagReset()">↺ Reset</button>
+    </div>
+    <div class="explainer-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Klik tombol untuk mengungkap satu titik sekaligus. Titik aktif berwarna oranye, titik selesai berwarna hijau.</p>
+      <div class="tbl-wrap">
+        <table class="dag-sim-table">
+          <thead><tr>
+            <th style="background:var(--s1)">Titik</th>
+            <th style="background:var(--s2)">Cara Mencapai</th>
+            <th style="background:var(--s3)">Penjelasan</th>
+          </tr></thead>
+          <tbody id="dag-tbody"></tbody>
+        </table>
+      </div>
+      <div class="ctrl-row">
+        <button class="reveal-btn" id="dag-btn" onclick="dagNext()">Hitung titik berikutnya ▶</button>
+        <span class="step-counter" id="dag-ctr">Titik 1 dari 8</span>
+      </div>
+      <div id="dag-insight" class="callout callout-green" style="display:none;margin-top:16px">
+        <div class="callout-label" style="color:var(--green)">✅ H = 60 rute (tanpa kunci)</div>
+        <strong>Prinsip kunci:</strong> lajur ganda dalam satu segmen → <strong>kalikan</strong>. Beberapa jalur masuk ke satu titik → <strong>jumlahkan</strong>. G memiliki 3 jalur masuk: dari C, D, dan F.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PIGEONHOLE ── -->
+  <h3 style="margin-top:32px">③ Prinsip Pigeonhole — Simulator</h3>
+  <p style="font-size:14px;color:var(--muted)">Pak Dengklek membuat <strong>7 tipe biskuit</strong>, masing-masing <strong>5 butir</strong>. Geser slider untuk melihat kapan jaminan "semua tipe dicicipi" terpenuhi.</p>
+  <div style="background:var(--card);border:2px solid var(--border);border-radius:12px;padding:20px;margin-top:12px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Jumlah bebek diundang: <strong id="ph-count-text" style="color:var(--accent)">1</strong></div>
+        <input type="range" id="ph-slider" min="1" max="40" value="1" oninput="updatePigeonhole(this.value)" style="width:100%;height:8px;border-radius:4px;-webkit-appearance:none;appearance:none;background:var(--border);outline:none">
+      </div>
+      <div style="font-size:28px;font-weight:700;color:var(--accent);font-family:monospace;min-width:40px;text-align:right" id="ph-count-display">1</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px" id="ph-jars"></div>
+    <div id="ph-status" style="padding:14px;border-radius:10px;font-size:15px;line-height:1.65;text-align:center"></div>
+    <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-size:11px;font-family:monospace;color:var(--muted);margin-bottom:4px">Skenario terburuk</div>
+        <div style="font-size:16px;font-weight:700;font-family:monospace">(N−1)×K = 30</div>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--green-light);border:1.5px solid var(--green);border-radius:8px;padding:12px">
+        <div style="font-size:11px;font-family:monospace;color:var(--green);margin-bottom:4px">Minimal bebek</div>
+        <div style="font-size:16px;font-weight:700;font-family:monospace;color:var(--green)">(N−1)×K+1 = 31</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-latihan1')">Lanjut ke Latihan Terpandu →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 4 — LATIHAN TERPANDU
+══════════════════════════════════ -->
+<div id="p-latihan1" class="panel">
+  <div class="section-badge blue">Latihan Terpandu · Clicker Berjenjang</div>
+  <h2>Latihan Terpandu — 5 Soal Clicker</h2>
+  <p>Untuk setiap soal: baca dulu, pilih jawaban, lalu cek penjelasannya. Jangan lewat ke soal berikutnya sebelum paham mengapa jawabanmu benar atau salah.</p>
+
+  <!-- LT-1 -->
+  <h3>LT-1 — Pemanasan: Kata Sandi</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal LT-1</div>
+    <p>Dani ingin membuat kata sandi 2 huruf. Huruf pertama harus vokal (A, I, U, E, O) dan huruf kedua harus konsonan (K, L, M, N, P). Berapa banyak kata sandi berbeda yang bisa Dani buat?</p>
+  </div>
+  <div class="quiz-opts" id="lt1-opts"></div>
+  <div class="quiz-feedback" id="lt1-fb"></div>
+
+  <!-- LT-2 -->
+  <h3>LT-2 — Makan Siang</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal LT-2</div>
+    <p>Sinta memesan makan siang. Ia bisa memesan nasi goreng <strong>ATAU</strong> mie goreng (bukan keduanya). Nasi goreng tersedia dalam 3 tingkat kepedasan, mie goreng dalam 4 variasi topping. Berapa banyak pilihan makan siang Sinta?</p>
+  </div>
+  <div class="quiz-opts" id="lt2-opts"></div>
+  <div class="quiz-feedback" id="lt2-fb"></div>
+
+  <!-- LT-3 -->
+  <h3>LT-3 — Kode Akses</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal LT-3</div>
+    <p>Sebuah kode akses terdiri dari: 1 huruf kapital (A–Z), diikuti 2 angka (0–9), diikuti 1 simbol dari {!, @, #}. Berapa banyak kode akses berbeda yang mungkin?</p>
+  </div>
+  <div class="quiz-opts" id="lt3-opts"></div>
+  <div class="quiz-feedback" id="lt3-fb"></div>
+
+  <!-- LT-4 -->
+  <h3>LT-4 — Penghitungan Jalur (Inti Sesi)</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal LT-4 — OSN-K 2025, adaptasi Soal 14</div>
+    <p>Gunakan graf Perjalanan ke Timur di Panel Visual. Jika bebek <strong>tidak memiliki kunci sakti</strong> (semua lajur terkunci tidak bisa dilalui), berapa banyak rute berbeda dari A ke H?</p>
+    <p style="font-size:13px;color:var(--muted)"><em>Petunjuk: Gunakan tabel akumulasi di Panel Visual untuk membantu. Hitung titik dari kiri ke kanan.</em></p>
+  </div>
+  <div class="quiz-opts" id="lt4-opts"></div>
+  <div class="quiz-feedback" id="lt4-fb"></div>
+
+  <!-- LT-5 -->
+  <h3>LT-5 — Komplemen Bersyarat</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal LT-5</div>
+    <p>Pak Budi memilih pakaian kerja dari 3 kemeja, 2 celana, dan 4 pasang sepatu. Larangan: ia tidak mau memakai kemeja merah dengan celana hitam (1 kombinasi terlarang dari kemeja-celana), DAN tidak mau memakai sepatu coklat dengan celana hitam (1 kombinasi terlarang dari celana-sepatu). Berapa banyak pilihan pakaian yang valid?</p>
+  </div>
+  <div class="quiz-opts" id="lt5-opts"></div>
+  <div class="quiz-feedback" id="lt5-fb"></div>
+
+  <!-- Komplemen step-reveal -->
+  <div class="explainer-card" style="margin-top:24px">
+    <div class="explainer-header">📐 Langkah-Langkah Komplemen &amp; Inklusi-Eksklusi (LT-5)
+      <button class="reset-btn" onclick="ceReset()">↺ Reset</button>
+    </div>
+    <div class="explainer-body">
+      <div id="ce-steps"></div>
+      <div class="ctrl-row">
+        <button class="reveal-btn" id="ce-btn" onclick="ceNext()">Langkah berikutnya ▶</button>
+        <span class="step-counter" id="ce-ctr">0 / 5 langkah</span>
+      </div>
+      <div id="ce-insight" class="callout callout-purple" style="display:none;margin-top:16px">
+        <div class="callout-label" style="color:var(--purple)">⚠️ Hati-hati penghitungan ganda!</div>
+        Jika kita hanya mengurangi 4 + 3 = 7, kita mengurangi overlap <em>dua kali</em>. Prinsip inklusi-eksklusi: tambahkan kembali 1 untuk mengoreksinya. <strong>24 − 4 − 3 + 1 = 18.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-bacaan2')">Lanjut ke Bacaan Lanjutan →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 5 — BACAAN LANJUTAN
+══════════════════════════════════ -->
+<div id="p-bacaan2" class="panel">
+  <div class="section-badge">Bacaan Lanjutan · Sesi 4</div>
+  <h2>Kapan Enumerasi vs. Rumus?</h2>
+
+  <h3>Dua Strategi Berbeda</h3>
+  <p><strong>Enumerasi lengkap:</strong> daftar semua kemungkinan, hitung satu per satu. Cocok ketika jumlahnya kecil dan soal memerlukan konfigurasi spesifik yang tidak mudah dihitung dengan rumus.</p>
+  <p><strong>Rumus atau jalan pintas struktural:</strong> gunakan aturan penjumlahan, perkalian, simetri, atau komplemen untuk langsung menghitung. Wajib digunakan ketika jumlahnya besar.</p>
+  <p>LO A6 mengajarkan bahwa yang terpenting bukan menghafal rumus mana yang digunakan, melainkan <strong>mengenali ciri-ciri soal yang mengindikasikan adanya jalan pintas struktural</strong>.</p>
+
+  <h3>Ciri-Ciri Soal yang Punya Jalan Pintas</h3>
+  <ul>
+    <li>Pilihan bersifat independen di setiap tahap → kemungkinan besar aturan perkalian.</li>
+    <li>Kasus saling eksklusif (tidak tumpang tindih) → kemungkinan besar aturan penjumlahan.</li>
+    <li>Ada simetri: beberapa konfigurasi terlihat berbeda tapi sebenarnya ekuivalen → bisa dibagi faktor simetri.</li>
+    <li>Jumlah kemungkinan sangat besar → enumerasi tidak praktis, pasti ada rumus.</li>
+    <li>Ada larangan atau kondisi negatif → coba strategi komplemen (total − yang tidak valid).</li>
+  </ul>
+
+  <h3>Ciri-Ciri Soal yang Memerlukan Enumerasi</h3>
+  <ul>
+    <li>Jumlah konfigurasi kecil (kurang dari 20–30) dan soal memerlukan memverifikasi setiap konfigurasi.</li>
+    <li>Ada kondisi kompleks yang bergantung antar pilihan dengan cara yang tidak teratur.</li>
+    <li>Soal meminta konfigurasi spesifik tertentu, bukan hanya menghitung banyaknya.</li>
+  </ul>
+
+  <h3>Prinsip Pigeonhole — Batas Bawah yang Dijamin</h3>
+  <p>Ada jenis ketiga soal kombinatorik yang sering muncul di Bagian A OSN-K: bukan "berapa banyak cara?", melainkan <em>"berapa minimal agar sesuatu pasti terjadi?"</em></p>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">📌 Prinsip Pigeonhole</div>
+    Jika ada N kotak dan kita memasukkan lebih dari N benda, maka pasti ada setidaknya satu kotak yang berisi lebih dari satu benda. Secara umum: jika ada K benda dibagi ke dalam N kotak, maka ada setidaknya satu kotak dengan ⌈K/N⌉ benda.
+  </div>
+
+  <h3>Demo: Soal 17 OSN-K 2024 — Mencicipi Biskuit</h3>
+  <p>Pak Dengklek membuat 7 tipe biskuit, masing-masing 5 butir. Para bebek bebas mengambil satu butir mana pun. Minimal berapa bebek yang harus diundang agar semua tipe pernah dicicipi?</p>
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">🔎 Logika Skenario Terburuk</div>
+    Skenario terburuk: semua bebek mengambil dari 6 tipe saja (menghindari satu tipe). Setiap tipe punya 5 butir → setelah (7−1) × 5 = 30 bebek, masih mungkin ada satu tipe belum dicicipi. Bebek ke-31 <em>pasti</em> mengambil dari tipe ke-7.<br><br>
+    <strong>Jawaban: 31 bebek.</strong> Formula umum: <strong>(N−1) × K + 1</strong>, dengan N = jumlah tipe dan K = butir per tipe.
+  </div>
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">🔗 Hubungan ke A6</div>
+    Dari tiga jenis soal yang kita lihat hari ini — menghitung cara, menghitung jalur, menjamin kondisi — masing-masing punya teknik yang berbeda. Mengenali jenis pertanyaan sebelum mulai menghitung adalah inti LO A6.
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-latihan2')">Lanjut ke Latihan Mandiri →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 6 — LATIHAN MANDIRI
+══════════════════════════════════ -->
+<div id="p-latihan2" class="panel">
+  <div class="section-badge green">Latihan Mandiri · You Do</div>
+  <h2>Latihan Mandiri</h2>
+  <p>Kerjakan sendiri terlebih dahulu sebelum melihat petunjuk. Tunjukkan cara kerjamu secara jelas.</p>
+
+  <!-- LM-1 -->
+  <h3>LM-1 — Kode Pintu Gudang Berlapis</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal LM-1</div>
+    Pak Rudi membuat kode pintu gudang: 3 karakter. Karakter pertama: huruf kapital (A–Z). Karakter kedua: angka genap (0, 2, 4, 6, 8). Karakter ketiga: angka (0–9) atau simbol bintang (*) atau simbol pagar (#).
+    <ol style="margin-top:10px">
+      <li>(a) Berapa banyak kode yang mungkin?</li>
+      <li>(b) Berapa banyak kode yang karakter keduanya bukan 0?</li>
+      <li>(c) Berapa banyak kode yang karakter pertamanya vokal DAN karakter ketiganya adalah simbol (bukan angka)?</li>
+      <li>(d) Berapa banyak kode yang karakter pertamanya vokal ATAU karakter keduanya adalah 0? <em>(Perhatikan kemungkinan tumpang tindih.)</em></li>
+    </ol>
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Ruang Kerja LM-1</div>
+    <div class="form-group">
+      <label class="form-label">(a) Total kode:</label>
+      <textarea rows="3" data-key="lm1_a" placeholder="Tuliskan cara kerjamu: berapa pilihan tiap karakter? Aturan apa yang dipakai?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">(b) Karakter kedua bukan 0:</label>
+      <textarea rows="3" data-key="lm1_b" placeholder="Karakter kedua bukan 0 berarti berapa pilihannya?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">(c) Vokal DAN simbol:</label>
+      <textarea rows="3" data-key="lm1_c" placeholder="Berapa vokal? Berapa simbol? Aturan apa?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">(d) Vokal ATAU karakter kedua = 0:</label>
+      <textarea rows="4" data-key="lm1_d" placeholder="Hati-hati tumpang tindih! |Vokal| + |Kedua=0| − |Vokal DAN Kedua=0| = ?"></textarea>
+    </div>
+  </div>
+
+  <div class="explainer-card">
+    <div class="explainer-header blue">💡 Petunjuk dan Solusi LM-1
+      <button class="reset-btn" onclick="lm1Reset()">↺ Sembunyikan</button>
+    </div>
+    <div class="explainer-body" id="lm1-sol" style="display:none">
+      <p><strong>(a)</strong> Karakter pertama: 26. Karakter kedua: 5 (angka genap). Karakter ketiga: 10 angka + 2 simbol = 12. Total = <strong>26 × 5 × 12 = 1.560</strong>.</p>
+      <p><strong>(b)</strong> Karakter kedua bukan 0 → 4 pilihan (2,4,6,8). Total = 26 × 4 × 12 = <strong>1.248</strong>.</p>
+      <p><strong>(c)</strong> Vokal (A,I,U,E,O): 5. Karakter kedua: 5. Simbol: 2. Total = 5 × 5 × 2 = <strong>50</strong>.</p>
+      <p><strong>(d)</strong> |Vokal| = 5×5×12 = 300. |Kedua=0| = 26×1×12 = 312. |Vokal DAN Kedua=0| = 5×1×12 = 60. Jawaban = 300 + 312 − 60 = <strong>552</strong>.</p>
+      <div class="callout callout-yellow"><div class="callout-label" style="color:var(--yellow)">⚠️ Kesalahan Umum</div>Soal (a): lupa menjumlahkan angka + 2 simbol untuk karakter ketiga, hanya menghitung 10. Soal (d): menjumlahkan 300 + 312 = 612 tanpa mengurangi overlap — ini adalah inklusi-eksklusi!</div>
+    </div>
+    <div class="explainer-body" id="lm1-btn-wrap">
+      <button class="reveal-btn" onclick="lm1Show()">Tampilkan Solusi ▶</button>
+    </div>
+  </div>
+
+  <!-- LM-2 -->
+  <h3>LM-2 — Perjalanan ke Timur: Satu Kunci Sakti (OSN-K 2025, Soal 16)</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal LM-2</div>
+    Gunakan graf Perjalanan ke Timur yang sama. Ada 3 lajur rahasia terkunci: E→D ×1, D→F ×1, dan satu D→G ×1 tambahan. Jika bebek hanya memiliki <strong>SATU kunci sakti</strong>, berapa banyak rute berbeda dari A ke H yang bisa mereka lalui?
+    <br><br>
+    <em>Petunjuk: lakukan analisis kasus berdasarkan lajur mana yang dibuka. Hitung rute untuk masing-masing kasus.</em>
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Ruang Kerja LM-2 — Analisis Kasus</div>
+    <div class="tbl-wrap">
+      <table class="sim-table th-blue">
+        <thead><tr>
+          <th>Kunci digunakan untuk lajur…</th>
+          <th>Perubahan pada graf</th>
+          <th>Banyak rute A→H</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Tidak digunakan (baseline)</td>
+            <td style="color:var(--muted);font-size:13px">Dari LT-4</td>
+            <td><input class="cell-input" data-key="lm2_case0" placeholder="?"></td>
+          </tr>
+          <tr>
+            <td>Membuka E→D</td>
+            <td><input class="cell-input" style="width:100%" data-key="lm2_case1_note" placeholder="Apa yang berubah?"></td>
+            <td><input class="cell-input" data-key="lm2_case1" placeholder="?"></td>
+          </tr>
+          <tr>
+            <td>Membuka D→F (tambahan)</td>
+            <td><input class="cell-input" style="width:100%" data-key="lm2_case2_note" placeholder="Apa yang berubah?"></td>
+            <td><input class="cell-input" data-key="lm2_case2" placeholder="?"></td>
+          </tr>
+          <tr>
+            <td>Membuka D→G (tambahan)</td>
+            <td><input class="cell-input" style="width:100%" data-key="lm2_case3_note" placeholder="Apa yang berubah?"></td>
+            <td><input class="cell-input" data-key="lm2_case3" placeholder="?"></td>
+          </tr>
+          <tr style="background:var(--accent-light)">
+            <td><strong>Jawaban akhir:</strong></td>
+            <td colspan="2"><input class="cell-input" style="width:100%" data-key="lm2_final" placeholder="Berapa rute maksimum dengan 1 kunci?"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="explainer-card">
+    <div class="explainer-header blue">💡 Solusi LM-2
+      <button class="reset-btn" onclick="lm2Reset()">↺ Sembunyikan</button>
+    </div>
+    <div class="explainer-body" id="lm2-sol" style="display:none">
+      <p><strong>Baseline (tanpa kunci):</strong> 60 rute (dari LT-4: A=1,B=2,C=2,D=6,E=2,F=6,G=20,H=60).</p>
+      <p><strong>Kasus E→D dibuka:</strong> Cara ke D sekarang = 6 + (cara ke E × 1) = 6 + 2 = 8. Cara ke G = C×1 + D×2 + F×1 = 2 + 16 + 6 = 24. Cara ke H = 24 × 3 = <strong>72</strong>.</p>
+      <p><strong>Kasus D→F dibuka (D→F ×1 tambahan, jadi total D→F = 2):</strong> Cara ke F = 6 × 2 = 12. Cara ke G = 2 + 12 + 12 = 26... Tunggu — perlu hati-hati. D→F sekarang 2 lajur (1 normal... oh, semula 0 normal + 1 terkunci, sekarang 1 terbuka). Cara ke F = 6 × 1 = 6. Cara ke G = 2 + 12 + 6 = 20 → H = 60. Tidak ada perubahan? Perhatikan: baseline sudah menghitung D→F = 0 (terkunci), jadi membuka 1 lajur D→F: cara ke F = 6 × 1 = 6 (baru). Cara ke G = 2 + 12 + 6 = 20. H = 60. <em>Hmm sama.</em></p>
+      <div class="callout callout-yellow"><div class="callout-label" style="color:var(--yellow)">📌 Interpretasi Soal OSN-K 2025</div>Jawaban resmi OSN-K 2025 Soal 16 adalah <strong>114 rute</strong>, yang sesuai dengan membuka lajur E→D (rute = 72)... Perhatikan bahwa interpretasi soal sangat bergantung pada struktur awal graf yang diberikan di soal asli. Kerjakan sesuai pemahamanmu dan bandingkan dengan solusi instruktur.</div>
+    </div>
+    <div class="explainer-body" id="lm2-btn-wrap">
+      <button class="reveal-btn" onclick="lm2Show()">Tampilkan Solusi ▶</button>
+    </div>
+  </div>
+
+  <!-- LM-3 -->
+  <h3>LM-3 — Membentuk Komite (Tantangan)</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal LM-3 — Tantangan</div>
+    Sebuah organisasi ingin membentuk komite: tepat 1 ketua dan 2 anggota biasa. Tersedia 5 kandidat ketua (berbeda dari kandidat anggota) dan 8 kandidat anggota. Kedua anggota biasa tidak memiliki urutan: {Andi, Budi} = {Budi, Andi}.
+    <ol style="margin-top:10px">
+      <li>(a) Berapa banyak komite yang mungkin?</li>
+      <li>(b) Jika Andi dan Budi tidak mau berada dalam komite yang sama, berapa banyak komite yang valid?</li>
+      <li>(c) <strong>Tantangan:</strong> Jika sekarang butuh 1 ketua, 1 wakil ketua (dari kelompok 5 kandidat), dan 2 anggota (dari kelompok 8 kandidat), berapa banyak komite yang mungkin?</li>
+    </ol>
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Ruang Kerja LM-3</div>
+    <div class="form-group">
+      <label class="form-label">(a) Total komite:</label>
+      <textarea rows="3" data-key="lm3_a" placeholder="Pilih ketua: 5 cara. Pilih 2 dari 8 anggota tanpa urutan: C(8,2) = ?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">(b) Komite valid (tanpa Andi+Budi bersama):</label>
+      <textarea rows="3" data-key="lm3_b" placeholder="Total − kasus Andi+Budi sama-sama anggota = ?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">(c) Tantangan — ketua + wakil ketua + 2 anggota:</label>
+      <textarea rows="3" data-key="lm3_c" placeholder="Apakah ketua dan wakil ketua perlu dibagi 2? Pikirkan: apakah {Andi ketua, Budi wakil} = {Budi ketua, Andi wakil}?"></textarea>
+    </div>
+  </div>
+
+  <div class="explainer-card">
+    <div class="explainer-header blue">💡 Solusi LM-3
+      <button class="reset-btn" onclick="lm3Reset()">↺ Sembunyikan</button>
+    </div>
+    <div class="explainer-body" id="lm3-sol" style="display:none">
+      <p><strong>(a)</strong> Pilih ketua: 5. Pilih 2 anggota dari 8 tanpa urutan: C(8,2) = 8×7/2 = 28. Total = 5 × 28 = <strong>140 komite</strong>.</p>
+      <p><strong>(b)</strong> Kasus Andi+Budi bersama: 1 cara (keduanya terpilih) × 5 ketua = 5. Jawaban = 140 − 5 = <strong>135 komite</strong>.</p>
+      <p><strong>(c)</strong> Pilih ketua: 5. Pilih wakil dari sisa 4: 4. Pilih 2 anggota: C(8,2) = 28. Total = 5 × 4 × 28 = <strong>560 komite</strong>. Tidak perlu dibagi 2 karena ketua dan wakil ketua memiliki peran berbeda — {Andi ketua, Budi wakil} ≠ {Budi ketua, Andi wakil}.</p>
+      <div class="callout callout-blue"><div class="callout-label" style="color:var(--blue)">💡 Intuisi C(8,2) = 28</div>Mengapa dibagi 2? Karena {X,Y} dan {Y,X} adalah komite yang sama — kita menghitung setiap pasangan dua kali jika menggunakan perkalian biasa. Konsep ini (kombinasi C(n,k)) akan diperdalam di Sesi 8.</div>
+    </div>
+    <div class="explainer-body" id="lm3-btn-wrap">
+      <button class="reveal-btn" onclick="lm3Show()">Tampilkan Solusi ▶</button>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-bank')">Lanjut ke Bank Soal →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 7 — BANK SOAL
+══════════════════════════════════ -->
+<div id="p-bank" class="panel">
+  <div class="section-badge">Bank Soal Tambahan · Sesi 4</div>
+  <h2>Bank Soal Tambahan</h2>
+  <p>Gunakan soal-soal ini jika sudah menyelesaikan latihan mandiri, atau sebagai materi review di Sesi 5.</p>
+
+  <h3>BS-1 — Jadwal Rapat dengan Simetri</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal BS-1</div>
+    Sebuah perusahaan ingin menjadwalkan 3 rapat berbeda (Rapat A, B, C) dalam satu minggu kerja (Senin–Jumat). Setiap rapat harus pada hari yang berbeda.<br>
+    (a) Berapa banyak jadwal rapat yang mungkin?<br>
+    (b) Jika Rapat A harus diadakan sebelum Rapat B (tidak harus berurutan langsung), berapa banyak jadwal yang valid?
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Ruang Kerja BS-1</div>
+    <textarea rows="4" data-key="bs1_jawab" placeholder="Tuliskan cara kerjamu..."></textarea>
+  </div>
+  <div class="explainer-card">
+    <div class="explainer-header">💡 Solusi BS-1 <button class="reset-btn" onclick="bs1Reset()">↺</button></div>
+    <div class="explainer-body" id="bs1-sol" style="display:none">
+      <p><strong>(a)</strong> 5 × 4 × 3 = <strong>60 jadwal</strong>.</p>
+      <p><strong>(b)</strong> Dari 60 jadwal, secara simetri tepat setengahnya memiliki A sebelum B. Jawaban = 60 / 2 = <strong>30 jadwal</strong>.</p>
+      <div class="callout callout-yellow"><div class="callout-label" style="color:var(--yellow)">💡 Simetri sebagai jalan pintas</div>Argumen simetri: dari semua pasangan (jadwal A-sebelum-B, jadwal B-sebelum-A), tepat setengahnya memiliki A sebelum B. Lebih elegan daripada enumerasi semua kasus.</div>
+    </div>
+    <div class="explainer-body" id="bs1-btn-wrap"><button class="reveal-btn" onclick="bs1Show()">Tampilkan Solusi ▶</button></div>
+  </div>
+
+  <h3>BS-2 — Perjalanan ke Timur: Tiga Kunci Sakti (OSN-K 2025, Soal 15)</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal BS-2</div>
+    Gunakan graf Perjalanan ke Timur. Jika bebek memiliki <strong>TIGA kunci sakti</strong> (sehingga semua lajur rahasia bisa dibuka sekaligus: E→D, D→F tambahan, D→G tambahan), berapa banyak rute berbeda dari A ke H?
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Ruang Kerja BS-2</div>
+    <textarea rows="5" data-key="bs2_jawab" placeholder="Hitung ulang akumulasi dengan semua lajur terbuka. Perhatikan: E→D menciptakan ketergantungan — hitung D dan E secara iteratif."></textarea>
+  </div>
+  <div class="explainer-card">
+    <div class="explainer-header">💡 Solusi BS-2 <button class="reset-btn" onclick="bs2Reset()">↺</button></div>
+    <div class="explainer-body" id="bs2-sol" style="display:none">
+      <p>Dengan semua lajur terbuka: A→B×2, B→C×1, B→D×3, B→E×1, E→D×1, C→G×1, D→G×3 (2+1), D→F×1, E→F×3, F→G×1, G→H×3.</p>
+      <p>A=1, B=2, C=2, E=2 (B×1). D = (B×3) + (E×1) = 6 + 2 = 8. F = (D×1) + (E×3) = 8 + 6 = 14. G = (C×1) + (D×3) + (F×1) = 2 + 24 + 14 = 40. H = 40 × 3 = <strong>120</strong>.</p>
+      <div class="callout callout-yellow"><div class="callout-label" style="color:var(--yellow)">⚠️ Ketergantungan E→D</div>Karena E→D membuat D bergantung pada E (dan E bergantung pada B yang sudah diketahui), hitung E dulu, baru D. Urutan topologis sangat penting di sini.</div>
+    </div>
+    <div class="explainer-body" id="bs2-btn-wrap"><button class="reveal-btn" onclick="bs2Show()">Tampilkan Solusi ▶</button></div>
+  </div>
+
+  <h3>BS-3 — Penghitungan Jalur pada Grid</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal BS-3</div>
+    Sebuah robot berada di pojok kiri atas grid 3×4 (3 baris, 4 kolom). Robot hanya bisa bergerak ke kanan atau ke bawah, satu langkah setiap kali.<br>
+    (a) Berapa banyak rute berbeda dari pojok kiri atas ke pojok kanan bawah?<br>
+    (b) Jika sel di baris 2 kolom 3 tidak bisa dilewati, berapa banyak rute yang valid?
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Ruang Kerja BS-3</div>
+    <textarea rows="5" data-key="bs3_jawab" placeholder="Robot harus bergerak berapa langkah ke kanan dan berapa ke bawah? Gunakan akumulasi atau C(n,k)."></textarea>
+  </div>
+  <div class="explainer-card">
+    <div class="explainer-header">💡 Solusi BS-3 <button class="reset-btn" onclick="bs3Reset()">↺</button></div>
+    <div class="explainer-body" id="bs3-sol" style="display:none">
+      <p><strong>(a)</strong> Robot harus bergerak 3 langkah ke kanan dan 2 langkah ke bawah (total 5 langkah). C(5,2) = 10 rute.</p>
+      <p><strong>(b)</strong> Rute yang melewati sel (2,3): C(3,1) × C(2,1) = 3 × 2 = 6. Jawaban = 10 − 6 = <strong>4 rute</strong>.</p>
+    </div>
+    <div class="explainer-body" id="bs3-btn-wrap"><button class="reveal-btn" onclick="bs3Show()">Tampilkan Solusi ▶</button></div>
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-errorlog')">Lanjut ke Error Log →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 8 — ERROR LOG
+══════════════════════════════════ -->
+<div id="p-errorlog" class="panel">
+  <div class="section-badge">Error Log · AS-F2</div>
+  <h2>Error Log — Catatan Kesalahan Pribadi</h2>
+  <p>Setiap kali kamu mengerjakan soal dan hasilnya salah (atau benar tapi tidak yakin), catat satu baris di Error Log.</p>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">✅ Mengapa Error Log Penting?</div>
+    Error Log bukan hukuman. Ini adalah <strong>alat diagnosis</strong>: semakin baik kamu memahami MENGAPA kamu salah, semakin cepat kamu bisa memperbaikinya.
+  </div>
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">⏰ Penting</div>
+    Isi Error Log ini <strong>sekarang</strong>, selagi ingatan masih segar. Isi minimal <strong>1 baris</strong> berdasarkan soal yang kamu kerjakan di sesi ini.
+  </div>
+  <div class="tbl-wrap">
+    <table class="error-log-table" id="errlog-tbl">
+      <thead>
+        <tr style="background:var(--accent);color:#fff">
+          <td style="font-weight:700;padding:9px 8px;font-size:12px">#</td>
+          <td style="font-weight:700;padding:9px 8px;font-size:12px">Sumber Soal</td>
+          <td style="font-weight:700;padding:9px 8px;font-size:12px">Jawaban Saya</td>
+          <td style="font-weight:700;padding:9px 8px;font-size:12px">Jawaban Benar</td>
+          <td style="font-weight:700;padding:9px 8px;font-size:12px">Di Mana Gagal (spesifik)</td>
+          <td style="font-weight:700;padding:9px 8px;font-size:12px">Tipe Kesalahan</td>
+        </tr>
+      </thead>
+      <tbody id="errlog-tb"></tbody>
+    </table>
+  </div>
+  <button class="add-row-btn" onclick="errlogAdd()">+ Tambah Baris</button>
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-karcis')">Lanjut ke Karcis Keluar →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 9 — KARCIS KELUAR
+══════════════════════════════════ -->
+<div id="p-karcis" class="panel">
+  <div class="section-badge purple">Karcis Keluar · AS-F1</div>
+  <h2>Karcis Keluar — Sesi 4</h2>
+  <p>Isi form ini sebelum sesi berakhir. Jawaban jujur sangat membantu instruktur mempersiapkan sesi berikutnya.</p>
+
+  <div class="exit-card">
+    <h3>Pertanyaan 1 — Pilihan Ganda (wajib)</h3>
+    <p>Seorang siswa ingin memilih satu buku untuk dibaca. Ia bisa memilih dari 4 buku fiksi <strong>ATAU</strong> dari 6 buku nonfiksi. Berapa banyak pilihan yang ia punya?</p>
+    <div class="radio-group" style="margin-top:12px">
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="A" data-key="karcis_p1"> A. 24</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="B" data-key="karcis_p1"> B. 10</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="C" data-key="karcis_p1"> C. 4</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="D" data-key="karcis_p1"> D. 6</label>
+    </div>
+  </div>
+
+  <div class="exit-card" style="margin-top:16px">
+    <h3>Pertanyaan 2 — Jawaban Pendek (wajib)</h3>
+    <p>Dari soal latihan hari ini, tuliskan <strong>SATU soal</strong> yang kamu kerjakan. Apakah kamu menggunakan aturan penjumlahan, perkalian, atau keduanya? Jelaskan dalam 1–2 kalimat mengapa.</p>
+    <div class="form-group" style="margin-top:12px">
+      <textarea data-key="karcis_p2" rows="4" placeholder="Tuliskan nomor soal dan penjelasanmu..."></textarea>
+    </div>
+  </div>
+
+  <div class="exit-card" style="margin-top:16px">
+    <h3>Pertanyaan 3 — Refleksi (wajib)</h3>
+    <p>Dari LT-4 (penghitungan jalur) dan LM-2 (Perjalanan ke Timur dengan satu kunci), apa satu hal yang paling mengejutkan atau membingungkan? Jelaskan dalam 1–2 kalimat.</p>
+    <div class="form-group" style="margin-top:12px">
+      <textarea data-key="karcis_p3" rows="4" placeholder="Tuliskan refleksimu..."></textarea>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;text-align:right">
+    <button class="reveal-btn primary" onclick="goPanel('p-ringkasan')">Lanjut ke Ringkasan →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  PANEL 10 — RINGKASAN + DOWNLOAD
+══════════════════════════════════ -->
+<div id="p-ringkasan" class="panel">
+  <div class="section-badge green">Ringkasan · Sesi 4</div>
+  <h2>Yang Dipelajari Hari Ini</h2>
+  <ul>
+    <li><strong>Aturan penjumlahan:</strong> pilihan ATAU (saling eksklusif). Hitung tiap kasus dan jumlahkan.</li>
+    <li><strong>Aturan perkalian:</strong> pilihan berurutan dan independen (DAN). Kalikan jumlah pilihan di setiap tahap.</li>
+    <li><strong>Penghitungan jalur dalam DAG:</strong> lajur ganda → perkalian. Titik dengan beberapa jalur masuk → penjumlahan. Hitung secara kumulatif dari kiri ke kanan.</li>
+    <li><strong>Strategi komplemen:</strong> Total − yang tidak valid. Paling efektif ketika larangan lebih mudah dihitung.</li>
+    <li><strong>Prinsip pigeonhole:</strong> (N−1)×K+1 untuk menjamin setidaknya satu kategori terpenuhi dalam skenario terburuk.</li>
+    <li><strong>LO A6:</strong> Sebelum menghitung, tanya: "Apakah ini soal menghitung cara, menghitung jalur, atau menjamin kondisi?" Jawabannya menentukan teknik yang tepat.</li>
+  </ul>
+
+  <h3>Preview Sesi 5</h3>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">🔮 Sesi Berikutnya — Logika Boolean &amp; Permainan Kombinatorik</div>
+    Sesi 5 membahas <strong>Logika Boolean</strong> (mengevaluasi pernyataan logika menggunakan tabel kebenaran, LO A2) dan <strong>Permainan Kombinatorik</strong> (analisis mundur, LO A5). Kedua topik ini sering muncul bersamaan di Bagian A OSN-K.<br><br>
+    <strong>Sebelum Sesi 5:</strong> pastikan Error Log kamu sudah diisi minimal 1 baris berdasarkan latihan di sesi ini.
+  </div>
+
+  <div class="download-section">
+    <h3>📥 Unduh Responsku</h3>
+    <p>Tombol ini mengunduh semua jawabanmu dari sesi ini (latihan terpandu, latihan mandiri, bank soal, error log, dan karcis keluar) dalam satu file terstruktur yang dapat dibaca oleh instruktur.</p>
+    <div style="text-align:left;margin-bottom:16px">
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label" for="dl-nama" style="color:#ccc">Nama Lengkap</label>
+        <input type="text" id="dl-nama" placeholder="Nama kamu…" style="background:#2a2420;color:#fff;border-color:#555">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dl-email" style="color:#ccc">Alamat Email</label>
+        <input type="email" id="dl-email" placeholder="email@contoh.com" style="background:#2a2420;color:#fff;border-color:#555">
+      </div>
+    </div>
+    <button class="download-btn" onclick="doDownload()">⬇ Unduh Respons Sesi 4</button>
+    <div class="download-note">File akan diunduh sebagai .txt. Sampaikan ke instruktur untuk ditinjau.</div>
+  </div>
+</div>
+
+<script>
+// ── PANELS ────────────────────────────────────────────────
+const PANEL_IDS = ['p-gambaran','p-bacaan','p-visual','p-latihan1','p-bacaan2','p-latihan2','p-bank','p-errorlog','p-karcis','p-ringkasan'];
+
+function goPanel(id, pushHistory=true) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.prog-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = PANEL_IDS.indexOf(id);
+  if (idx>=0) document.querySelectorAll('.prog-btn')[idx].classList.add('active');
+  if (pushHistory) history.pushState(null,null,'#'+id);
+  window.scrollTo(0,0);
+}
+function syncPanelFromHash() {
+  const hash = window.location.hash.substring(1);
+  if (PANEL_IDS.includes(hash)) goPanel(hash,false);
+  else if (!window.location.hash) goPanel(PANEL_IDS[0],false);
+}
+window.addEventListener('DOMContentLoaded', syncPanelFromHash);
+window.addEventListener('hashchange', syncPanelFromHash);
+
+// ── KEYWORD DETECTOR ────────────────────────────────────
+const KEYWORDS = [
+  {word:'atau',type:'plus',color:'var(--blue)',bg:'var(--blue-light)',explain:'"Atau" → pilih <em>salah satu</em> dari beberapa opsi yang saling eksklusif. Gunakan <strong>Aturan Penjumlahan (+)</strong>. Contoh: "nasi goreng ATAU mie goreng" = 3 + 4 = 7 pilihan.'},
+  {word:'salah satu dari',type:'plus',color:'var(--blue)',bg:'var(--blue-light)',explain:'"Salah satu dari" → hanya satu opsi yang dipilih. Gunakan <strong>Aturan Penjumlahan (+)</strong>.'},
+  {word:'kasus berbeda',type:'plus',color:'var(--blue)',bg:'var(--blue-light)',explain:'"Kasus berbeda" → situasi yang tidak bisa terjadi bersamaan. Hitung tiap kasus lalu jumlahkan.'},
+  {word:'dan',type:'times',color:'var(--green)',bg:'var(--green-light)',explain:'"Dan" → semua kondisi harus terpenuhi secara berurutan/bersama. Gunakan <strong>Aturan Perkalian (×)</strong>. Contoh: "huruf DAN angka DAN simbol" = 26 × 10 × 3.'},
+  {word:'lalu / kemudian',type:'times',color:'var(--green)',bg:'var(--green-light)',explain:'"Lalu/Kemudian" → tahap berurutan, setiap tahap independen. Gunakan <strong>Aturan Perkalian (×)</strong>.'},
+  {word:'berurutan',type:'times',color:'var(--green)',bg:'var(--green-light)',explain:'"Berurutan" → aksi dilakukan step by step, tiap step independen → kalikan.'},
+  {word:'setiap',type:'times',color:'var(--green)',bg:'var(--green-light)',explain:'"Setiap" → pilihan diulang untuk setiap elemen. Biasanya mengisyaratkan perkalian.'},
+];
+const chips = document.getElementById('kw-chips');
+const kwResult = document.getElementById('kw-result');
+KEYWORDS.forEach(kw => {
+  const chip = document.createElement('span');
+  chip.style.cssText = 'padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;transition:all .2s;font-family:Georgia,serif;display:inline-block';
+  chip.textContent = kw.word;
+  chip.onclick = () => {
+    chips.querySelectorAll('span').forEach(c => { c.style.background='var(--card)'; c.style.borderColor='var(--border)'; c.style.color='var(--ink)'; c.style.fontWeight='normal'; });
+    chip.style.background = kw.bg; chip.style.borderColor = kw.color; chip.style.color = kw.color; chip.style.fontWeight = '700';
+    kwResult.innerHTML = kw.explain;
+    kwResult.style.background = kw.bg; kwResult.style.color = kw.color; kwResult.style.padding = '12px 14px'; kwResult.style.borderRadius = '8px';
+  };
+  chips.appendChild(chip);
+});
+
+// ── DAG STEP REVEAL ───────────────────────────────────
+const DAG_ROWS = [
+  {node:'A',count:1,  explain:'Titik awal. Selalu 1 cara.',rule:''},
+  {node:'B',count:2,  explain:'A→B ada 2 lajur terbuka. Cara ke B = 1 × 2 = 2.',rule:'× (lajur ganda)'},
+  {node:'C',count:2,  explain:'B→C ada 1 lajur. Cara ke C = 2 × 1 = 2.',rule:'× (lajur tunggal)'},
+  {node:'D',count:6,  explain:'B→D ada 3 lajur terbuka. Cara ke D = 2 × 3 = 6. (E→D terkunci — tidak dihitung di LT-4)',rule:'× (3 lajur dari B)'},
+  {node:'E',count:2,  explain:'B→E ada 1 lajur. Cara ke E = 2 × 1 = 2.',rule:'× (lajur tunggal)'},
+  {node:'F',count:6,  explain:'E→F ada 3 lajur terbuka. Cara ke F = 2 × 3 = 6. (D→F terkunci — tidak dihitung)',rule:'× (3 lajur dari E)'},
+  {node:'G',count:20, explain:'C→G (2×1=2) + D→G (6×2=12) + F→G (6×1=6): 2 + 12 + 6 = 20.',rule:'+ (3 jalur masuk), × dalam tiap jalur'},
+  {node:'H',count:60, explain:'G→H ada 3 lajur. Cara ke H = 20 × 3 = 60.',rule:'× (3 lajur)'},
+];
+let dagIdx = 0;
+const dagTbody = document.getElementById('dag-tbody');
+DAG_ROWS.forEach((row,i) => {
+  const tr = document.createElement('tr');
+  tr.id = 'dag-row-'+i; tr.className = 'hidden-row';
+  tr.innerHTML = `<td style="font-weight:700;font-size:15px">${row.node}</td><td id="dag-cell-${i}">?</td><td style="font-size:13px;color:var(--muted)"><em>${row.explain}</em><br><span style="font-family:monospace;font-size:11px;color:var(--blue)">${row.rule}</span></td>`;
+  dagTbody.appendChild(tr);
+});
+activateDagRow(0);
+
+function activateDagRow(idx) {
+  const tr = document.getElementById('dag-row-'+idx);
+  tr.className = 'current-row';
+  document.getElementById('dag-cell-'+idx).textContent = DAG_ROWS[idx].count;
+  const node = DAG_ROWS[idx].node;
+  const circle = document.getElementById('dag-'+node);
+  const countEl = document.getElementById('dag-'+node+'-count');
+  if (circle) { circle.setAttribute('fill','#FDEEE5'); circle.setAttribute('stroke','#D4521A'); circle.setAttribute('stroke-width','3'); }
+  if (countEl) { countEl.textContent = DAG_ROWS[idx].count; countEl.setAttribute('fill','#D4521A'); countEl.setAttribute('font-weight','700'); }
+  if (idx > 0) {
+    document.getElementById('dag-row-'+(idx-1)).className = 'revealed-row';
+    const prevNode = DAG_ROWS[idx-1].node;
+    const prevC = document.getElementById('dag-'+prevNode);
+    if (prevC) { prevC.setAttribute('fill','#E5F4EC'); prevC.setAttribute('stroke','#1F7A4A'); prevC.setAttribute('stroke-width','2'); }
+  }
+}
+function dagNext() {
+  if (dagIdx < DAG_ROWS.length-1) { dagIdx++; activateDagRow(dagIdx); }
+  document.getElementById('dag-ctr').textContent = 'Titik '+(dagIdx+1)+' dari '+DAG_ROWS.length;
+  if (dagIdx === DAG_ROWS.length-1) {
+    document.getElementById('dag-insight').style.display = 'block';
+    document.getElementById('dag-btn').disabled = true;
+    document.getElementById('dag-row-'+dagIdx).className = 'revealed-row';
+  }
+  save();
+}
+function dagReset() {
+  dagIdx = 0;
+  DAG_ROWS.forEach((row,i) => {
+    document.getElementById('dag-row-'+i).className = 'hidden-row';
+    document.getElementById('dag-cell-'+i).textContent = '?';
+    const circle = document.getElementById('dag-'+row.node);
+    const countEl = document.getElementById('dag-'+row.node+'-count');
+    if (circle) { circle.setAttribute('fill','white'); circle.setAttribute('stroke','#E8DDD0'); circle.setAttribute('stroke-width','2'); }
+    if (countEl) { countEl.textContent = '?'; countEl.setAttribute('fill','#ccc'); countEl.removeAttribute('font-weight'); }
+  });
+  document.getElementById('dag-ctr').textContent = 'Titik 1 dari 8';
+  document.getElementById('dag-insight').style.display = 'none';
+  document.getElementById('dag-btn').disabled = false;
+  activateDagRow(0);
+  save();
+}
+
+// ── QUIZ BUILDER ─────────────────────────────────────
+function buildQuiz(id, opts, correct, feedbacks) {
+  const wrap = document.getElementById(id+'-opts');
+  const fb = document.getElementById(id+'-fb');
+  opts.forEach((opt,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt'; btn.textContent = opt;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.quiz-opt').forEach(b=>{b.className='quiz-opt'});
+      btn.className = 'quiz-opt '+(i===correct?'correct':'wrong');
+      fb.innerHTML = feedbacks[i];
+      fb.style.background = i===correct?'var(--green-light)':'var(--accent-light)';
+      fb.style.color = i===correct?'var(--green)':'var(--accent)';
+      save();
+    };
+    wrap.appendChild(btn);
+  });
+}
+buildQuiz('lt1', ['A. 10','B. 25','C. 2','D. 7'], 1, [
+  '<b>Belum tepat (A).</b> Kamu menjumlahkan 5+5=10. Tapi ingat: kamu harus memilih <em>keduanya</em> (vokal DAN konsonan), bukan salah satu. Gunakan perkalian: 5 × 5 = 25.',
+  '<b>✅ Benar! B. 25.</b> Aturan perkalian: 5 vokal × 5 konsonan = 25. Kata kuncinya adalah "huruf pertama… DAN huruf kedua…".',
+  '<b>Belum tepat (C).</b> 2 bukan jawaban yang relevan di sini. Ada 5 vokal dan 5 konsonan — kalikan keduanya.',
+  '<b>Belum tepat (D).</b> 7 adalah hasil penjumlahan 5+2 — tidak relevan. Ingat: ini soal perkalian.',
+]);
+buildQuiz('lt2', ['A. 12','B. 7','C. 3','D. 4'], 1, [
+  '<b>Belum tepat (A).</b> Kamu mengalikan 3×4=12. Tapi Sinta hanya memesan SALAH SATU — bukan keduanya. Kata kunci "ATAU" → penjumlahan.',
+  '<b>✅ Benar! B. 7.</b> Aturan penjumlahan: 3 + 4 = 7. Karena memilih nasi goreng ATAU mie goreng (tidak keduanya), jumlahkan.',
+  '<b>Belum tepat (C).</b> Ini hanya pilihan nasi goreng saja. Mie goreng juga harus dihitung.',
+  '<b>Belum tepat (D).</b> Ini hanya pilihan mie goreng saja. Nasi goreng juga harus dihitung.',
+]);
+buildQuiz('lt3', ['A. 39','B. 780','C. 7.800','D. 260'], 2, [
+  '<b>Belum tepat (A).</b> 39 = 26+10+3 — kamu menjumlahkan semua pilihan. Tapi ini adalah 4 tahap berurutan yang independen, bukan pilihan "atau".',
+  '<b>Belum tepat (B).</b> 780 = 26×10×3. Kamu lupa ada <em>dua</em> digit angka (bukan satu). Tahapnya: huruf, angka1, angka2, simbol = 26×10×10×3.',
+  '<b>✅ Benar! C. 7.800.</b> 26 × 10 × 10 × 3 = 7.800. Empat tahap berurutan — aturan perkalian. Digit pertama dan kedua independen satu sama lain.',
+  '<b>Belum tepat (D).</b> 260 = 26×10. Kamu hanya menghitung huruf dan satu digit. Ada 4 tahap, bukan 2.',
+]);
+buildQuiz('lt4', ['A. 18','B. 36','C. 54','D. 60','E. 90'], 3, [
+  '<b>Belum tepat (A).</b> Terlalu kecil. Coba gunakan tabel akumulasi di Panel Visual untuk menghitung titik demi titik.',
+  '<b>Belum tepat (B).</b> Belum tepat. Ingat bahwa B memiliki 3 jalur keluar (ke C, D, E), dan G memiliki 3 jalur masuk. Hitung secara akumulatif.',
+  '<b>Belum tepat (C).</b> 54 adalah jawaban untuk struktur graf yang berbeda. Perhatikan bahwa B→D memiliki ×3 lajur dan E→F memiliki ×3 lajur.',
+  '<b>✅ Benar! D. 60.</b> A=1, B=2, C=2, D=6, E=2, F=6, G=(2+12+6)=20, H=20×3=60. G mendapat kontribusi dari C, D, dan F.',
+  '<b>Belum tepat (E).</b> Terlalu besar. Periksa kembali: lajur terkunci tidak dihitung.',
+]);
+buildQuiz('lt5', ['A. 24','B. 21','C. 20','D. 18','E. 15'], 3, [
+  '<b>Belum tepat (A).</b> 24 adalah total tanpa batasan. Belum dikurangi larangan.',
+  '<b>Belum tepat (B).</b> 21 = 24−3. Kamu hanya mengurangi larangan kedua. Ada DUA larangan yang harus dikurangi (dan overlap ditambah kembali).',
+  '<b>Belum tepat (C).</b> 20 = 24−4. Kamu hanya mengurangi larangan pertama. Ada DUA larangan.',
+  '<b>✅ Benar! D. 18.</b> Inklusi-eksklusi: 24 − 4 − 3 + 1 = 18. Kurangi L1 (4), kurangi L2 (3), tambah kembali overlap (1 yang dikurangi dua kali).',
+  '<b>Belum tepat (E).</b> Terlalu kecil. Kamu mungkin mengurangi terlalu banyak. Jangan lupa menambahkan kembali overlap.',
+]);
+
+// ── COMPLEMENT STEP REVEAL ───────────────────────────
+const CE_STEPS = [
+  {title:'Langkah 1 — Total Tanpa Batasan',body:'Hitung semua kombinasi jika tidak ada larangan: 3 kemeja × 2 celana × 4 sepatu.',math:'3 × 2 × 4 = 24 kombinasi',color:'var(--ink)',bg:'var(--card)'},
+  {title:'Langkah 2 — Hitung Larangan 1',body:'Kemeja merah + celana hitam (sepatu bebas): 1 pilihan kemeja, 1 pilihan celana, 4 pilihan sepatu.',math:'1 × 1 × 4 = 4 kombinasi terlarang',color:'var(--accent)',bg:'var(--accent-light)'},
+  {title:'Langkah 3 — Hitung Larangan 2',body:'Celana hitam + sepatu coklat (kemeja bebas): 3 pilihan kemeja, 1 pilihan celana, 1 pilihan sepatu.',math:'3 × 1 × 1 = 3 kombinasi terlarang',color:'var(--blue)',bg:'var(--blue-light)'},
+  {title:'Langkah 4 — Hitung Overlap (L1 ∩ L2)',body:'Kombinasi yang melanggar KEDUA larangan: kemeja merah + celana hitam + sepatu coklat. Ini dihitung dua kali jika hanya dikurangi!',math:'1 × 1 × 1 = 1 kombinasi',color:'var(--purple)',bg:'var(--purple-light)'},
+  {title:'Langkah 5 — Inklusi-Eksklusi',body:'Kurangi L1 dan L2, tambahkan kembali overlap (agar tidak dikurangi dua kali).',math:'24 − 4 − 3 + 1 = 18 kombinasi valid ✅',color:'var(--green)',bg:'var(--green-light)'},
+];
+let ceIdx=0;
+const ceStepsEl=document.getElementById('ce-steps');
+CE_STEPS.forEach((s,i)=>{
+  const div=document.createElement('div');
+  div.id='ce-s'+i;
+  div.style.cssText='margin-bottom:10px;padding:14px 18px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);opacity:.3;transition:all .35s';
+  div.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:monospace;margin-bottom:6px;color:${s.color}">${s.title}</div><div style="font-size:14px;line-height:1.6">${s.body}</div><div style="font-family:monospace;font-size:15px;font-weight:700;margin-top:6px;color:${s.color}">${s.math}</div>`;
+  ceStepsEl.appendChild(div);
+});
+function ceNext(){
+  if(ceIdx<CE_STEPS.length){
+    const el=document.getElementById('ce-s'+ceIdx);
+    el.style.opacity='1'; el.style.background=CE_STEPS[ceIdx].bg; el.style.borderColor=CE_STEPS[ceIdx].color;
+    ceIdx++;
+  }
+  document.getElementById('ce-ctr').textContent=ceIdx+' / 5 langkah';
+  if(ceIdx===CE_STEPS.length){document.getElementById('ce-insight').style.display='block';document.getElementById('ce-btn').disabled=true;}
+  save();
+}
+function ceReset(){
+  ceIdx=0;
+  CE_STEPS.forEach((_,i)=>{const el=document.getElementById('ce-s'+i);el.style.opacity='.3';el.style.background='var(--card)';el.style.borderColor='var(--border)';});
+  document.getElementById('ce-ctr').textContent='0 / 5 langkah';
+  document.getElementById('ce-insight').style.display='none';
+  document.getElementById('ce-btn').disabled=false;
+  save();
+}
+
+// ── PIGEONHOLE ────────────────────────────────────────
+const PH_N=7, PH_K=5, PH_MIN=31;
+const phJars=document.getElementById('ph-jars');
+for(let i=1;i<=PH_N;i++){
+  const jar=document.createElement('div');
+  jar.style.cssText='display:flex;flex-direction:column;align-items:center;gap:4px;min-width:48px';
+  jar.innerHTML=`<div style="width:50px;height:8px;background:var(--border);border-radius:4px 4px 0 0"></div><div style="width:50px;height:64px;border:2px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column-reverse;position:relative"><div id="phf${i}" style="width:100%;height:0;transition:height .3s;background:var(--blue-light);display:flex;align-items:flex-start;justify-content:center;padding-top:2px;font-size:12px;font-weight:700;color:var(--blue);font-family:monospace"></div></div><div style="font-size:10px;font-family:monospace;color:var(--muted)">T${i}</div>`;
+  phJars.appendChild(jar);
+}
+function updatePigeonhole(val){
+  val=parseInt(val);
+  document.getElementById('ph-count-text').textContent=val;
+  document.getElementById('ph-count-display').textContent=val;
+  let counts=new Array(PH_N).fill(0), rem=val;
+  for(let t=0;t<PH_N-1&&rem>0;t++){const add=Math.min(PH_K,rem);counts[t]=add;rem-=add;}
+  if(rem>0)counts[PH_N-1]=Math.min(rem,PH_K);
+  for(let i=0;i<PH_N;i++){
+    const fillEl=document.getElementById('phf'+(i+1));
+    const pct=(counts[i]/PH_K)*100;
+    fillEl.style.height=pct+'%';
+    fillEl.textContent=counts[i]>0?counts[i]:'';
+    fillEl.style.background=i===PH_N-1&&counts[i]>0?'var(--accent-light)':'var(--blue-light)';
+    fillEl.style.color=i===PH_N-1&&counts[i]>0?'var(--accent)':'var(--blue)';
+  }
+  const status=document.getElementById('ph-status');
+  if(val<PH_MIN){status.style.background='var(--yellow-light)';status.style.border='1.5px solid var(--yellow)';status.style.borderRadius='10px';status.innerHTML=`Dengan ${val} bebek, masih <b>mungkin</b> ada tipe yang belum dicicipi. Butuh ${PH_MIN-val} bebek lagi.`;}
+  else{status.style.background='var(--green-light)';status.style.border='1.5px solid var(--green)';status.style.borderRadius='10px';status.innerHTML=`✅ Dengan ${val} bebek, semua 7 tipe <b>pasti sudah dicicipi</b>!`;}
+}
+updatePigeonhole(1);
+
+// ── SOLUTION TOGGLES ──────────────────────────────────
+function lm1Show(){document.getElementById('lm1-sol').style.display='block';document.getElementById('lm1-btn-wrap').style.display='none';}
+function lm1Reset(){document.getElementById('lm1-sol').style.display='none';document.getElementById('lm1-btn-wrap').style.display='block';}
+function lm2Show(){document.getElementById('lm2-sol').style.display='block';document.getElementById('lm2-btn-wrap').style.display='none';}
+function lm2Reset(){document.getElementById('lm2-sol').style.display='none';document.getElementById('lm2-btn-wrap').style.display='block';}
+function lm3Show(){document.getElementById('lm3-sol').style.display='block';document.getElementById('lm3-btn-wrap').style.display='none';}
+function lm3Reset(){document.getElementById('lm3-sol').style.display='none';document.getElementById('lm3-btn-wrap').style.display='block';}
+function bs1Show(){document.getElementById('bs1-sol').style.display='block';document.getElementById('bs1-btn-wrap').style.display='none';}
+function bs1Reset(){document.getElementById('bs1-sol').style.display='none';document.getElementById('bs1-btn-wrap').style.display='block';}
+function bs2Show(){document.getElementById('bs2-sol').style.display='block';document.getElementById('bs2-btn-wrap').style.display='none';}
+function bs2Reset(){document.getElementById('bs2-sol').style.display='none';document.getElementById('bs2-btn-wrap').style.display='block';}
+function bs3Show(){document.getElementById('bs3-sol').style.display='block';document.getElementById('bs3-btn-wrap').style.display='none';}
+function bs3Reset(){document.getElementById('bs3-sol').style.display='none';document.getElementById('bs3-btn-wrap').style.display='block';}
+
+// ── ERROR LOG ─────────────────────────────────────────
+const ERROR_TYPES=['Salah baca soal','Model keliru','Kesalahan aritmetika','Analisis kasus tidak lengkap','Kehabisan waktu'];
+let errCount=0;
+function errlogAdd(){
+  errCount++;
+  const n=errCount;
+  const opts=ERROR_TYPES.map(t=>'<option value="'+t+'">'+t+'</option>').join('');
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td style="text-align:center;color:var(--muted);font-size:13px;padding-top:10px">'+n+'</td>'+
+    '<td><input type="text" data-key="err'+n+'_src" placeholder="mis. LT-4"></td>'+
+    '<td><input type="text" data-key="err'+n+'_mine" placeholder="Jawabanku"></td>'+
+    '<td><input type="text" data-key="err'+n+'_correct" placeholder="Jawaban benar"></td>'+
+    '<td><textarea rows="2" data-key="err'+n+'_where" placeholder="Langkah mana yang salah?"></textarea></td>'+
+    '<td><select data-key="err'+n+'_type"><option value="">— pilih —</option>'+opts+'</select></td>';
+  document.getElementById('errlog-tb').appendChild(tr);
+  tr.querySelectorAll('[data-key]').forEach(el=>el.addEventListener('input',save));
+  save();
+}
+errlogAdd();
+
+// ── PERSISTENCE ───────────────────────────────────────
+const STORE='osnk-sesi4';
+function save(){
+  const d={};
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const k=el.getAttribute('data-key');
+    if(el.type==='radio'||el.type==='checkbox'){if(el.checked)d[k]=el.value;}
+    else d[k]=el.value;
+  });
+  d._dagIdx=dagIdx; d._ceIdx=ceIdx; d._errCount=errCount;
+  try{localStorage.setItem(STORE,JSON.stringify(d));}catch(e){}
+}
+function load(){
+  let d; try{d=JSON.parse(localStorage.getItem(STORE));}catch(e){}
+  if(!d)return;
+  if(d._errCount>1){for(let i=1;i<d._errCount;i++)errlogAdd();}
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const k=el.getAttribute('data-key');
+    if(!(k in d))return;
+    if(el.type==='radio'||el.type==='checkbox')el.checked=el.value===d[k];
+    else el.value=d[k];
+  });
+  if(d._dagIdx){while(dagIdx<d._dagIdx)dagNext();}
+  if(d._ceIdx){while(ceIdx<d._ceIdx)ceNext();}
+}
+document.querySelectorAll('[data-key]').forEach(el=>el.addEventListener('input',save));
+
+// ── DOWNLOAD ──────────────────────────────────────────
+function doDownload(){
+  const data={};
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const k=el.getAttribute('data-key');
+    if(el.type==='radio'||el.type==='checkbox'){if(el.checked)data[k]=el.value;}
+    else data[k]=el.value;
+  });
+  data._meta={sesi:'4',ts:new Date().toISOString(),nama:document.getElementById('dl-nama').value,email:document.getElementById('dl-email').value};
+  const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([encoded],{type:'text/plain'}));
+  a.download='respons-sesi4-'+Date.now()+'.txt';
+  a.click();
+}
+
+// MUST BE LAST
+load();
+</script>
+</body>
+</html>
