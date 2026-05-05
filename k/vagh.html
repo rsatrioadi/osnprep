@@ -1,0 +1,1474 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sesi 5 — Logika Boolean dan Permainan Kombinatorik</title>
+<style>
+:root {
+  --bg: #fdf8f2; --card: #ffffff; --border: #e8ddd0; --ink: #1a1410; --muted: #7a6a5a;
+  --accent: #d4521a; --accent-light: #fdeee5;
+  --blue: #1b4f8a; --blue-light: #e5edf7;
+  --green: #1f7a4a; --green-light: #e5f4ec;
+  --yellow: #c8930a; --yellow-light: #fef7e5;
+  --purple: #8b3a9c; --purple-light: #f3e8f8;
+  --s1: #d4521a; --s1-bg: #fdeee5;
+  --s2: #1b4f8a; --s2-bg: #e5edf7;
+  --s3: #1f7a4a; --s3-bg: #e5f4ec;
+  --s4: #8b3a9c; --s4-bg: #f3e8f8;
+  --s5: #c8930a; --s5-bg: #fef7e5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: Georgia, "Times New Roman", serif; color: var(--ink); line-height: 1.7; }
+code, .mono { font-family: "Courier New", monospace; }
+
+.site-header { background: #1a1410; padding: 16px 24px; }
+.site-header .eyebrow { font-size: 11px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; font-family: monospace; }
+.site-header h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+
+.prog-nav { background: var(--card); border-bottom: 2px solid var(--border); padding: 0 24px; display: flex; gap: 0; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.prog-btn { padding: 12px 16px; border: none; background: transparent; color: var(--muted); font-family: Georgia, serif; font-size: 12px; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; }
+.prog-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+.prog-btn:not(.active):hover { color: var(--ink); background: var(--accent-light); }
+
+.panel { display: none; max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; }
+.panel.active { display: block; }
+
+h2 { font-size: 22px; color: var(--accent); margin-bottom: 8px; margin-top: 32px; }
+h2:first-child { margin-top: 0; }
+h3 { font-size: 17px; color: var(--ink); margin: 24px 0 8px; font-weight: 700; }
+h4 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 6px; font-family: monospace; }
+p { margin-bottom: 14px; font-size: 15px; }
+ul, ol { margin: 0 0 14px 22px; font-size: 15px; }
+li { margin-bottom: 4px; }
+
+.callout { border-radius: 8px; padding: 14px 18px; font-size: 14px; line-height: 1.65; margin: 16px 0; }
+.callout-yellow  { background: var(--yellow-light); border: 1px solid #c8930a60; }
+.callout-blue    { background: var(--blue-light);   border: 1px solid #1b4f8a60; }
+.callout-green   { background: var(--green-light);  border: 1px solid #1f7a4a60; }
+.callout-purple  { background: var(--purple-light); border: 1px solid #8b3a9c60; }
+.callout-accent  { background: var(--accent-light); border: 1px solid #d4521a60; }
+.callout-label   { font-weight: 700; margin-bottom: 4px; }
+
+.tbl-wrap { overflow-x: auto; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { background: var(--accent); color: #fff; padding: 9px 12px; text-align: left; font-weight: 700; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: #faf7f4; }
+tr:last-child td { border-bottom: none; }
+.th-blue th   { background: var(--blue); }
+.th-green th  { background: var(--green); }
+.th-purple th { background: var(--purple); }
+.th-muted th  { background: var(--muted); }
+
+.section-badge { display: inline-block; background: var(--accent); color: #fff; font-family: monospace; font-size: 11px; letter-spacing: 1px; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; text-transform: uppercase; }
+.section-badge.blue   { background: var(--blue); }
+.section-badge.green  { background: var(--green); }
+.section-badge.purple { background: var(--purple); }
+.section-badge.yellow { background: var(--yellow); }
+
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 14px; font-weight: 700; display: block; margin-bottom: 6px; color: var(--ink); }
+input[type="text"], input[type="email"], textarea, select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 6px; font-family: Georgia, serif; font-size: 14px; background: #fff; color: var(--ink); transition: border-color 0.2s; }
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus { border-color: var(--accent); outline: none; }
+textarea { resize: vertical; min-height: 80px; }
+.radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.radio-opt { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; }
+.radio-opt input { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); }
+
+.reveal-btn { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); padding: 8px 18px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 13px; font-weight: 700; transition: all 0.2s; }
+.reveal-btn:hover { background: var(--accent); color: #fff; }
+.reveal-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.reset-btn { background: transparent; color: var(--muted); border: 1.5px solid var(--border); padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 12px; transition: all 0.2s; }
+.reset-btn:hover { background: var(--border); }
+.check-btn { background: var(--green); color: #fff; border: none; padding: 9px 22px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 14px; font-weight: 700; transition: background 0.2s; }
+.check-btn:hover { background: #176039; }
+.next-btn { display: inline-block; background: var(--accent); color: #fff; border: none; padding: 11px 28px; border-radius: 8px; cursor: pointer; font-family: Georgia, serif; font-size: 15px; font-weight: 700; margin-top: 32px; transition: background 0.2s; }
+.next-btn:hover { background: #b84215; }
+.ctrl-row { display: flex; gap: 8px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.step-counter { font-size: 12px; color: var(--muted); font-family: monospace; }
+.add-row-btn { margin-top: 10px; background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 13px; font-weight: 700; }
+.add-row-btn:hover { background: var(--green); color: #fff; }
+
+.sim-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+.sim-table th { padding: 9px 14px; text-align: center; font-weight: 700; color: #fff; }
+.sim-table td { padding: 8px 12px; border: 1px solid var(--border); text-align: center; }
+.sim-table .row-label { text-align: left; font-weight: 600; background: #faf7f4; font-size: 13px; }
+.sim-table input.cell-input { width: 70px; padding: 5px; border: 1.5px solid var(--border); border-radius: 4px; text-align: center; font-family: monospace; font-size: 13px; font-weight: 700; background: #fff; }
+.sim-table input.cell-input:focus { border-color: var(--accent); outline: none; }
+.sim-table select.cell-select { width: 90px; padding: 5px; border: 1.5px solid var(--border); border-radius: 4px; font-family: monospace; font-size: 13px; font-weight: 700; background: #fff; }
+.sim-table select.cell-select:focus { border-color: var(--accent); outline: none; }
+.sim-table .given { background: var(--blue-light); font-family: monospace; font-weight: 700; color: var(--blue); }
+
+.correct { background: var(--green-light) !important; border-color: var(--green) !important; color: var(--green) !important; }
+.wrong   { background: #fef0ee !important; border-color: #e88a7a !important; color: #c0392b !important; }
+
+.tt-insight { background: var(--green-light); border: 1.5px solid var(--green); border-radius: 8px; padding: 14px 18px; font-size: 14px; line-height: 1.65; margin-top: 16px; display: none; }
+
+.pos-P { display: inline-block; background: #fef0ee; color: #c0392b; border: 1.5px solid #e88a7a; font-family: monospace; font-weight: 900; font-size: 13px; padding: 2px 10px; border-radius: 20px; }
+.pos-N { display: inline-block; background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); font-family: monospace; font-weight: 900; font-size: 13px; padding: 2px 10px; border-radius: 20px; }
+
+.download-section { background: #1a1410; border-radius: 12px; padding: 32px; margin-top: 40px; text-align: center; }
+.download-section h3 { color: #fff; font-size: 18px; margin-bottom: 8px; }
+.download-section p  { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+.download-btn { background: var(--accent); color: #fff; border: none; padding: 14px 32px; border-radius: 8px; cursor: pointer; font-family: Georgia, serif; font-size: 16px; font-weight: 700; transition: background 0.2s; }
+.download-btn:hover { background: #b84215; }
+.download-note { font-size: 12px; color: #888; margin-top: 12px; }
+.answer-box { background: var(--card); border: 2px dashed var(--accent); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.answer-box-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-family: monospace; font-weight: 700; margin-bottom: 10px; }
+.exit-card { background: var(--accent-light); border: 2px solid #d4521a60; border-radius: 12px; padding: 24px; margin: 20px 0; }
+
+/* Boolean explorer */
+.bool-explorer { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; }
+.bool-inputs { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+.bool-var-group { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 20px; }
+.bool-var-label { font-size: 13px; font-weight: 700; font-family: monospace; color: var(--blue); margin-bottom: 8px; letter-spacing: 1px; }
+.bool-radio-row { display: flex; gap: 12px; }
+.bool-radio-row label { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; font-family: monospace; font-weight: 700; }
+.bool-radio-row input { accent-color: var(--blue); }
+.bool-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.bool-result-cell { border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; transition: all 0.2s; }
+.bool-result-cell .expr { font-family: monospace; font-size: 13px; color: var(--muted); }
+.bool-result-cell .val { font-family: monospace; font-size: 18px; font-weight: 900; }
+.bool-result-cell.true  { background: var(--green-light); border: 1.5px solid var(--green); }
+.bool-result-cell.false { background: #fef0ee; border: 1.5px solid #e88a7a; }
+.bool-result-cell.true .val  { color: var(--green); }
+.bool-result-cell.false .val { color: #c0392b; }
+
+/* Op cards */
+.op-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin: 16px 0; }
+.op-card { border-radius: 8px; padding: 12px 14px; border: 1.5px solid; }
+.op-card .op-name { font-family: monospace; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; margin-bottom: 4px; }
+.op-card .op-rule { font-size: 13px; line-height: 1.5; }
+
+/* Law table */
+.law-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.law-table th { background: var(--blue); color: #fff; padding: 8px 12px; text-align: left; }
+.law-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); font-family: monospace; }
+.law-table td:first-child { font-family: Georgia, serif; font-weight: 700; color: var(--ink); }
+.law-table .star td:first-child { color: var(--accent); }
+.law-table tr:nth-child(even) td { background: #faf7f4; }
+
+/* Kontra/Konvers/Invers table */
+.kkv-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+.kkv-table th { padding: 9px 14px; color: #fff; font-weight: 700; text-align: left; }
+.kkv-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.kkv-table tr:nth-child(even) td { background: #faf7f4; }
+
+/* Inference classification */
+.inf-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 10px 0; }
+.inf-item .inf-num { font-size: 11px; font-family: monospace; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.inf-item .inf-text { font-size: 14px; margin-bottom: 10px; }
+.inf-select { padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 6px; font-family: Georgia, serif; font-size: 13px; background: #fff; }
+.inf-select:focus { border-color: var(--accent); outline: none; }
+
+/* Kelereng table */
+.kelereng-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.kelereng-table th { background: var(--blue); color: #fff; padding: 8px 10px; text-align: center; }
+.kelereng-table th:first-child { text-align: left; }
+.kelereng-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: center; }
+.kelereng-table td:first-child { text-align: left; font-size: 12px; }
+.kelereng-table .terpilih td { background: var(--green-light); }
+.kelereng-table .tidak td { background: #faf7f4; }
+
+/* XOR display */
+.xor-display { background: #1a1410; color: #f0e8dc; font-family: "Courier New", monospace; font-size: 13px; line-height: 1.8; padding: 16px 20px; border-radius: 8px; margin: 14px 0; }
+
+/* Nim skenario */
+.skenario-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 10px 0; cursor: pointer; transition: all 0.2s; }
+.skenario-item:hover { border-color: var(--accent); }
+.skenario-item .sk-head { display: flex; justify-content: space-between; align-items: center; }
+.skenario-item .sk-label { font-weight: 700; font-size: 14px; }
+.skenario-item .sk-reveal { font-size: 12px; color: var(--muted); font-family: monospace; }
+.skenario-item .sk-body { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 14px; }
+.sk-win  { color: var(--green); font-weight: 700; }
+.sk-lose { color: #c0392b; font-weight: 700; }
+
+/* Flowchart */
+.flowchart-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin: 16px 0; }
+.flow-step { display: flex; align-items: center; gap: 16px; background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 14px 20px; cursor: pointer; width: min(560px, 100%); transition: all 0.25s; z-index: 1; }
+.flow-step:hover { border-color: var(--accent); background: var(--accent-light); }
+.flow-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.flow-chev { margin-left: auto; font-size: 14px; color: var(--muted); opacity: 0.4; transition: all 0.2s; }
+.flow-desc { border-top: none; border-radius: 0 0 10px 10px; width: min(560px, 100%); padding: 24px 20px 16px; margin-top: -12px; font-size: 14px; line-height: 1.65; display: none; z-index: 0; }
+.flow-connector { display: flex; flex-direction: column; align-items: center; margin-left: 22px; }
+.flow-line  { width: 2px; height: 12px; background: var(--border); }
+.flow-arrow { font-size: 16px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="eyebrow">OSN-K Informatika · Kursus Persiapan</div>
+  <h1>Sesi 5 — Logika Boolean dan Permainan Kombinatorik</h1>
+</div>
+
+<div class="prog-nav" id="progNav">
+  <button class="prog-btn active" onclick="goPanel('p-gambaran')">① Gambaran Sesi</button>
+  <button class="prog-btn"        onclick="goPanel('p-bacaan1')">② Logika Boolean</button>
+  <button class="prog-btn"        onclick="goPanel('p-latihan1')">③ Latihan Terpandu</button>
+  <button class="prog-btn"        onclick="goPanel('p-bacaan2')">④ Permainan Kombinatorik</button>
+  <button class="prog-btn"        onclick="goPanel('p-latihan2')">⑤ Latihan Mandiri</button>
+  <button class="prog-btn"        onclick="goPanel('p-bank')">⑥ Bank Soal</button>
+  <button class="prog-btn"        onclick="goPanel('p-errorlog')">⑦ Error Log</button>
+  <button class="prog-btn"        onclick="goPanel('p-karcis')">⑧ Karcis Keluar</button>
+  <button class="prog-btn"        onclick="goPanel('p-ringkasan')">⑨ Ringkasan</button>
+</div>
+
+<!-- ═══ PANEL 1 — GAMBARAN ═══ -->
+<div id="p-gambaran" class="panel active">
+  <div class="section-badge">Gambaran Sesi · Sesi 5</div>
+  <h2>Logika Boolean dan Permainan Kombinatorik</h2>
+  <p>Durasi: 120 menit &nbsp;|&nbsp; LO Utama: A2, A5 &nbsp;|&nbsp; Format: Online (sinkron)</p>
+
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">A2 — Utama</div>
+    Mengevaluasi pernyataan logika dengan operator Boolean (AND, OR, NOT, Implikasi, Biconditional, XOR), tabel kebenaran, dan hukum ekivalensi (termasuk De Morgan); menerapkan Modus Ponens dan Modus Tollens.
+  </div>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">A5 — Utama</div>
+    Menganalisis permainan kombinatorik dua pemain — satu tumpukan maupun multi-pile — dengan analisis mundur dan invariant XOR.
+  </div>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">D1 — Kontinu</div>
+    Serangan Lima Langkah dimodelkan dan diterapkan di setiap soal yang dikerjakan.
+  </div>
+
+  <h3>Alur Sesi</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Blok</th><th>Durasi</th><th>Aktivitas</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pembuka</strong></td><td>10 menit</td><td>Review karcis keluar S4 + orientasi</td></tr>
+        <tr><td><strong>Instruksi I</strong></td><td>25 menit</td><td><em>I do</em> — Operator Boolean + biconditional, hukum De Morgan, kontraposisi/konvers/invers, aturan inferensi. Demo Soal 7 OSN-K 2024</td></tr>
+        <tr><td><strong>Latihan Terpandu</strong></td><td>25 menit</td><td><em>We do</em> — LT-1 (think-pair-share: 5 pernyataan × 6 siswa) + LT-2 (penyederhanaan Boolean + deteksi kekeliruan inferensi)</td></tr>
+        <tr><td><strong>Instruksi II</strong></td><td>20 menit</td><td><em>I do</em> — Multi-pile Nim + invariant XOR. Demo Soal 9 OSN-K 2024 (Mengambil Daun)</td></tr>
+        <tr><td><strong>Latihan Mandiri</strong></td><td>25 menit</td><td><em>You do</em> — Tiga tingkat: LM-1 (Nim aturan baru), LM-2 (XOR 2-pile), LM-3 (XOR 3-pile)</td></tr>
+        <tr><td><strong>Penutup</strong></td><td>15 menit</td><td>Debrief + karcis keluar AS-F1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Serangan Lima Langkah — Pengingat</h3>
+  <div class="flowchart-wrap" id="fc-five-attack"></div>
+
+  <button class="next-btn" onclick="goPanel('p-bacaan1')">Mulai Bacaan: Logika Boolean →</button>
+</div>
+
+<!-- ═══ PANEL 2 — LOGIKA BOOLEAN ═══ -->
+<div id="p-bacaan1" class="panel">
+  <div class="section-badge blue">Bacaan · Logika Boolean Lanjutan</div>
+  <h2>Logika Boolean: Dari Operator Dasar ke Hukum Ekivalensi</h2>
+
+  <p>Sesi ini menambah tiga lapisan baru di atas operator dasar: <strong>biconditional</strong> sebagai operator keenam, <strong>hukum-hukum logika</strong> untuk penyederhanaan ekspresi, dan <strong>distingsi kontraposisi/konvers/invers</strong> yang merupakan sumber miskonsepsi paling umum di Bagian A OSN-K.</p>
+
+  <h3>① Enam Operator Boolean</h3>
+  <div class="op-grid">
+    <div class="op-card" style="border-color:#1b4f8a;background:var(--blue-light)">
+      <div class="op-name" style="color:var(--blue)">AND (∧)</div>
+      <div class="op-rule">Benar <strong>hanya jika keduanya</strong> benar</div>
+    </div>
+    <div class="op-card" style="border-color:var(--green);background:var(--green-light)">
+      <div class="op-name" style="color:var(--green)">OR (∨)</div>
+      <div class="op-rule">Benar jika <strong>minimal satu</strong> benar</div>
+    </div>
+    <div class="op-card" style="border-color:var(--accent);background:var(--accent-light)">
+      <div class="op-name" style="color:var(--accent)">NOT (¬)</div>
+      <div class="op-rule">Membalik nilai: benar ↔ salah</div>
+    </div>
+    <div class="op-card" style="border-color:var(--purple);background:var(--purple-light)">
+      <div class="op-name" style="color:var(--purple)">Implikasi (→)</div>
+      <div class="op-rule">Salah <strong>hanya jika</strong> A benar dan B salah</div>
+    </div>
+    <div class="op-card" style="border-color:#7a6a5a;background:#f5f0eb">
+      <div class="op-name" style="color:#5a4a3a">Biconditional (↔)</div>
+      <div class="op-rule">Benar jika <strong>A dan B sama nilainya</strong> (keduanya B atau keduanya S)</div>
+    </div>
+    <div class="op-card" style="border-color:var(--yellow);background:var(--yellow-light)">
+      <div class="op-name" style="color:var(--yellow)">XOR (⊕)</div>
+      <div class="op-rule">Benar jika <strong>tepat satu</strong> yang benar</div>
+    </div>
+  </div>
+
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">💡 Biconditional vs XOR</div>
+    Biconditional (A ↔ B) adalah <em>lawan logis</em> XOR: A ↔ B benar persis ketika A ⊕ B salah. Di soal OSN-K, biconditional sering muncul sebagai "jika dan hanya jika" dalam pernyataan keanggotaan atau aturan.
+  </div>
+
+  <h3>② Eksplorasi Langsung — Pilih Nilai A dan B</h3>
+  <div class="bool-explorer">
+    <div class="bool-inputs">
+      <div class="bool-var-group">
+        <div class="bool-var-label">A =</div>
+        <div class="bool-radio-row">
+          <label><input type="radio" name="varA" value="1" checked onchange="updateBool()"> B</label>
+          <label><input type="radio" name="varA" value="0"       onchange="updateBool()"> S</label>
+        </div>
+      </div>
+      <div class="bool-var-group">
+        <div class="bool-var-label">B =</div>
+        <div class="bool-radio-row">
+          <label><input type="radio" name="varB" value="1" checked onchange="updateBool()"> B</label>
+          <label><input type="radio" name="varB" value="0"       onchange="updateBool()"> S</label>
+        </div>
+      </div>
+    </div>
+    <div class="bool-results" id="boolResults"></div>
+  </div>
+
+  <h3>③ Hukum-Hukum Logika (Ekivalensi)</h3>
+  <p>Hukum-hukum ini memungkinkan penyederhanaan ekspresi tanpa membuat tabel kebenaran penuh. Dua yang paling penting di OSN-K ditandai ★.</p>
+  <table class="law-table">
+    <thead><tr><th>Hukum</th><th>Bentuk</th></tr></thead>
+    <tbody>
+      <tr><td>Komutatif</td><td>A ∧ B ≡ B ∧ A &nbsp;|&nbsp; A ∨ B ≡ B ∨ A</td></tr>
+      <tr><td>Distributif</td><td>A ∧ (B ∨ C) ≡ (A ∧ B) ∨ (A ∧ C) &nbsp;|&nbsp; A ∨ (B ∧ C) ≡ (A ∨ B) ∧ (A ∨ C)</td></tr>
+      <tr><td>Identitas</td><td>A ∧ Benar ≡ A &nbsp;|&nbsp; A ∨ Salah ≡ A</td></tr>
+      <tr><td>Idempoten</td><td>A ∧ A ≡ A &nbsp;|&nbsp; A ∨ A ≡ A</td></tr>
+      <tr><td>Negasi ganda</td><td>¬(¬A) ≡ A</td></tr>
+      <tr class="star"><td>★ De Morgan</td><td>¬(A ∧ B) ≡ ¬A ∨ ¬B &nbsp;|&nbsp; ¬(A ∨ B) ≡ ¬A ∧ ¬B</td></tr>
+      <tr><td>Implikasi sbg OR</td><td>A → B ≡ ¬A ∨ B</td></tr>
+      <tr class="star"><td>★ Kontraposisi</td><td>A → B ≡ ¬B → ¬A</td></tr>
+      <tr><td>Biconditional</td><td>A ↔ B ≡ (A → B) ∧ (B → A) ≡ (A ∧ B) ∨ (¬A ∧ ¬B)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">⚠️ De Morgan — Jebakan Umum</div>
+    <strong>Salah:</strong> ¬(A ∧ B) = ¬A ∧ ¬B &nbsp;|&nbsp; <strong>Benar:</strong> ¬(A ∧ B) = ¬A ∨ ¬B<br>
+    Ingat: ketika negasi masuk ke dalam, operator ganti. AND ↔ OR.
+  </div>
+
+  <h3>④ Distingsi Kritis: Kontraposisi · Konvers · Invers</h3>
+  <p>Diberikan implikasi <code>A → B</code>, ada tiga "varian" yang sering dirancukan:</p>
+  <div class="tbl-wrap">
+    <table class="kkv-table">
+      <thead><tr>
+        <th style="background:var(--muted)">Varian</th>
+        <th style="background:var(--muted)">Bentuk</th>
+        <th style="background:var(--green)">Setara dg A→B?</th>
+        <th style="background:var(--muted)">Hubungan</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Kontraposisi</strong></td>
+          <td><code>¬B → ¬A</code></td>
+          <td style="color:var(--green);font-weight:700">✓ YA, setara</td>
+          <td>Balik arah <em>dan</em> negasikan keduanya</td>
+        </tr>
+        <tr>
+          <td><strong>Konvers</strong></td>
+          <td><code>B → A</code></td>
+          <td style="color:#c0392b;font-weight:700">✗ TIDAK setara</td>
+          <td>Balik arah saja, tanpa negasi</td>
+        </tr>
+        <tr>
+          <td><strong>Invers</strong></td>
+          <td><code>¬A → ¬B</code></td>
+          <td style="color:#c0392b;font-weight:700">✗ TIDAK setara</td>
+          <td>Negasikan keduanya tanpa balik arah. <em>Invers ≡ Konvers!</em></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">🧠 Mnemonik</div>
+    <strong>KONTRA setara, KONVERS-INVERS berbeda.</strong> Dan: konvers ≡ invers (keduanya bukan setara dengan implikasi asli, tetapi setara satu sama lain).
+  </div>
+
+  <h3>⑤ Aturan Inferensi Formal</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Nama</th><th>Pola</th><th>Contoh</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Modus Ponens (MP)</strong></td>
+          <td><code>A→B, A ∴ B</code></td>
+          <td>"Jika x habis dibagi 6, maka x habis dibagi 3. x habis dibagi 6. ∴ x habis dibagi 3."</td>
+        </tr>
+        <tr>
+          <td><strong>Modus Tollens (MT)</strong></td>
+          <td><code>A→B, ¬B ∴ ¬A</code></td>
+          <td>"Jika ada Euler path, maka simpul ganjil ≤ 2. Ada 4 simpul ganjil. ∴ Tidak ada Euler path."</td>
+        </tr>
+        <tr>
+          <td><strong>Silogisme Hipotetik (SH)</strong></td>
+          <td><code>A→B, B→C ∴ A→C</code></td>
+          <td>"Jika x prima &gt; 2, maka x ganjil. Jika x ganjil, maka x² ganjil. ∴ Jika x prima &gt; 2, maka x² ganjil."</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">⚠️ Dua Kekeliruan Umum di OSN-K</div>
+    <strong>Afirmasi konsekuen (SALAH):</strong> Dari A→B dan B, siswa salah menyimpulkan A. Contoh: "Jika hujan, jalan basah. Jalan basah. ∴ Hujan." — TIDAK valid (mungkin baru disiram).<br><br>
+    <strong>Negasi anteseden (SALAH):</strong> Dari A→B dan ¬A, siswa salah menyimpulkan ¬B. Ini sama dengan menggunakan invers yang bukan setara. Contoh: "Jika hujan, jalan basah. Tidak hujan. ∴ Jalan tidak basah." — TIDAK valid.
+  </div>
+
+  <h3>⑥ Demo OSN-K 2024 — Soal 7: Mesin Pengurutan Kelereng</h3>
+  <p>Tabel berikut menunjukkan 16 kelereng dengan 4 atribut (Ukuran, Warna, Bahan, Desain) dan status terpilih atau tidak. Tugas: tentukan ekspresi logika yang tepat membedakan kelereng terpilih dari tidak terpilih.</p>
+
+  <div class="tbl-wrap">
+    <table class="kelereng-table">
+      <thead><tr><th>Ukuran</th><th>Warna</th><th>Bahan</th><th>Desain</th><th>Status</th></tr></thead>
+      <tbody id="kelereng-body"></tbody>
+    </table>
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Penerapan Serangan Lima Langkah</div>
+    <p style="font-size:14px;margin-bottom:10px"><strong>Langkah 3 (Kasus kecil):</strong> Ambil satu kelereng terpilih dan satu tidak terpilih. Apa perbedaan atributnya?</p>
+    <textarea data-key="soal7_step3" rows="3" placeholder="Kelereng terpilih yang kupilih: ...  Kelereng tidak terpilih: ...  Perbedaan: ..."></textarea>
+    <p style="font-size:14px;margin:10px 0"><strong>Langkah 4 (Invariant):</strong> Apa ekspresi logika yang paling ringkas membedakan semua kelereng terpilih?</p>
+    <textarea data-key="soal7_step4" rows="3" placeholder="Ekspresi logikaku: ..."></textarea>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-latihan1')">Lanjut ke Latihan Terpandu →</button>
+</div>
+
+<!-- ═══ PANEL 3 — LATIHAN TERPANDU ═══ -->
+<div id="p-latihan1" class="panel">
+  <div class="section-badge green">Latihan Terpandu · We Do</div>
+  <h2>LT-1 dan LT-2: Dua Latihan Bertingkat (25 menit)</h2>
+
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">Format</div>
+    <strong>LT-1 (13 menit)</strong>: evaluasi 5 pernyataan × 6 siswa — think-pair-share &nbsp;→&nbsp;
+    <strong>LT-2 (12 menit)</strong>: penyederhanaan Boolean + deteksi kekeliruan inferensi — diskusi terbuka
+  </div>
+
+  <!-- LT-1 -->
+  <h3>LT-1 — Evaluasi Pernyataan Multi-Siswa</h3>
+  <h4>Data Siswa</h4>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr class="th-blue">
+        <th>Siswa</th><th>M (Mat)</th><th>F (Fis)</th><th>K (Kim)</th><th>O (Olimp)</th><th>S (Klub Sains)</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Aldo</td><td>Ya</td><td>Ya</td><td>Tidak</td><td>Ya</td><td>Ya</td></tr>
+        <tr><td>Bela</td><td>Ya</td><td>Tidak</td><td>Ya</td><td>Ya</td><td>Ya</td></tr>
+        <tr><td>Cika</td><td>Tidak</td><td>Ya</td><td>Ya</td><td>Tidak</td><td>Ya</td></tr>
+        <tr><td>Doni</td><td>Tidak</td><td>Tidak</td><td>Ya</td><td>Tidak</td><td>Tidak</td></tr>
+        <tr><td>Elsa</td><td>Ya</td><td>Tidak</td><td>Tidak</td><td>Tidak</td><td>Ya</td></tr>
+        <tr><td>Fika</td><td>Tidak</td><td>Ya</td><td>Tidak</td><td>Ya</td><td>Tidak</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Lima Pernyataan</h4>
+  <div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">P1</div>"Jika siswa suka Matematika, maka siswa mengikuti Olimpiade." — <code>M → O</code></div>
+  <div class="callout callout-blue"><div class="callout-label" style="color:var(--blue)">P2 — KONTRAPOSISI dari P1</div>"Jika siswa tidak mengikuti Olimpiade, maka siswa tidak suka Matematika." — <code>¬O → ¬M</code></div>
+  <div class="callout callout-purple"><div class="callout-label" style="color:var(--purple)">P3 — INVERS dari P1</div>"Jika siswa tidak suka Matematika, maka siswa tidak mengikuti Olimpiade." — <code>¬M → ¬O</code></div>
+  <div class="callout callout-yellow"><div class="callout-label" style="color:var(--yellow)">P4 — KONVERS dari P1</div>"Jika siswa mengikuti Olimpiade, maka siswa suka Matematika." — <code>O → M</code></div>
+  <div style="background:#f5f0eb;border:1px solid #c0a88060;border-radius:8px;padding:14px 18px;font-size:14px;margin:16px 0">
+    <div style="font-weight:700;margin-bottom:4px;color:#5a4a3a">P5 — BICONDITIONAL</div>
+    "Siswa tergabung di Klub Sains jika dan hanya jika siswa suka Matematika ATAU suka Fisika." — <code>S ↔ (M ∨ F)</code>
+  </div>
+
+  <h4>Tugas: Isi Tabel (B / S untuk setiap sel)</h4>
+  <div class="tbl-wrap">
+    <table class="sim-table" id="lt1-table">
+      <thead>
+        <tr>
+          <th style="background:var(--muted)">Pernyataan</th>
+          <th style="background:var(--accent)">Aldo</th>
+          <th style="background:var(--blue)">Bela</th>
+          <th style="background:var(--green)">Cika</th>
+          <th style="background:var(--purple)">Doni</th>
+          <th style="background:var(--yellow)">Elsa</th>
+          <th style="background:#5a4a3a">Fika</th>
+        </tr>
+      </thead>
+      <tbody id="lt1-body"></tbody>
+    </table>
+  </div>
+  <div class="ctrl-row">
+    <button class="check-btn" onclick="lt1Check()">✓ Periksa Jawaban</button>
+    <button class="reset-btn" onclick="lt1Reset()">↺ Reset</button>
+  </div>
+  <div id="lt1-feedback" style="display:none;margin-top:16px"></div>
+
+  <div class="answer-box" style="margin-top:24px">
+    <div class="answer-box-label">Pertanyaan Refleksi LT-1</div>
+    <p style="font-size:14px;margin-bottom:8px">a) Mengapa P1 dan P2 menghasilkan kolom yang identik?</p>
+    <textarea data-key="lt1_ra" rows="3" placeholder="Karena P2 adalah kontraposisi dari P1, dan kontraposisi selalu setara secara logika..."></textarea>
+    <p style="font-size:14px;margin:10px 0 8px">b) Mengapa P3 dan P4 menghasilkan kolom yang identik?</p>
+    <textarea data-key="lt1_rb" rows="3" placeholder="Karena invers ≡ konvers..."></textarea>
+  </div>
+
+  <!-- LT-2 -->
+  <h3 style="margin-top:40px">LT-2 — Penyederhanaan Boolean + Deteksi Kekeliruan</h3>
+
+  <h4>Bagian (a) — Penyederhanaan dengan De Morgan dan Distributif</h4>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal (a1)</div>
+    <p style="font-size:14px;margin-bottom:8px">Sederhanakan: <code>¬(¬A ∨ B) ∨ (A ∧ ¬B)</code></p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Petunjuk: mulai dengan De Morgan pada suku pertama.</p>
+    <textarea data-key="lt2_a1" rows="4" placeholder="Langkah 1 (De Morgan): ¬(¬A ∨ B) = ...&#10;Langkah 2: ekspresi menjadi ...&#10;Jawaban akhir: ..."></textarea>
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal (a2)</div>
+    <p style="font-size:14px;margin-bottom:8px">Sederhanakan: <code>(A ∧ B) ∨ (A ∧ ¬B) ∨ (¬A ∧ B)</code></p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Petunjuk: faktorkan dua suku pertama dulu.</p>
+    <textarea data-key="lt2_a2" rows="4" placeholder="Langkah 1 (Distributif): (A∧B)∨(A∧¬B) = ...&#10;Langkah 2: ...&#10;Jawaban akhir: ..."></textarea>
+  </div>
+
+  <h4>Bagian (b) — Buktikan Ekivalensi dengan Tabel Kebenaran</h4>
+  <p>Buktikan bahwa <code>(A→B) ∧ (A→C) ≡ A→(B∧C)</code> menggunakan tabel 8 baris (3 variabel).</p>
+  <div class="tbl-wrap">
+    <table class="sim-table">
+      <thead>
+        <tr>
+          <th style="background:var(--blue)">A</th>
+          <th style="background:var(--blue)">B</th>
+          <th style="background:var(--blue)">C</th>
+          <th style="background:var(--s3)">A→B</th>
+          <th style="background:var(--s3)">A→C</th>
+          <th style="background:var(--accent)">(A→B)∧(A→C)</th>
+          <th style="background:var(--purple)">B∧C</th>
+          <th style="background:var(--s2)">A→(B∧C)</th>
+          <th style="background:var(--muted)">Sama?</th>
+        </tr>
+      </thead>
+      <tbody id="lt2b-body"></tbody>
+    </table>
+  </div>
+  <div class="ctrl-row">
+    <button class="reveal-btn" id="lt2b-btn" onclick="lt2bNext()">Ungkap baris berikutnya ▶</button>
+    <button class="reset-btn" onclick="lt2bReset()">↺ Reset</button>
+    <span class="step-counter" id="lt2b-ctr">0 / 8 baris</span>
+  </div>
+  <div class="tt-insight" id="lt2b-insight">
+    <strong style="color:var(--green)">✓ Terbukti!</strong> Kolom ke-6 dan kolom ke-8 identik di semua 8 baris — ekspresi setara logika.
+  </div>
+
+  <h4>Bagian (c) — Valid atau Kekeliruan?</h4>
+  <p>Untuk setiap argumen, pilih apakah inferensinya valid (MP / MT / SH) atau kekeliruan (Afirmasi Konsekuen / Negasi Anteseden).</p>
+  <div id="lt2c-container"></div>
+  <div class="ctrl-row" style="margin-top:16px">
+    <button class="check-btn" onclick="lt2cCheck()">✓ Periksa Jawaban</button>
+    <button class="reset-btn" onclick="lt2cReset()">↺ Reset</button>
+  </div>
+  <div id="lt2c-feedback" style="display:none;margin-top:16px"></div>
+
+  <button class="next-btn" onclick="goPanel('p-bacaan2')">Lanjut ke Bacaan: Permainan Kombinatorik →</button>
+</div>
+
+<!-- ═══ PANEL 4 — PERMAINAN KOMBINATORIK ═══ -->
+<div id="p-bacaan2" class="panel">
+  <div class="section-badge blue">Bacaan · Permainan Kombinatorik</div>
+  <h2>Dari Satu Tumpukan ke Multi-Pile: Invariant XOR</h2>
+
+  <h3>Review Singkat: Posisi P dan N</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Kategori</th><th>Definisi</th><th>Ciri</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pos-P">P</span> (Pemain yg gerak kalah)</td><td>Semua gerakan dari P menuju posisi N</td><td>Tidak ada "jalan keluar" ke sesama P</td></tr>
+        <tr><td><span class="pos-N">N</span> (Pemain yg gerak menang)</td><td>Ada setidaknya satu gerakan dari N ke posisi P</td><td>Bisa "menjebak" lawan ke P</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">⚠️ Selalu mulai dari bawah!</div>
+    Posisi terminal (tidak bisa bergerak, aturan "yang ambil terakhir menang") = <span class="pos-P">P</span>. Klasifikasikan ke atas, bukan dari atas ke bawah.
+  </div>
+
+  <h3>Review: Nim Satu Tumpukan (7 batu, ambil 1 atau 2)</h3>
+  <div class="tbl-wrap">
+    <table class="sim-table">
+      <thead><tr>
+        <th style="background:var(--muted);width:80px">Batu</th>
+        <th style="background:var(--blue)">Bisa Ambil ke</th>
+        <th style="background:var(--purple);width:110px">Klasifikasi</th>
+        <th style="background:var(--muted)">Alasan</th>
+      </tr></thead>
+      <tbody id="nim7-body"></tbody>
+    </table>
+  </div>
+  <div class="ctrl-row">
+    <button class="reveal-btn" id="nim7-btn" onclick="nim7Next()">Ungkap posisi berikutnya ▶</button>
+    <button class="reset-btn" onclick="nim7Reset()">↺ Reset</button>
+    <span class="step-counter" id="nim7-ctr">0 / 8 posisi</span>
+  </div>
+  <div class="tt-insight" id="nim7-insight">
+    <strong style="color:var(--green)">✓ Invariant:</strong> Posisi P = kelipatan 3. Umum: dalam Nim "ambil 1 hingga k", posisi P = kelipatan (k+1).
+  </div>
+
+  <h3>Multi-Pile Nim: Theorema Bouton dan Invariant XOR</h3>
+  <p>Ketika ada lebih dari satu tumpukan, backward induction langsung menjadi tidak praktis karena jumlah posisi membludak. Solusinya: <strong>Nim-value (XOR bitwise)</strong>.</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">Teorema Nim (Bouton, 1901)</div>
+    Hitung <strong>Nim-value</strong>: <code>N* = n₁ ⊕ n₂ ⊕ ... ⊕ nₖ</code> (XOR bitwise semua tumpukan).<br>
+    Jika N* = 0 → <span class="pos-P">P</span> (pemain yang harus gerak, kalah).<br>
+    Jika N* ≠ 0 → <span class="pos-N">N</span> (pemain yang harus gerak, menang dengan strategi optimal).<br>
+    <strong>Strategi optimal dari N:</strong> cari satu tumpukan yang bisa dikurangi sehingga XOR baru = 0.
+  </div>
+
+  <h4>Contoh Perhitungan XOR</h4>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr class="th-blue"><th>Posisi</th><th>Tumpukan (biner)</th><th>XOR</th><th>Klasifikasi</th></tr></thead>
+      <tbody>
+        <tr><td>(1, 1)</td><td>1, 1</td><td>0</td><td><span class="pos-P">P</span></td></tr>
+        <tr><td>(2, 3)</td><td>010, 011</td><td>001 = 1</td><td><span class="pos-N">N</span></td></tr>
+        <tr><td>(3, 5, 6)</td><td>011, 101, 110</td><td>000 = 0</td><td><span class="pos-P">P</span></td></tr>
+        <tr><td>(2, 4, 7)</td><td>010, 100, 111</td><td>001 = 1</td><td><span class="pos-N">N</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">💡 Cara XOR Bitwise</div>
+    XOR bit-per-bit: hasilnya 1 jika <em>tepat satu</em> dari kedua bit = 1, hasilnya 0 jika sama. Contoh: 3 ⊕ 5 = 011 ⊕ 101 = 110 = 6.
+  </div>
+
+  <h3>Demo OSN-K 2024 — Soal 9: Mengambil Daun</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Teks Soal (OSN-K 2024)</div>
+    Pak Dengklek dan Pak Ganesh bergiliran memainkan permainan "mengambil daun". Daun-daun ditumpuk pada dua piring: <strong>A (2 daun)</strong> dan <strong>B (3 daun)</strong>. Saat gilirannya, pemain harus mengambil 1 atau lebih daun dari <em>salah satu</em> piring. Pemenang adalah pemain yang mengambil daun terakhir dari 5 lembar yang ada.<br><br>
+    Dari 5 skenario berikut, <strong>manakah yang menjamin kemenangan Pak Dengklek?</strong>
+  </div>
+
+  <h4>Analisis Posisi: XOR untuk (A, B)</h4>
+  <p>Posisi awal: (2, 3). &nbsp; XOR = 2 ⊕ 3 = <code>010 ⊕ 011 = 001 = 1 ≠ 0</code> → <span class="pos-N">N</span> → <strong>siapapun yang gerak pertama menang</strong> jika bermain optimal.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr class="th-blue"><th>A\B</th><th>B=0</th><th>B=1</th><th>B=2</th><th>B=3</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A=0</strong></td><td><span class="pos-P">P</span></td><td><span class="pos-N">N</span></td><td><span class="pos-N">N</span></td><td><span class="pos-N">N</span></td></tr>
+        <tr><td><strong>A=1</strong></td><td><span class="pos-N">N</span></td><td><span class="pos-P">P</span></td><td><span class="pos-N">N</span></td><td><span class="pos-N">N</span></td></tr>
+        <tr><td><strong>A=2</strong></td><td><span class="pos-N">N</span></td><td><span class="pos-N">N</span></td><td><span class="pos-P">P</span></td><td><span class="pos-N">N</span> ← awal</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">Posisi P = posisi dengan XOR = 0 = posisi dengan tumpukan seimbang (a = b).</p>
+
+  <h4>Analisis 5 Skenario — Klik untuk mengungkap</h4>
+  <div id="skenario-container"></div>
+
+  <div class="tt-insight" style="display:block;margin-top:16px">
+    <strong style="color:var(--green)">💡 Strategi Optimal dari (2,3):</strong> Pemain pertama harus menuju posisi P = posisi seimbang. Ambil 1 dari piring B → (2, 2) ✓ seimbang. Lawan kemudian bergerak ke posisi tidak seimbang, dan kita selalu bisa menyeimbangkan kembali.
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-latihan2')">Lanjut ke Latihan Mandiri →</button>
+</div>
+
+<!-- ═══ PANEL 5 — LATIHAN MANDIRI ═══ -->
+<div id="p-latihan2" class="panel">
+  <div class="section-badge green">Latihan Mandiri · You Do</div>
+  <h2>Tangga Tiga Tingkat (25 menit)</h2>
+  <div class="callout callout-blue">
+    <strong>LM-1</strong> (6 menit, semua) → <strong>LM-2</strong> (12 menit, semua) → <strong>LM-3</strong> (7 menit, bonus)
+  </div>
+
+  <!-- LM-1 -->
+  <h3>LM-1 — Pemanasan: Nim dengan Aturan Baru (6 menit)</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal</div>
+    12 batu di tumpukan. Setiap giliran, pemain boleh mengambil <strong>1, 3, atau 4 batu</strong> (perhatikan: angka 2 TIDAK boleh!). Pemain yang mengambil batu terakhir menang.
+  </div>
+  <p>Tentukan semua posisi P untuk n = 0 sampai 12. Apakah posisi awal 12 batu adalah P atau N?</p>
+
+  <div class="tbl-wrap">
+    <table class="sim-table" id="lm1-table">
+      <thead>
+        <tr>
+          <th style="background:var(--muted);width:70px">n</th>
+          <th style="background:var(--purple);width:120px">P / N</th>
+          <th style="background:var(--muted)">Alasan (langkah yang ada)</th>
+        </tr>
+      </thead>
+      <tbody id="lm1-body"></tbody>
+    </table>
+  </div>
+  <div class="ctrl-row">
+    <button class="check-btn" onclick="lm1Check()">✓ Periksa Jawaban</button>
+    <button class="reset-btn" onclick="lm1Reset()">↺ Reset</button>
+  </div>
+  <div id="lm1-feedback" style="display:none;margin-top:16px"></div>
+  <div class="answer-box" style="margin-top:16px">
+    <div class="answer-box-label">Kesimpulan LM-1</div>
+    <p style="font-size:14px;margin-bottom:8px">Posisi P yang kutemukan: ___. Apakah ada pola modular sederhana? Mengapa atau mengapa tidak?</p>
+    <textarea data-key="lm1_kesimpulan" rows="3" placeholder="Posisi P: {  }. Pola: ..."></textarea>
+  </div>
+
+  <!-- LM-2 -->
+  <h3 style="margin-top:40px">LM-2 — Inti: Nim Dua Tumpukan (4, 7) (12 menit)</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal</div>
+    Dua tumpukan: <strong>4 batu</strong> dan <strong>7 batu</strong>. Setiap giliran, ambil sebanyak yang diinginkan dari <em>satu</em> tumpukan (minimal 1). Yang mengambil batu terakhir menang.
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan (a) — Hitung XOR Posisi Awal</div>
+    <p style="font-size:14px;margin-bottom:8px">Konversi ke biner dan hitung XOR:</p>
+    <div class="xor-display" id="lm2-xor-display">4  = ?₂
+7  = ?₂
+──────────
+XOR = ?₂ = ?</div>
+    <div class="ctrl-row" style="margin-top:10px">
+      <button class="reveal-btn" onclick="lm2RevealXor()">Ungkap Perhitungan XOR ▶</button>
+    </div>
+    <div style="margin-top:10px">
+      <label style="font-size:14px;font-weight:700">Kesimpulan: posisi (4,7) adalah</label>
+      <select data-key="lm2_pos" style="width:160px;margin-left:10px">
+        <option value="">— pilih —</option>
+        <option value="P">P (Kalah)</option>
+        <option value="N">N (Menang)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan (b) — Langkah Pertama Menang</div>
+    <p style="font-size:14px;margin-bottom:8px">Jika N, tentukan SEMUA langkah pertama yang menjamin kemenangan. Tunjukkan bahwa posisi setelah langkah tersebut memiliki XOR = 0.</p>
+    <textarea data-key="lm2_langkah" rows="5" placeholder="Langkah menang: dari pile ___, ambil ___ batu. Posisi baru: (___, ___). Verifikasi XOR: ___ ⊕ ___ = ___"></textarea>
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan (c) — Pembuktian a = b ⟺ Posisi P</div>
+    <p style="font-size:14px;margin-bottom:8px">Mengapa pada Nim 2-pile, posisi (a, b) adalah P jika dan hanya jika a = b? Jelaskan kedua arah.</p>
+    <textarea data-key="lm2_bukti" rows="5" placeholder="Arah ← (jika a=b, maka P): apapun langkah lawan dari (a,a)...&#10;Arah → (jika a≠b, maka N): pemain bisa..."></textarea>
+  </div>
+
+  <!-- LM-3 -->
+  <h3 style="margin-top:40px">LM-3 — Bonus: Nim Tiga Tumpukan (3, 5, 6) (7 menit)</h3>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">Soal</div>
+    Tiga tumpukan: <strong>3, 5, dan 6 batu</strong>. Aturan Nim biasa: ambil sebanyak yang diinginkan dari tepat satu tumpukan. Yang mengambil terakhir menang.
+  </div>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan (a)</div>
+    <p style="font-size:14px;margin-bottom:8px">Hitung XOR(3, 5, 6). Tunjukkan langkah biner.</p>
+    <textarea data-key="lm3_xor" rows="4" placeholder="3 = 011₂&#10;5 = 101₂&#10;6 = 110₂&#10;XOR: 011 ⊕ 101 = ... ; ... ⊕ 110 = ..."></textarea>
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan (b) & (c)</div>
+    <p style="font-size:14px;margin-bottom:8px">Apakah posisi awal P atau N? Jika N, tentukan langkah pertama menang. Jika P, jelaskan mengapa tidak ada langkah menang.</p>
+    <textarea data-key="lm3_bc" rows="4" placeholder="Posisi (3,5,6) adalah ... karena XOR = .... Oleh karena itu..."></textarea>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-bank')">Lanjut ke Bank Soal →</button>
+</div>
+
+<!-- ═══ PANEL 6 — BANK SOAL ═══ -->
+<div id="p-bank" class="panel">
+  <div class="section-badge purple">Bank Soal Tambahan</div>
+  <h2>Lima Soal Lanjutan</h2>
+
+  <!-- Soal 1 -->
+  <h3>Soal 1 — Logika Multi-Kondisi: Sistem Diskon</h3>
+  <p>Toko memberikan diskon dengan ekspresi: <code>(A ∧ B) ∨ (C ∧ D) ∨ (A ∧ ¬C ∧ D)</code></p>
+  <p>dengan A = anggota, B = belanja ≥ Rp 500.000, C = hari Sabtu, D = kartu kredit.</p>
+
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan</div>
+    <p style="font-size:14px;margin-bottom:8px">(a) Sederhanakan ekspresi diskon. Tunjukkan langkah dengan menyebut hukum yang digunakan.</p>
+    <textarea data-key="bs1_a" rows="5" placeholder="Langkah 1: kelompokkan... Langkah 2: distributif... Hasil akhir: ..."></textarea>
+    <p style="font-size:14px;margin:10px 0 8px">(b) Dari kondisi berikut, mana yang <strong>menjamin</strong> diskon?</p>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="bs1_b" value="i" data-key="bs1_b"> (i) Anggota pada hari Sabtu (A=1, C=1, B=0, D=0)</label>
+      <label class="radio-opt"><input type="radio" name="bs1_b" value="ii" data-key="bs1_b"> (ii) Anggota dengan kartu kredit (A=1, D=1)</label>
+      <label class="radio-opt"><input type="radio" name="bs1_b" value="iii" data-key="bs1_b"> (iii) Bukan anggota, belanja Rp 600.000, hari Sabtu, pakai kartu (A=0, B=1, C=1, D=1)</label>
+      <label class="radio-opt"><input type="radio" name="bs1_b" value="ii_iii" data-key="bs1_b"> (ii) dan (iii) keduanya menjamin</label>
+    </div>
+  </div>
+
+  <!-- Soal 2 -->
+  <h3 style="margin-top:36px">Soal 2 — Nim 2 Tumpukan dengan Batasan Langkah</h3>
+  <p>Dua tumpukan: <strong>8 dan 11 batu</strong>. Setiap giliran, ambil dari tepat satu tumpukan, <strong>minimal 1 dan maksimal 3 batu</strong>. Yang mengambil terakhir menang.</p>
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">💡 Petunjuk: Nilai Grundy</div>
+    Karena ada batasan langkah, XOR biasa tidak berlaku. Gunakan nilai Grundy: untuk satu pile dengan aturan "ambil 1-3", nilai Grundy g(n) = n mod 4. XOR dari nilai Grundy antar-pile memberikan klasifikasi P/N.
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Penyelesaian</div>
+    <p style="font-size:14px;margin-bottom:8px">(a) Hitung g(8) dan g(11). &nbsp; (b) Hitung XOR nilai Grundy. &nbsp; (c) P atau N? Jika N, beri langkah menang.</p>
+    <textarea data-key="bs2_ans" rows="6" placeholder="g(8) = 8 mod 4 = ...&#10;g(11) = 11 mod 4 = ...&#10;XOR: ... ⊕ ... = ...&#10;Klasifikasi: ...&#10;Langkah menang (jika N): ..."></textarea>
+  </div>
+
+  <!-- Soal 3 -->
+  <h3 style="margin-top:36px">Soal 3 — Deteksi Kekeliruan Inferensi (Konteks Graf)</h3>
+  <p>Klasifikasikan setiap argumen sebagai Valid (MP / MT / SH) atau Kekeliruan (Afirmasi Konsekuen / Negasi Anteseden):</p>
+  <div id="bs3-container"></div>
+  <div class="ctrl-row" style="margin-top:12px">
+    <button class="check-btn" onclick="bs3Check()">✓ Periksa</button>
+    <button class="reset-btn" onclick="bs3Reset()">↺ Reset</button>
+  </div>
+  <div id="bs3-feedback" style="display:none;margin-top:12px"></div>
+
+  <!-- Soal 4 — Lampu -->
+  <h3 style="margin-top:36px">Soal 4 — Tabel Kebenaran Tiga Lampu</h3>
+  <p>Tiga lampu L1, L2, L3 dikontrol oleh sakelar P, Q, R dengan aturan:</p>
+  <ul>
+    <li><code>L1 = P ∧ Q</code></li>
+    <li><code>L2 = Q ⊕ R</code></li>
+    <li><code>L3 = ¬P ∨ R</code></li>
+  </ul>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr class="th-blue">
+        <th>P</th><th>Q</th><th>R</th>
+        <th>L1 = P∧Q</th><th>L2 = Q⊕R</th><th>L3 = ¬P∨R</th><th>Jumlah Lampu Menyala</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>2</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>2</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="answer-box">
+    <div class="answer-box-label">Pertanyaan</div>
+    <p style="font-size:14px;margin-bottom:8px">(a) Kondisi sakelar mana yang membuat semua lampu mati (Jumlah = 0)?</p>
+    <textarea data-key="bs4_a" rows="2" placeholder="Semua lampu mati saat P=_, Q=_, R=_. Alasan: ..."></textarea>
+    <p style="font-size:14px;margin:10px 0 8px">(b) Berapa banyak kondisi yang membuat tepat 2 lampu menyala?</p>
+    <textarea data-key="bs4_b" rows="2" placeholder="Jumlah kondisi: _. Kondisi-kondisinya: ..."></textarea>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-errorlog')">Lanjut ke Error Log →</button>
+</div>
+
+<!-- ═══ PANEL 7 — ERROR LOG ═══ -->
+<div id="p-errorlog" class="panel">
+  <div class="section-badge purple">Error Log · AS-F2</div>
+  <h2>Catatan Kesalahan</h2>
+  <p>Untuk setiap soal yang kamu kerjakan hari ini, catat kesalahan yang kamu buat. Tujuan: menemukan pola agar tidak terulang.</p>
+  <div class="tbl-wrap">
+    <table style="font-size:13px">
+      <thead><tr>
+        <th style="width:30px">#</th>
+        <th>Sumber Soal</th>
+        <th>Jawabanku</th>
+        <th>Jawaban Benar</th>
+        <th>Langkah yang Salah</th>
+        <th>Tipe Kesalahan</th>
+      </tr></thead>
+      <tbody id="errlog-tb"></tbody>
+    </table>
+  </div>
+  <button class="add-row-btn" onclick="errlogAdd()">+ Tambah Entri</button>
+  <button class="next-btn" onclick="goPanel('p-karcis')">Lanjut ke Karcis Keluar →</button>
+</div>
+
+<!-- ═══ PANEL 8 — KARCIS KELUAR ═══ -->
+<div id="p-karcis" class="panel">
+  <div class="section-badge">Karcis Keluar · AS-F1</div>
+  <h2>Karcis Keluar Sesi 5</h2>
+
+  <div class="exit-card">
+    <h3 style="margin-top:0;color:var(--accent)">Pertanyaan 1 — Logika (Pilihan Ganda)</h3>
+    <p>Pernyataan: <em>"Jika x bilangan prima dan x &gt; 2, maka x ganjil."</em></p>
+    <p>Diketahui <strong>x = 8</strong> (x genap, bukan ganjil). Apa yang PASTI dapat disimpulkan?</p>
+    <div class="radio-group" style="margin-top:12px">
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="A" data-key="karcis_p1"> A. x bukan bilangan prima.</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="B" data-key="karcis_p1"> B. x ≤ 2.</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="C" data-key="karcis_p1"> C. x bukan bilangan prima <strong>ATAU</strong> x ≤ 2.</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="D" data-key="karcis_p1"> D. Tidak dapat disimpulkan apapun.</label>
+    </div>
+    <div class="callout callout-yellow" style="margin-top:12px;font-size:13px">
+      <strong>Petunjuk:</strong> Implikasi asal berbentuk (P ∧ Q) → R. Kontraposisinya berbentuk ¬R → ¬(P ∧ Q). Apa itu ¬(P ∧ Q) menurut De Morgan?
+    </div>
+  </div>
+
+  <div class="exit-card" style="margin-top:20px">
+    <h3 style="margin-top:0;color:var(--accent)">Pertanyaan 2 — Permainan (Jawaban Singkat)</h3>
+    <p>Pada permainan Nim 3 tumpukan dengan jumlah batu (a, b, c), bagaimana cara cepat memeriksa apakah posisi awal merupakan posisi P? Jelaskan dalam 2–3 kalimat, termasuk langkah konkret jika posisi N.</p>
+    <textarea data-key="karcis_p2" rows="5" placeholder="Untuk mengecek: hitung a ⊕ b ⊕ c...&#10;Jika XOR = 0, maka...&#10;Jika XOR ≠ 0, langkah menang adalah..."></textarea>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-ringkasan')">Lanjut ke Ringkasan →</button>
+</div>
+
+<!-- ═══ PANEL 9 — RINGKASAN + UNDUHAN ═══ -->
+<div id="p-ringkasan" class="panel">
+  <div class="section-badge green">Ringkasan · Sesi 5</div>
+  <h2>Poin Kunci dan Transisi ke Sesi 6</h2>
+
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">A2 — Logika Boolean</div>
+    Enam operator, hukum De Morgan, ekivalensi. Evaluasi logika tidak boleh mengandalkan intuisi.
+  </div>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">Kontra · Konvers · Invers</div>
+    Kontraposisi ≡ implikasi asli. Konvers ≡ Invers, tetapi keduanya ≠ implikasi asli. Mnemonik: "kontra setara, konvers-invers berbeda".
+  </div>
+  <div class="callout callout-green">
+    <div class="callout-label" style="color:var(--green)">Inferensi</div>
+    Modus Ponens, Modus Tollens, Silogisme Hipotetik — valid. Afirmasi konsekuen dan negasi anteseden — KEKELIRUAN.
+  </div>
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">A5 — Nim Multi-Pile</div>
+    Hitung XOR semua tumpukan. XOR = 0 → P. XOR ≠ 0 → N. Strategi: cari tumpukan yang dikurangi hingga XOR total = 0.
+  </div>
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">📋 Persiapan Sesi 6</div>
+    Perbarui error log sebelum Sesi 6. Bawa contoh soal "permainan dua pemain" dari arsip OSN-K yang belum dibahas.
+  </div>
+
+  <div class="download-section">
+    <h3>📥 Unduh Respons Sesi 5</h3>
+    <p>Simpan seluruh jawaban sebagai file teks untuk dikumpulkan ke instruktur.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
+      <div style="text-align:left">
+        <label style="color:#ccc;font-size:13px;display:block;margin-bottom:4px">Nama</label>
+        <input type="text" data-key="dl_nama" placeholder="Nama lengkap" style="background:#2a2218;color:#fff;border-color:#555;width:200px">
+      </div>
+      <div style="text-align:left">
+        <label style="color:#ccc;font-size:13px;display:block;margin-bottom:4px">Email</label>
+        <input type="email" data-key="dl_email" placeholder="email@sekolah.id" style="background:#2a2218;color:#fff;border-color:#555;width:220px">
+      </div>
+    </div>
+    <button class="download-btn" onclick="doDownload()">⬇ Unduh Respons Sesi 5</button>
+    <div class="download-note">File .txt berisi seluruh jawabanmu dalam format Base64. Instruktur akan membacanya langsung.</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+const PANEL_IDS = ['p-gambaran','p-bacaan1','p-latihan1','p-bacaan2','p-latihan2','p-bank','p-errorlog','p-karcis','p-ringkasan'];
+
+function goPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.prog-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.prog-btn')[PANEL_IDS.indexOf(id)].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  FIVE-ATTACK FLOWCHART
+// ═══════════════════════════════════════════════════════
+const FIVE_STEPS = [
+  { num:1, icon:'🔍', color:'var(--s1)', bg:'var(--s1-bg)', title:'Baca Cermat', desc:'Identifikasi: apa yang diminta, apa yang diberikan, apa prosesnya. Tandai kata kunci operator logika atau aturan permainan.' },
+  { num:2, icon:'🏷️', color:'var(--s2)', bg:'var(--s2-bg)', title:'Identifikasi Tipe', desc:'Logika Boolean? Implikasi? Multi-pile Nim? Tentukan tipe lalu pilih alat yang tepat (tabel kebenaran, hukum ekivalensi, XOR, atau backward induction).' },
+  { num:3, icon:'🧪', color:'var(--s3)', bg:'var(--s3-bg)', title:'Coba Kasus Kecil', desc:'Kurangi parameter. Untuk logika: coba 1-2 variabel dulu. Untuk permainan: mulai dari 0 batu ke atas, bukan dari atas.' },
+  { num:4, icon:'💎', color:'var(--s4)', bg:'var(--s4-bg)', title:'Cari Invariant / Pola', desc:'Untuk logika: adakah pola di tabel kebenaran? Untuk Nim: apakah ada periodisitas? Apakah XOR = 0 menjadi kriteria P?' },
+  { num:5, icon:'⚠️', color:'var(--s5)', bg:'var(--s5-bg)', title:'Periksa Kasus Tepi', desc:'Untuk logika: uji semua baris, jangan berhenti di baris pertama yang benar. Untuk permainan: periksa posisi terminal dan posisi batas (n=0).' },
+];
+
+function buildFlowchart(containerId, steps) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  steps.forEach((step, i) => {
+    const card = document.createElement('div');
+    card.className = 'flow-step';
+    card.innerHTML = `<div class="flow-icon" style="background:${step.bg};border:2px solid ${step.color}">${step.icon}</div><div><div style="font-size:11px;font-weight:700;color:${step.color};letter-spacing:1px;font-family:monospace">LANGKAH ${step.num}</div><div style="font-size:16px;font-weight:700;color:var(--ink)">${step.title}</div></div><div class="flow-chev">▼</div>`;
+    const desc = document.createElement('div');
+    desc.className = 'flow-desc';
+    desc.style.cssText = `background:${step.bg};border:1.5px solid ${step.color}40;`;
+    desc.textContent = step.desc;
+    card.onclick = () => {
+      const open = card._open = !card._open;
+      card.style.border = open ? `2px solid ${step.color}` : '2px solid var(--border)';
+      card.style.background = open ? step.bg : 'var(--card)';
+      desc.style.display = open ? 'block' : 'none';
+      card.querySelector('.flow-chev').style.opacity = open ? '1' : '0.4';
+      card.querySelector('.flow-chev').style.transform = open ? 'rotate(180deg)' : '';
+    };
+    wrap.appendChild(card); wrap.appendChild(desc);
+    if (i < steps.length - 1) {
+      const conn = document.createElement('div');
+      conn.className = 'flow-connector';
+      conn.innerHTML = '<div class="flow-line"></div><div class="flow-arrow">⇅</div><div class="flow-line"></div>';
+      wrap.appendChild(conn);
+    }
+  });
+}
+buildFlowchart('fc-five-attack', FIVE_STEPS);
+
+// ═══════════════════════════════════════════════════════
+//  KELERENG TABLE (Soal 7 OSN-K 2024)
+// ═══════════════════════════════════════════════════════
+const KELERENG = [
+  ['Kecil','Merah','Batu','Berkilau','Tidak Terpilih'],
+  ['Kecil','Merah','Batu','Mosaik','Tidak Terpilih'],
+  ['Kecil','Merah','Logam','Berkilau','Terpilih'],
+  ['Kecil','Merah','Logam','Mosaik','Tidak Terpilih'],
+  ['Kecil','Kuning','Batu','Berkilau','Terpilih'],
+  ['Kecil','Kuning','Batu','Mosaik','Terpilih'],
+  ['Kecil','Kuning','Logam','Berkilau','Terpilih'],
+  ['Kecil','Kuning','Logam','Mosaik','Terpilih'],
+  ['Besar','Merah','Batu','Berkilau','Tidak Terpilih'],
+  ['Besar','Merah','Batu','Mosaik','Tidak Terpilih'],
+  ['Besar','Merah','Logam','Berkilau','Tidak Terpilih'],
+  ['Besar','Merah','Logam','Mosaik','Tidak Terpilih'],
+  ['Besar','Kuning','Batu','Berkilau','Tidak Terpilih'],
+  ['Besar','Kuning','Batu','Mosaik','Terpilih'],
+  ['Besar','Kuning','Logam','Berkilau','Tidak Terpilih'],
+  ['Besar','Kuning','Logam','Mosaik','Tidak Terpilih'],
+];
+(function() {
+  const tb = document.getElementById('kelereng-body');
+  KELERENG.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.className = r[4] === 'Terpilih' ? 'terpilih' : 'tidak';
+    const badge = r[4] === 'Terpilih'
+      ? '<span style="background:var(--green);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-family:monospace">✓ TERPILIH</span>'
+      : '<span style="background:#e0e0e0;color:#888;font-size:11px;padding:2px 8px;border-radius:10px;font-family:monospace">Tidak</span>';
+    tr.innerHTML = `<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td style="text-align:center">${badge}</td>`;
+    tb.appendChild(tr);
+  });
+})();
+
+// ═══════════════════════════════════════════════════════
+//  BOOLEAN EXPLORER (6 operators)
+// ═══════════════════════════════════════════════════════
+const BOOL_OPS = [
+  { expr:'A ∧ B',  fn:(a,b) => a&&b },
+  { expr:'A ∨ B',  fn:(a,b) => a||b },
+  { expr:'¬A',     fn:(a,b) => !a },
+  { expr:'¬B',     fn:(a,b) => !b },
+  { expr:'A → B',  fn:(a,b) => !a||b },
+  { expr:'A ↔ B',  fn:(a,b) => a===b },
+  { expr:'A ⊕ B',  fn:(a,b) => (a&&!b)||(!a&&b) },
+];
+function updateBool() {
+  const a = document.querySelector('input[name="varA"]:checked')?.value === '1';
+  const b = document.querySelector('input[name="varB"]:checked')?.value === '1';
+  const c = document.getElementById('boolResults');
+  c.innerHTML = '';
+  BOOL_OPS.forEach(op => {
+    const res = op.fn(a, b);
+    const el = document.createElement('div');
+    el.className = 'bool-result-cell ' + (res ? 'true' : 'false');
+    el.innerHTML = `<span class="expr">${op.expr}</span><span class="val">${res ? 'B' : 'S'}</span>`;
+    c.appendChild(el);
+  });
+}
+updateBool();
+
+// ═══════════════════════════════════════════════════════
+//  LT-1: 6 students × 5 statements TPS table
+// ═══════════════════════════════════════════════════════
+const LT1_STMTS = ['P1: M→O','P2: ¬O→¬M (kontraposisi)','P3: ¬M→¬O (invers)','P4: O→M (konvers)','P5: S↔(M∨F) (biconditional)'];
+const LT1_ANS = [
+  ['B','B','B','B','S','B'],  // P1
+  ['B','B','B','B','S','B'],  // P2
+  ['B','B','B','B','B','S'],  // P3
+  ['B','B','B','B','B','S'],  // P4
+  ['B','B','B','B','B','S'],  // P5
+];
+function buildLT1Table() {
+  const tb = document.getElementById('lt1-body');
+  tb.innerHTML = '';
+  LT1_STMTS.forEach((stmt, si) => {
+    const tr = document.createElement('tr');
+    let cells = `<td style="font-family:monospace;font-weight:700;font-size:12px;background:#faf7f4">${stmt}</td>`;
+    ['Aldo','Bela','Cika','Doni','Elsa','Fika'].forEach((_, sj) => {
+      cells += `<td style="text-align:center"><input type="text" class="cell-input" data-key="lt1_${si}_${sj}" maxlength="1" placeholder="B/S" style="width:48px"></td>`;
+    });
+    tr.innerHTML = cells;
+    tb.appendChild(tr);
+    tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+  });
+}
+buildLT1Table();
+function lt1Check() {
+  let ok = 0, total = 0;
+  LT1_STMTS.forEach((_, si) => {
+    ['Aldo','Bela','Cika','Doni','Elsa','Fika'].forEach((_, sj) => {
+      const inp = document.querySelector(`[data-key="lt1_${si}_${sj}"]`);
+      if (!inp) return; total++;
+      inp.classList.remove('correct','wrong');
+      const v = inp.value.toUpperCase().trim();
+      if (v === LT1_ANS[si][sj]) { inp.classList.add('correct'); ok++; }
+      else if (v) { inp.classList.add('wrong'); }
+    });
+  });
+  const fb = document.getElementById('lt1-feedback');
+  fb.style.display = 'block';
+  if (ok === total) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Benar!</div>Perhatikan: P1 dan P2 identik (kontraposisi setara), P3/P4/P5 identik dalam kolom Fika — ketiganya gagal di Fika karena Fika tidak memenuhi kondisinya.</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/${total} Benar</div>Ingat: untuk implikasi A→B, satu-satunya kasus SALAH adalah A benar dan B salah. Periksa kembali baris yang merah.</div>`;
+  }
+  save();
+}
+function lt1Reset() {
+  LT1_STMTS.forEach((_,si) => ['Aldo','Bela','Cika','Doni','Elsa','Fika'].forEach((_,sj) => {
+    const inp = document.querySelector(`[data-key="lt1_${si}_${sj}"]`);
+    if (inp) { inp.value = ''; inp.classList.remove('correct','wrong'); }
+  }));
+  document.getElementById('lt1-feedback').style.display = 'none'; save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  LT-2b: (A→B)∧(A→C) ≡ A→(B∧C) step-reveal
+// ═══════════════════════════════════════════════════════
+const LT2B_ROWS = [
+  {A:'B',B:'B',C:'B',ab:'B',ac:'B',conj:'B',bc:'B',res:'B'},
+  {A:'B',B:'B',C:'S',ab:'B',ac:'S',conj:'S',bc:'S',res:'S'},
+  {A:'B',B:'S',C:'B',ab:'S',ac:'B',conj:'S',bc:'S',res:'S'},
+  {A:'B',B:'S',C:'S',ab:'S',ac:'S',conj:'S',bc:'S',res:'S'},
+  {A:'S',B:'B',C:'B',ab:'B',ac:'B',conj:'B',bc:'B',res:'B'},
+  {A:'S',B:'B',C:'S',ab:'B',ac:'B',conj:'B',bc:'S',res:'B'},
+  {A:'S',B:'S',C:'B',ab:'B',ac:'B',conj:'B',bc:'S',res:'B'},
+  {A:'S',B:'S',C:'S',ab:'B',ac:'B',conj:'B',bc:'S',res:'B'},
+];
+let lt2bRev = 0;
+function lt2bRender() {
+  const tb = document.getElementById('lt2b-body');
+  tb.innerHTML = '';
+  LT2B_ROWS.forEach((r, i) => {
+    if (i >= lt2bRev) return;
+    const tr = document.createElement('tr');
+    const same = r.conj === r.res ? '✓' : '✗';
+    const sameColor = r.conj === r.res ? 'var(--green)' : '#c0392b';
+    tr.innerHTML = `<td style="font-family:monospace;font-weight:700">${r.A}</td><td style="font-family:monospace;font-weight:700">${r.B}</td><td style="font-family:monospace;font-weight:700">${r.C}</td><td style="font-family:monospace">${r.ab}</td><td style="font-family:monospace">${r.ac}</td><td style="font-family:monospace;font-weight:700;color:var(--accent)">${r.conj}</td><td style="font-family:monospace">${r.bc}</td><td style="font-family:monospace;font-weight:700;color:var(--blue)">${r.res}</td><td style="font-weight:700;color:${sameColor}">${same}</td>`;
+    tb.appendChild(tr);
+  });
+}
+function lt2bNext() {
+  if (lt2bRev >= LT2B_ROWS.length) return;
+  lt2bRev++;
+  lt2bRender();
+  document.getElementById('lt2b-ctr').textContent = lt2bRev + ' / 8 baris';
+  if (lt2bRev >= LT2B_ROWS.length) {
+    document.getElementById('lt2b-btn').disabled = true;
+    document.getElementById('lt2b-insight').style.display = 'block';
+  }
+  save();
+}
+function lt2bReset() {
+  lt2bRev = 0; lt2bRender();
+  document.getElementById('lt2b-ctr').textContent = '0 / 8 baris';
+  document.getElementById('lt2b-btn').disabled = false;
+  document.getElementById('lt2b-insight').style.display = 'none'; save();
+}
+lt2bRender();
+
+// ═══════════════════════════════════════════════════════
+//  LT-2c: Inference classification
+// ═══════════════════════════════════════════════════════
+const LT2C_ITEMS = [
+  { num:1, text:'Premis: "Jika sebuah graf terhubung penuh, ia memiliki minimal n−1 sisi." Premis: "Graf G memiliki kurang dari n−1 sisi." Kesimpulan: "Graf G tidak terhubung penuh."', ans:'MT' },
+  { num:2, text:'Premis: "Jika x prima, maka x ganjil ATAU x = 2." Premis: "x ganjil ATAU x = 2." Kesimpulan: "x prima."', ans:'AK' },
+  { num:3, text:'Premis: "Jika dua bilangan habis dibagi 4, maka keduanya habis dibagi 2." Premis: "Dua bilangan habis dibagi 4." Kesimpulan: "Keduanya habis dibagi 2."', ans:'MP' },
+  { num:4, text:'Premis: "Jika hari Senin, sekolah masuk pagi." Premis: "Hari ini bukan Senin." Kesimpulan: "Sekolah tidak masuk pagi."', ans:'NA' },
+  { num:5, text:'Premis: "Jika algoritma A benar, output sesuai spesifikasi." Premis: "Jika output sesuai spesifikasi, sistem lulus uji." Kesimpulan: "Jika algoritma A benar, sistem lulus uji."', ans:'SH' },
+];
+const INF_OPTIONS = [
+  {v:'MP', label:'MP — Modus Ponens (Valid)'}, {v:'MT', label:'MT — Modus Tollens (Valid)'},
+  {v:'SH', label:'SH — Silogisme Hipotetik (Valid)'}, {v:'AK', label:'AK — Afirmasi Konsekuen (Kekeliruan)'},
+  {v:'NA', label:'NA — Negasi Anteseden (Kekeliruan)'},
+];
+function buildLT2c() {
+  const c = document.getElementById('lt2c-container');
+  c.innerHTML = '';
+  LT2C_ITEMS.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'inf-item';
+    const opts = INF_OPTIONS.map(o => `<option value="${o.v}">${o.label}</option>`).join('');
+    div.innerHTML = `<div class="inf-num">Argumen ${item.num}</div><div class="inf-text">${item.text}</div><select class="inf-select" data-key="lt2c_${item.num}"><option value="">— pilih —</option>${opts}</select>`;
+    c.appendChild(div);
+    div.querySelector('select').addEventListener('change', save);
+  });
+}
+buildLT2c();
+function lt2cCheck() {
+  let ok = 0;
+  LT2C_ITEMS.forEach(item => {
+    const sel = document.querySelector(`[data-key="lt2c_${item.num}"]`);
+    if (!sel) return;
+    sel.style.borderColor = '';
+    if (sel.value === item.ans) { sel.style.borderColor = 'var(--green)'; ok++; }
+    else if (sel.value) { sel.style.borderColor = '#e88a7a'; }
+  });
+  const fb = document.getElementById('lt2c-feedback');
+  fb.style.display = 'block';
+  if (ok === LT2C_ITEMS.length) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Benar!</div>Yang paling sering disalahkan di OSN-K: Afirmasi Konsekuen (argumen 2) dan Negasi Anteseden (argumen 4).</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/5 Benar</div>Tips: Valid = pola persis MP/MT/SH. Kekeliruan = pola seperti valid tapi arah premis terbalik atau anteseden dinegasi.</div>`;
+  }
+  save();
+}
+function lt2cReset() {
+  LT2C_ITEMS.forEach(item => { const sel = document.querySelector(`[data-key="lt2c_${item.num}"]`); if (sel) { sel.value=''; sel.style.borderColor=''; }});
+  document.getElementById('lt2c-feedback').style.display = 'none'; save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  NIM 7 STEP-REVEAL
+// ═══════════════════════════════════════════════════════
+const NIM7_ROWS = [
+  {batu:0,to:'— (tidak bisa)',cls:'P',reason:'Tidak bisa bergerak → kalah'},
+  {batu:1,to:'→ 0',cls:'N',reason:'Ada gerakan ke P(0): ambil 1'},
+  {batu:2,to:'→ 1, → 0',cls:'N',reason:'Ada gerakan ke P(0): ambil 2'},
+  {batu:3,to:'→ 2, → 1',cls:'P',reason:'Semua gerakan menuju N'},
+  {batu:4,to:'→ 3, → 2',cls:'N',reason:'Ada gerakan ke P(3): ambil 1'},
+  {batu:5,to:'→ 4, → 3',cls:'N',reason:'Ada gerakan ke P(3): ambil 2'},
+  {batu:6,to:'→ 5, → 4',cls:'P',reason:'Semua gerakan menuju N'},
+  {batu:7,to:'→ 6, → 5',cls:'N',reason:'Ada gerakan ke P(6): ambil 1'},
+];
+let nim7Phase = 0;
+function nim7Render() {
+  const tb = document.getElementById('nim7-body'); tb.innerHTML = '';
+  NIM7_ROWS.forEach((r, i) => {
+    if (i >= nim7Phase) return;
+    const tr = document.createElement('tr');
+    const badge = r.cls === 'P' ? '<span class="pos-P">P — Kalah</span>' : '<span class="pos-N">N — Menang</span>';
+    tr.innerHTML = `<td style="font-family:monospace;font-weight:900;font-size:18px;text-align:center;color:${r.cls==='P'?'#c0392b':'var(--green)'}">${r.batu}</td><td style="font-family:monospace;font-size:13px;color:var(--muted)">${r.to}</td><td style="text-align:center">${badge}</td><td style="font-size:13px">${r.reason}</td>`;
+    if (r.cls === 'P') tr.style.background = '#fff5f5';
+    tb.appendChild(tr);
+  });
+}
+function nim7Next() {
+  if (nim7Phase >= NIM7_ROWS.length) return;
+  nim7Phase++;
+  nim7Render();
+  document.getElementById('nim7-ctr').textContent = nim7Phase + ' / 8 posisi';
+  if (nim7Phase >= NIM7_ROWS.length) {
+    document.getElementById('nim7-btn').disabled = true;
+    document.getElementById('nim7-insight').style.display = 'block';
+  }
+  save();
+}
+function nim7Reset() {
+  nim7Phase = 0; nim7Render();
+  document.getElementById('nim7-ctr').textContent = '0 / 8 posisi';
+  document.getElementById('nim7-btn').disabled = false;
+  document.getElementById('nim7-insight').style.display = 'none'; save();
+}
+nim7Render();
+
+// ═══════════════════════════════════════════════════════
+//  SKENARIO MENGAMBIL DAUN (Soal 9 OSN-K 2024)
+// ═══════════════════════════════════════════════════════
+const SKENARIOS = [
+  { label:'A — Pak Dengklek mulai: ambil 1 dari Piring A', xorStr:'(1,3) → XOR = 1⊕3 = 010 = 2 ≠ 0 → N untuk Pak Ganesh', win:false, explain:'Pak Dengklek menghasilkan posisi N untuk Pak Ganesh. Pak Ganesh yang menang. ✗ Tidak menjamin.' },
+  { label:'B — Pak Dengklek mulai: ambil 2 dari Piring A', xorStr:'(0,3) → XOR = 0⊕3 = 3 ≠ 0 → N untuk Pak Ganesh', win:false, explain:'Pak Dengklek memberikan posisi N ke Pak Ganesh. ✗ Tidak menjamin.' },
+  { label:'C — Pak Dengklek mulai: ambil 2 dari Piring B', xorStr:'(2,1) → XOR = 2⊕1 = 3 ≠ 0 → N untuk Pak Ganesh', win:false, explain:'Pak Dengklek memberikan posisi N ke Pak Ganesh. ✗ Tidak menjamin.' },
+  { label:'D — Pak Ganesh mulai: ambil 1 dari Piring A', xorStr:'Pak Dengklek menerima (1,3) → XOR = 1⊕3 = 2 ≠ 0 → N untuk Pak Dengklek', win:true,  explain:'Pak Dengklek di posisi N! Langkah optimal: ambil 2 dari Piring B → (1,1) seimbang = P untuk Pak Ganesh. ✓ Menjamin kemenangan Pak Dengklek.' },
+  { label:'E — Pak Ganesh mulai: ambil 1 dari Piring B', xorStr:'Pak Dengklek menerima (2,2) → XOR = 2⊕2 = 0 → P untuk Pak Dengklek', win:false, explain:'Pak Dengklek di posisi P — semua langkahnya memberikan posisi N ke Pak Ganesh. ✗ Tidak menjamin.' },
+];
+function buildSkenario() {
+  const c = document.getElementById('skenario-container');
+  c.innerHTML = '';
+  SKENARIOS.forEach((sk, i) => {
+    const div = document.createElement('div');
+    div.className = 'skenario-item';
+    div.dataset.open = '0';
+    div.innerHTML = `
+      <div class="sk-head">
+        <div class="sk-label">Skenario ${sk.label}</div>
+        <div class="sk-reveal">Klik untuk analisis ▾</div>
+      </div>
+      <div class="sk-body">
+        <div style="font-family:monospace;font-size:13px;background:#f5f0eb;padding:8px 12px;border-radius:6px;margin-bottom:8px">${sk.xorStr}</div>
+        <div class="${sk.win ? 'sk-win' : 'sk-lose'}">${sk.explain}</div>
+      </div>`;
+    div.onclick = () => {
+      const open = div.dataset.open === '0';
+      div.dataset.open = open ? '1' : '0';
+      div.querySelector('.sk-body').style.display = open ? 'block' : 'none';
+      div.querySelector('.sk-reveal').textContent = open ? 'Tutup ▴' : 'Klik untuk analisis ▾';
+      div.style.borderColor = open ? (sk.win ? 'var(--green)' : '#e88a7a') : 'var(--border)';
+    };
+    c.appendChild(div);
+  });
+}
+buildSkenario();
+
+// ═══════════════════════════════════════════════════════
+//  LM-1: Nim 1,3,4 (n=0..12)
+// ═══════════════════════════════════════════════════════
+const LM1_ANS = ['P','N','P','N','N','N','N','P','N','P','N','N','N']; // n=0..12
+function buildLM1Table() {
+  const tb = document.getElementById('lm1-body'); tb.innerHTML = '';
+  for (let n = 0; n <= 12; n++) {
+    let toStr;
+    const opts = [n-1,n-3,n-4].filter(x=>x>=0);
+    toStr = opts.length ? '→ ' + opts.join(', ') : '— (tidak bisa)';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="font-family:monospace;font-weight:900;font-size:16px;text-align:center">${n}</td><td style="text-align:center"><select class="cell-select" data-key="lm1_cls_${n}"><option value="">—</option><option value="P">P</option><option value="N">N</option></select></td><td><input type="text" data-key="lm1_rsn_${n}" placeholder="${toStr}" style="padding:5px 8px;font-size:12px"></td>`;
+    tb.appendChild(tr);
+    tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('change', save));
+    tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+  }
+}
+buildLM1Table();
+function lm1Check() {
+  let ok = 0;
+  for (let n = 0; n <= 12; n++) {
+    const sel = document.querySelector(`[data-key="lm1_cls_${n}"]`);
+    if (!sel) continue;
+    sel.classList.remove('correct','wrong');
+    if (sel.value === LM1_ANS[n]) { sel.classList.add('correct'); ok++; }
+    else if (sel.value) { sel.classList.add('wrong'); }
+  }
+  const fb = document.getElementById('lm1-feedback');
+  fb.style.display = 'block';
+  if (ok === 13) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Benar!</div>Posisi P = {0, 2, 7, 9}. Perhatikan: pola ini TIDAK modular sederhana — backward induction tetap diperlukan.</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/13 Benar</div>Cek n=2: dari 2, hanya bisa ambil 1 (→ 1=N). Tidak bisa ambil 3 atau 4 (sisa negatif). Semua langkah → N → posisi 2 adalah P.</div>`;
+  }
+  save();
+}
+function lm1Reset() {
+  for (let n = 0; n <= 12; n++) {
+    const sel = document.querySelector(`[data-key="lm1_cls_${n}"]`);
+    if (sel) { sel.value=''; sel.classList.remove('correct','wrong'); }
+  }
+  document.getElementById('lm1-feedback').style.display = 'none'; save();
+}
+
+// LM-2 XOR reveal
+let lm2Revealed = false;
+function lm2RevealXor() {
+  if (lm2Revealed) return;
+  lm2Revealed = true;
+  document.getElementById('lm2-xor-display').textContent =
+`4  = 100₂
+7  = 111₂
+──────────
+XOR = 011₂ = 3 ≠ 0  →  Posisi N (Pemain Pertama Menang)
+
+Strategi: dari pile 7, ambil 3 batu → sisa 4.
+Posisi baru (4, 4): 100 ⊕ 100 = 000 = 0  ✓ Posisi P untuk lawan.`;
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  Bank Soal 3 — inference classification (with graph context)
+// ═══════════════════════════════════════════════════════
+const BS3_ITEMS = [
+  { num:1, text:'Premis: "Jika algoritma sorting berjalan O(n log n), maka ia lebih cepat dari O(n²) untuk n besar." Premis: "QuickSort rata-rata O(n log n)." Kesimpulan: "QuickSort rata-rata lebih cepat dari O(n²) untuk n besar."', ans:'MP' },
+  { num:2, text:'Premis: "Jika BFS dijalankan di graf tak berbobot, ia menemukan jalur terpendek." Premis: "BFS tidak menemukan jalur terpendek di graf G." Kesimpulan: "Graf G berbobot."', ans:'MT' },
+  { num:3, text:'Premis: "Jika suatu bilangan habis dibagi 9, maka ia habis dibagi 3." Premis: "Bilangan X habis dibagi 3." Kesimpulan: "X habis dibagi 9."', ans:'AK' },
+];
+function buildBS3() {
+  const c = document.getElementById('bs3-container');
+  c.innerHTML = '';
+  const opts = INF_OPTIONS.map(o => `<option value="${o.v}">${o.label}</option>`).join('');
+  BS3_ITEMS.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'inf-item';
+    div.innerHTML = `<div class="inf-num">Argumen ${item.num}</div><div class="inf-text">${item.text}</div><select class="inf-select" data-key="bs3_${item.num}"><option value="">— pilih —</option>${opts}</select>`;
+    c.appendChild(div);
+    div.querySelector('select').addEventListener('change', save);
+  });
+}
+buildBS3();
+function bs3Check() {
+  let ok = 0;
+  BS3_ITEMS.forEach(item => {
+    const sel = document.querySelector(`[data-key="bs3_${item.num}"]`);
+    if (!sel) return;
+    sel.style.borderColor = '';
+    if (sel.value === item.ans) { sel.style.borderColor = 'var(--green)'; ok++; }
+    else if (sel.value) { sel.style.borderColor = '#e88a7a'; }
+  });
+  const fb = document.getElementById('bs3-feedback');
+  fb.style.display = 'block';
+  fb.innerHTML = ok === BS3_ITEMS.length
+    ? '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Benar!</div>Argumen 3 adalah Afirmasi Konsekuen: tahu B tidak cukup untuk menyimpulkan A.</div>'
+    : `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/3 Benar</div>Identifikasi pola premis dulu: MP = A,A→B→B; MT = A→B,¬B→¬A; AK = A→B,B→A (kekeliruan).</div>`;
+  save();
+}
+function bs3Reset() {
+  BS3_ITEMS.forEach(item => { const sel = document.querySelector(`[data-key="bs3_${item.num}"]`); if (sel) { sel.value=''; sel.style.borderColor=''; }});
+  document.getElementById('bs3-feedback').style.display = 'none'; save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  ERROR LOG
+// ═══════════════════════════════════════════════════════
+const ERROR_TYPES = ['Salah baca soal','Model logika keliru','Kesalahan evaluasi operator','Invers/kontraposisi tertukar','Kesalahan XOR/Nim','Kehabisan waktu'];
+let errCount = 0;
+function errlogAdd() {
+  errCount++;
+  const n = errCount;
+  const opts = ERROR_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td style="text-align:center;color:var(--muted);font-size:13px;padding-top:10px">${n}</td><td><input type="text" data-key="err${n}_src" placeholder="mis. LT-1"></td><td><input type="text" data-key="err${n}_mine" placeholder="Jawabanku"></td><td><input type="text" data-key="err${n}_correct" placeholder="Jawaban benar"></td><td><textarea rows="2" data-key="err${n}_where" placeholder="Langkah mana yang salah?"></textarea></td><td><select data-key="err${n}_type"><option value="">— pilih —</option>${opts}</select></td>`;
+  document.getElementById('errlog-tb').appendChild(tr);
+  tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+  save();
+}
+errlogAdd();
+
+// ═══════════════════════════════════════════════════════
+//  PERSISTENCE
+// ═══════════════════════════════════════════════════════
+const STORE = 'osnk-sesi5-v2';
+function save() {
+  const d = {};
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (el.type === 'radio' || el.type === 'checkbox') { if (el.checked) d[k] = el.value; }
+    else { d[k] = el.value; }
+  });
+  d._lt2bRev = lt2bRev; d._nim7Phase = nim7Phase;
+  d._errCount = errCount; d._lm2Revealed = lm2Revealed;
+  try { localStorage.setItem(STORE, JSON.stringify(d)); } catch(e) {}
+}
+function load() {
+  let d;
+  try { d = JSON.parse(localStorage.getItem(STORE)); } catch(e) {}
+  if (!d) return;
+  if (d._errCount > 1) for (let i = 1; i < d._errCount; i++) errlogAdd();
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (!(k in d)) return;
+    if (el.type === 'radio' || el.type === 'checkbox') el.checked = el.value === d[k];
+    else el.value = d[k];
+  });
+  if (d._lt2bRev)   { lt2bRev = 0;    while (lt2bRev < d._lt2bRev) lt2bNext(); }
+  if (d._nim7Phase) { nim7Phase = 0;   while (nim7Phase < d._nim7Phase) nim7Next(); }
+  if (d._lm2Revealed) { lm2Revealed = false; lm2RevealXor(); }
+}
+document.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+
+// ═══════════════════════════════════════════════════════
+//  DOWNLOAD
+// ═══════════════════════════════════════════════════════
+function doDownload() {
+  const data = {};
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (el.type === 'radio' || el.type === 'checkbox') { if (el.checked) data[k] = el.value; }
+    else { data[k] = el.value; }
+  });
+  data._meta = { sesi: '5', versi: 'v2', ts: new Date().toISOString() };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([encoded], { type: 'text/plain' }));
+  a.download = 'respons-sesi5-' + Date.now() + '.txt';
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════════
+//  ARROW-KEY HEADING NAVIGATION
+// ═══════════════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName) || e.target.isContentEditable) return;
+    const hs = Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6')).filter(h => h.offsetWidth > 0 && h.offsetHeight > 0);
+    let t = null;
+    if (e.key === 'ArrowRight') t = hs.find(h => h.getBoundingClientRect().top > 10);
+    else t = [...hs].reverse().find(h => h.getBoundingClientRect().top < -10);
+    if (t) { t.scrollIntoView({ behavior: 'smooth' }); e.preventDefault(); }
+  }
+});
+
+// MUST BE LAST
+load();
+</script>
+</body>
+</html>
