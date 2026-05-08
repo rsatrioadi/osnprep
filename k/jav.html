@@ -1,0 +1,1452 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sesi 6 — Integrasi Fase 1: Graf Lanjut dan Algoritma</title>
+<style>
+:root {
+  --bg: #fdf8f2; --card: #ffffff; --border: #e8ddd0; --ink: #1a1410; --muted: #7a6a5a;
+  --accent: #d4521a; --accent-light: #fdeee5;
+  --blue: #1b4f8a; --blue-light: #e5edf7;
+  --green: #1f7a4a; --green-light: #e5f4ec;
+  --yellow: #c8930a; --yellow-light: #fef7e5;
+  --purple: #8b3a9c; --purple-light: #f3e8f8;
+  --s1: #d4521a; --s1-bg: #fdeee5;
+  --s2: #1b4f8a; --s2-bg: #e5edf7;
+  --s3: #1f7a4a; --s3-bg: #e5f4ec;
+  --s4: #8b3a9c; --s4-bg: #f3e8f8;
+  --s5: #c8930a; --s5-bg: #fef7e5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: Georgia, "Times New Roman", serif; color: var(--ink); line-height: 1.7; }
+code, .mono { font-family: "Courier New", monospace; }
+
+.site-header { background: #1a1410; padding: 16px 24px; }
+.site-header .eyebrow { font-size: 11px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; font-family: monospace; }
+.site-header h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+
+.prog-nav { background: var(--card); border-bottom: 2px solid var(--border); padding: 0 24px; display: flex; gap: 0; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.prog-btn { padding: 12px 16px; border: none; background: transparent; color: var(--muted); font-family: Georgia, serif; font-size: 12px; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; }
+.prog-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+.prog-btn:not(.active):hover { color: var(--ink); background: var(--accent-light); }
+
+.panel { display: none; max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; }
+.panel.active { display: block; }
+
+h2 { font-size: 22px; color: var(--accent); margin-bottom: 8px; margin-top: 32px; }
+h2:first-child { margin-top: 0; }
+h3 { font-size: 17px; color: var(--ink); margin: 24px 0 8px; font-weight: 700; }
+h4 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 6px; font-family: monospace; }
+p { margin-bottom: 14px; font-size: 15px; }
+ul, ol { margin: 0 0 14px 22px; font-size: 15px; }
+li { margin-bottom: 4px; }
+
+.callout { border-radius: 8px; padding: 14px 18px; font-size: 14px; line-height: 1.65; margin: 16px 0; }
+.callout-yellow  { background: var(--yellow-light); border: 1px solid #c8930a60; }
+.callout-blue    { background: var(--blue-light);   border: 1px solid #1b4f8a60; }
+.callout-green   { background: var(--green-light);  border: 1px solid #1f7a4a60; }
+.callout-purple  { background: var(--purple-light); border: 1px solid #8b3a9c60; }
+.callout-accent  { background: var(--accent-light); border: 1px solid #d4521a60; }
+.callout-label   { font-weight: 700; margin-bottom: 4px; }
+
+.tbl-wrap { overflow-x: auto; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { background: var(--accent); color: #fff; padding: 9px 12px; text-align: left; font-weight: 700; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: #faf7f4; }
+tr:last-child td { border-bottom: none; }
+.th-blue th  { background: var(--blue); }
+.th-green th { background: var(--green); }
+.th-purple th{ background: var(--purple); }
+.th-muted th { background: var(--muted); }
+
+.section-badge { display: inline-block; background: var(--accent); color: #fff; font-family: monospace; font-size: 11px; letter-spacing: 1px; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; text-transform: uppercase; }
+.section-badge.blue   { background: var(--blue); }
+.section-badge.green  { background: var(--green); }
+.section-badge.purple { background: var(--purple); }
+.section-badge.yellow { background: var(--yellow); }
+
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 14px; font-weight: 700; display: block; margin-bottom: 6px; color: var(--ink); }
+input[type="text"], input[type="email"], textarea, select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 6px; font-family: Georgia, serif; font-size: 14px; background: #fff; color: var(--ink); transition: border-color 0.2s; }
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus { border-color: var(--accent); outline: none; }
+textarea { resize: vertical; min-height: 80px; }
+.radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.radio-opt { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; }
+.radio-opt input { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); }
+
+.reveal-btn { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); padding: 8px 18px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 13px; font-weight: 700; transition: all 0.2s; }
+.reveal-btn:hover { background: var(--accent); color: #fff; }
+.reveal-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.reset-btn { background: transparent; color: var(--muted); border: 1.5px solid var(--border); padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 12px; transition: all 0.2s; }
+.reset-btn:hover { background: var(--border); }
+.check-btn { background: var(--green); color: #fff; border: none; padding: 9px 22px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 14px; font-weight: 700; transition: background 0.2s; }
+.check-btn:hover { background: #176039; }
+.next-btn { display: inline-block; background: var(--accent); color: #fff; border: none; padding: 11px 28px; border-radius: 8px; cursor: pointer; font-family: Georgia, serif; font-size: 15px; font-weight: 700; margin-top: 32px; transition: background 0.2s; }
+.next-btn:hover { background: #b84215; }
+.ctrl-row { display: flex; gap: 8px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+.step-counter { font-size: 12px; color: var(--muted); font-family: monospace; }
+.add-row-btn { margin-top: 10px; background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); padding: 7px 16px; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 13px; font-weight: 700; }
+.add-row-btn:hover { background: var(--green); color: #fff; }
+
+.sim-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+.sim-table th { padding: 9px 14px; text-align: center; font-weight: 700; color: #fff; }
+.sim-table td { padding: 8px 12px; border: 1px solid var(--border); text-align: center; }
+.sim-table .row-label { text-align: left; font-weight: 600; background: #faf7f4; font-size: 13px; }
+.sim-table input.cell-input { width: 70px; padding: 5px; border: 1.5px solid var(--border); border-radius: 4px; text-align: center; font-family: monospace; font-size: 13px; font-weight: 700; background: #fff; }
+.sim-table input.cell-input:focus { border-color: var(--accent); outline: none; }
+.sim-table select.cell-select { width: 90px; padding: 5px; border: 1.5px solid var(--border); border-radius: 4px; font-family: monospace; font-size: 13px; font-weight: 700; background: #fff; }
+.sim-table .given { background: var(--blue-light); font-family: monospace; font-weight: 700; color: var(--blue); }
+
+.correct { background: var(--green-light) !important; border-color: var(--green) !important; color: var(--green) !important; }
+.wrong   { background: #fef0ee !important; border-color: #e88a7a !important; color: #c0392b !important; }
+
+.tt-insight { background: var(--green-light); border: 1.5px solid var(--green); border-radius: 8px; padding: 14px 18px; font-size: 14px; line-height: 1.65; margin-top: 16px; display: none; }
+
+.badge-odd  { display: inline-block; background: #fef0ee; color: #c0392b; border: 1.5px solid #e88a7a; font-family: monospace; font-weight: 900; font-size: 12px; padding: 2px 10px; border-radius: 20px; }
+.badge-even { display: inline-block; background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); font-family: monospace; font-weight: 900; font-size: 12px; padding: 2px 10px; border-radius: 20px; }
+.badge-round{ display: inline-block; background: var(--blue-light); color: var(--blue); border: 1.5px solid var(--blue); font-family: monospace; font-weight: 900; font-size: 12px; padding: 2px 10px; border-radius: 20px; }
+
+.download-section { background: #1a1410; border-radius: 12px; padding: 32px; margin-top: 40px; text-align: center; }
+.download-section h3 { color: #fff; font-size: 18px; margin-bottom: 8px; }
+.download-section p  { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+.download-btn { background: var(--accent); color: #fff; border: none; padding: 14px 32px; border-radius: 8px; cursor: pointer; font-family: Georgia, serif; font-size: 16px; font-weight: 700; transition: background 0.2s; }
+.download-btn:hover { background: #b84215; }
+.download-note { font-size: 12px; color: #888; margin-top: 12px; }
+
+.answer-box { background: var(--card); border: 2px dashed var(--accent); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.answer-box-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-family: monospace; font-weight: 700; margin-bottom: 10px; }
+.exit-card { background: var(--accent-light); border: 2px solid #d4521a60; border-radius: 12px; padding: 24px; margin: 20px 0; }
+
+/* Flowchart */
+.flowchart-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin: 16px 0; }
+.flow-step { display: flex; align-items: center; gap: 16px; background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 14px 20px; cursor: pointer; width: min(560px, 100%); transition: all 0.25s; z-index: 1; }
+.flow-step:hover { border-color: var(--accent); background: var(--accent-light); }
+.flow-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.flow-chev { margin-left: auto; font-size: 14px; color: var(--muted); opacity: 0.4; transition: all 0.2s; }
+.flow-desc { border-top: none; border-radius: 0 0 10px 10px; width: min(560px, 100%); padding: 24px 20px 16px; margin-top: -12px; font-size: 14px; line-height: 1.65; display: none; z-index: 0; }
+.flow-connector { display: flex; flex-direction: column; align-items: center; margin-left: 22px; }
+.flow-line  { width: 2px; height: 12px; background: var(--border); }
+.flow-arrow { font-size: 16px; color: var(--muted); }
+
+/* Accordion items (bank soal) */
+.accordion-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; margin: 10px 0; overflow: hidden; }
+.accordion-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; transition: background 0.2s; }
+.accordion-head:hover { background: var(--accent-light); }
+.accordion-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.accordion-chev { font-size: 13px; color: var(--muted); transition: transform 0.2s; }
+.accordion-body { display: none; padding: 16px 18px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.65; }
+
+/* Code block */
+.code-block { background: #1a1410; color: #f0e8dc; font-family: "Courier New", monospace; font-size: 13px; line-height: 1.8; padding: 16px 20px; border-radius: 8px; margin: 14px 0; white-space: pre; overflow-x: auto; }
+
+/* IO table for C3 */
+.io-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+.io-table th { padding: 9px 14px; color: #fff; font-weight: 700; text-align: center; }
+.io-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: center; }
+.io-table .left-align { text-align: left; }
+.io-table tr:nth-child(even) td { background: #faf7f4; }
+
+/* Complexity cards */
+.complexity-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 10px 0; }
+.complexity-item .cx-num { font-size: 11px; font-family: monospace; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.complexity-item .cx-text { font-size: 14px; margin-bottom: 10px; }
+.cx-select { padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 6px; font-family: Georgia, serif; font-size: 13px; background: #fff; }
+.cx-select:focus { border-color: var(--accent); outline: none; }
+
+/* Graph SVG container */
+.graph-svg-wrap { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 16px; margin: 16px 0; overflow-x: auto; }
+
+/* Topo round table */
+.topo-round-row { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.topo-round-num { font-family: monospace; font-weight: 900; font-size: 24px; color: var(--blue); flex-shrink: 0; min-width: 32px; }
+.topo-round-content { flex: 1; }
+.topo-round-label { font-size: 11px; color: var(--muted); font-family: monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.topo-node-chip { display: inline-block; background: var(--blue-light); color: var(--blue); border: 1.5px solid var(--blue); font-family: monospace; font-size: 12px; padding: 2px 10px; border-radius: 20px; margin: 2px; }
+.topo-freed-chip { display: inline-block; background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); font-family: monospace; font-size: 12px; padding: 2px 10px; border-radius: 20px; margin: 2px; }
+.topo-produk-chip { display: inline-block; background: var(--accent-light); color: var(--accent); border: 1.5px solid var(--accent); font-family: monospace; font-size: 12px; padding: 2px 10px; border-radius: 20px; margin: 2px; font-weight: 900; }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="eyebrow">OSN-K Informatika · Kursus Persiapan · Fase 1</div>
+  <h1>Sesi 6 — Integrasi: Graf Lanjut dan Analisis Algoritma</h1>
+</div>
+
+<div class="prog-nav" id="progNav">
+  <button class="prog-btn active" onclick="goPanel('p-gambaran')">① Gambaran Sesi</button>
+  <button class="prog-btn"        onclick="goPanel('p-bacaan1')">② Graf Lanjut</button>
+  <button class="prog-btn"        onclick="goPanel('p-fishbowl')">③ Latihan Terpandu</button>
+  <button class="prog-btn"        onclick="goPanel('p-bacaan2')">④ Algoritma C3+C4</button>
+  <button class="prog-btn"        onclick="goPanel('p-mandiri')">⑤ Latihan Mandiri</button>
+  <button class="prog-btn"        onclick="goPanel('p-bank')">⑥ Bank Soal</button>
+  <button class="prog-btn"        onclick="goPanel('p-errorlog')">⑦ Error Log</button>
+  <button class="prog-btn"        onclick="goPanel('p-karcis')">⑧ Karcis Keluar</button>
+  <button class="prog-btn"        onclick="goPanel('p-ringkasan')">⑨ Ringkasan</button>
+</div>
+
+<!-- ═══ PANEL 1 — GAMBARAN ═══ -->
+<div id="p-gambaran" class="panel active">
+  <div class="section-badge">Gambaran Sesi · Sesi 6</div>
+  <h2>Integrasi Fase 1: Graf Lanjut dan Analisis Algoritma</h2>
+  <p>Durasi: 120 menit &nbsp;|&nbsp; LO Utama: A4, C3, C4 &nbsp;|&nbsp; LO Pendukung: B5, D4 &nbsp;|&nbsp; Format: Online (sinkron)</p>
+
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">A4 — Utama</div>
+    Menerapkan konsep graf — keterhubungan, lintasan Euler, pengurutan topologis — untuk menentukan sifat atau jumlah yang diminta dalam suatu masalah.
+  </div>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">C3 — Utama</div>
+    Mengidentifikasi apa yang dihitung sebuah fungsi dari beberapa pasang input-output sampel, sebelum menelusuri kode secara penuh.
+  </div>
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">C4 — Utama</div>
+    Mengklasifikasikan kompleksitas waktu sebuah fungsi secara intuitif: jika N dua kali lipat, apakah waktu tetap sama, dua kali lipat, empat kali lipat?
+  </div>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">B5 + D4 — Pendukung</div>
+    B5: Argumen optimal (minimum/maksimum). D4: Triase soal — memutuskan urutan pengerjaan dalam kondisi waktu terbatas.
+  </div>
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">D1 — Kontinu</div>
+    Serangan Lima Langkah dimodelkan instruktur di setiap blok "I do" tanpa kecuali.
+  </div>
+
+  <h3>Alur Sesi</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Blok</th><th>Durasi</th><th>Aktivitas</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pembuka</strong></td><td>10 menit</td><td>Review karcis keluar S5 + orientasi &amp; preview Simulasi Tengah</td></tr>
+        <tr><td><strong>Instruksi I</strong></td><td>25 menit</td><td><em>I do</em> — Lintasan Euler (derajat simpul, syarat keberadaan) + Pengurutan Topologis (derajat masuk, algoritma). Demo Soal 5 &amp; 2 OSN-K 2024</td></tr>
+        <tr><td><strong>Latihan Terpandu</strong></td><td>25 menit</td><td><em>We do</em> — Fishbowl: Soal Jaringan Pipa Kota (6 stasiun pompa air)</td></tr>
+        <tr><td><strong>Instruksi II</strong></td><td>20 menit</td><td><em>I do</em> — C3: Identifikasi pola fungsi dari tabel I/O. C4: Klasifikasi kompleksitas intuitif. Demo Fungsi go(N) &amp; jumlah_digit</td></tr>
+        <tr><td><strong>Latihan Mandiri</strong></td><td>25 menit</td><td><em>You do</em> — Triase soal + Soal A (Topologis: Rapat Tim) + Soal C (Penelusuran: Fungsi Digit)</td></tr>
+        <tr><td><strong>Penutup</strong></td><td>15 menit</td><td>Debrief + karcis keluar AS-F1 + preview mekanisme Simulasi Tengah AS-F3</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Serangan Lima Langkah — Pengingat</h3>
+  <div class="flowchart-wrap" id="fc-five-attack"></div>
+
+  <button class="next-btn" onclick="goPanel('p-bacaan1')">Mulai Bacaan: Graf Lanjut →</button>
+</div>
+
+<!-- ═══ PANEL 2 — GRAF LANJUT ═══ -->
+<div id="p-bacaan1" class="panel">
+  <div class="section-badge blue">Bacaan · A4</div>
+  <h2>Graf Lanjut: Lintasan Euler dan Pengurutan Topologis</h2>
+
+  <p>Di Sesi 2, kita belajar cara merepresentasikan skenario sebagai graf dan cara memeriksa keterhubungan. Sesi ini naik satu tingkat: bukan hanya <em>"apakah ada jalur?"</em> tetapi <em>"jalur mana yang melewati semua sisi tepat satu kali?"</em> dan <em>"dalam urutan apa tugas-tugas dengan prasyarat bisa dikerjakan?"</em></p>
+
+  <!-- BAGIAN A: EULER -->
+  <h3>Bagian A — Lintasan Euler</h3>
+
+  <h4>Masalah Asli: Tujuh Jembatan Königsberg</h4>
+  <p>Pada abad ke-18, sebuah pertanyaan sederhana muncul di kota Königsberg: apakah mungkin berjalan melewati semua tujuh jembatan kota, masing-masing tepat satu kali, dan kembali ke titik awal? Euler membuktikan itu tidak mungkin — dan dalam prosesnya menciptakan teori graf.</p>
+  <p>Ide kunci Euler: jika kita merepresentasikan daratan sebagai simpul dan jembatan sebagai sisi, pertanyaannya menjadi — apakah ada lintasan yang melewati setiap sisi tepat satu kali?</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">📖 Definisi</div>
+    <strong>Lintasan Euler</strong> = jalur yang melewati setiap sisi tepat satu kali (titik awal dan akhir boleh berbeda).<br>
+    <strong>Sirkuit Euler</strong> = lintasan Euler yang kembali ke titik awal (siklus).
+  </div>
+
+  <h4>Syarat Keberadaan (Teorema Euler)</h4>
+  <div class="tbl-wrap">
+    <table class="th-blue">
+      <thead><tr><th>Kondisi</th><th>Jenis</th><th>Ada Lintasan/Sirkuit?</th></tr></thead>
+      <tbody>
+        <tr><td>Tepat <strong>0</strong> simpul berderajat ganjil</td><td>Sirkuit Euler</td><td style="color:var(--green);font-weight:700">✓ Ya — sirkuit penuh, boleh mulai dari mana saja</td></tr>
+        <tr><td>Tepat <strong>2</strong> simpul berderajat ganjil</td><td>Lintasan Euler</td><td style="color:var(--green);font-weight:700">✓ Ya — mulai dari satu simpul ganjil, berakhir di yang lain</td></tr>
+        <tr><td><strong>Lebih dari 2</strong> simpul berderajat ganjil</td><td>Tidak ada</td><td style="color:#c0392b;font-weight:700">✗ Tidak ada lintasan Euler</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">💡 Tip Kritis — Jumlah Rute Minimum</div>
+    Jika ada <em>k</em> simpul berderajat ganjil (di mana k &gt; 2), jumlah lintasan minimum yang dibutuhkan untuk menutupi semua sisi adalah <strong>k ÷ 2</strong>. Ingat: jumlah simpul berderajat ganjil selalu genap (karena jumlah semua derajat = 2 × jumlah sisi).
+  </div>
+
+  <h4>② Eksplorasi: Derajat Simpul Graf Jaringan Pipa</h4>
+  <p>Graf ini sama dengan Soal Fishbowl di Panel ③. Ungkap derajat setiap simpul satu per satu, dan prediksi hasilnya sebelum melihat jawabannya.</p>
+
+  <div class="graph-svg-wrap">
+    <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto">
+      <!-- edges -->
+      <line x1="90" y1="155" x2="195" y2="85"  stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="90" y1="155" x2="195" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="85"  x2="205" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="85"  x2="335" y2="85"  stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="225" x2="335" y2="85"  stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="225" x2="335" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="335" y1="85"  x2="335" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="335" y1="85"  x2="450" y2="155" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="335" y1="225" x2="450" y2="155" stroke="#c8bdb0" stroke-width="2.5"/>
+      <!-- nodes -->
+      <circle cx="90"  cy="155" r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="90"  y="160" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">A</text>
+      <circle cx="205" cy="85"  r="22" fill="#fef0ee" stroke="#e88a7a" stroke-width="2.5"/>
+      <text x="205" y="90"  text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="#c0392b">B</text>
+      <circle cx="205" cy="225" r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="205" y="230" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">C</text>
+      <circle cx="335" cy="85"  r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="335" y="90"  text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">D</text>
+      <circle cx="335" cy="225" r="22" fill="#fef0ee" stroke="#e88a7a" stroke-width="2.5"/>
+      <text x="335" y="230" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="#c0392b">E</text>
+      <circle cx="450" cy="155" r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="450" y="160" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">F</text>
+      <!-- odd labels -->
+      <text x="205" y="55" text-anchor="middle" font-family="monospace" font-size="11" fill="#c0392b" font-weight="700">⭐ ganjil</text>
+      <text x="335" y="255" text-anchor="middle" font-family="monospace" font-size="11" fill="#c0392b" font-weight="700">⭐ ganjil</text>
+    </svg>
+    <p style="font-size:12px;color:var(--muted);margin:8px 0 0;text-align:center">Sisi: A–B, A–C, B–C, B–D, C–D, C–E, D–E, D–F, E–F &nbsp;·&nbsp; Simpul merah = berderajat ganjil</p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table id="euler-reveal-table" class="sim-table th-blue">
+      <thead><tr><th>Simpul</th><th>Terhubung ke</th><th>Derajat</th><th>Status</th></tr></thead>
+      <tbody id="euler-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="ctrl-row">
+    <button class="reveal-btn" id="euler-btn" onclick="eulerNext()">Ungkap Simpul Berikutnya</button>
+    <button class="reset-btn" onclick="eulerReset()">↺ Ulangi</button>
+    <span class="step-counter" id="euler-ctr">0 / 6 simpul</span>
+  </div>
+  <div class="tt-insight" id="euler-insight">
+    <strong style="color:var(--green)">✓ Simpul berderajat ganjil: B (deg 3) dan E (deg 3) — tepat 2.</strong><br>
+    Ini memenuhi syarat keberadaan Lintasan Euler! Rute minimum = 2 ÷ 2 = <strong>1 rute</strong>. Rute harus dimulai dari B dan berakhir di E (atau sebaliknya).
+  </div>
+
+  <!-- BAGIAN B: TOPOLOGIS -->
+  <h3 style="margin-top:40px">Bagian B — Pengurutan Topologis</h3>
+
+  <p>Pengurutan topologis menjawab pertanyaan: jika ada sekumpulan tugas dengan prasyarat ("A harus selesai sebelum B"), dalam urutan apa kita bisa menyelesaikan semua tugas?</p>
+  <p>Ini hanya berlaku untuk <strong>Directed Acyclic Graph (DAG)</strong> — graf berarah yang tidak memiliki siklus. Jika ada siklus (A menunggu B, B menunggu A), urutan yang valid tidak ada.</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">📖 Derajat Masuk (In-degree)</div>
+    Derajat masuk sebuah simpul = jumlah sisi yang <em>masuk</em> ke simpul tersebut (berapa tugas yang harus selesai sebelum tugas ini bisa dimulai).
+  </div>
+
+  <h4>Algoritma Intuitif: Teknik Ronde Paralel</h4>
+  <ol>
+    <li>Hitung derajat masuk setiap simpul.</li>
+    <li>Semua simpul dengan derajat masuk = 0 bisa dikerjakan sekarang (ronde ini).</li>
+    <li>Setelah mengerjakan simpul tersebut, kurangi derajat masuk semua simpul yang bergantung padanya.</li>
+    <li>Ulangi dari langkah 2 sampai semua simpul selesai.</li>
+  </ol>
+  <p><strong>Posisi minimum sebuah simpul</strong> = panjang jalur terpanjang yang menuju simpul itu (dihitung dalam jumlah simpul, termasuk simpul itu sendiri).</p>
+
+  <h4>② Simulasi: Pengurutan Rapat Tim Startup (7 Divisi)</h4>
+  <p>Graf berarah: K→L, K→T, L→M, T→Q, T→D, D→P, Q→P. &nbsp; Pertanyaan: <em>paling awal, pada ronde ke berapa P (Produk) bisa dijadwalkan?</em></p>
+
+  <div id="topo-rounds-container"></div>
+
+  <div class="ctrl-row">
+    <button class="reveal-btn" id="topo-btn" onclick="topoNext()">Ungkap Ronde Berikutnya</button>
+    <button class="reset-btn" onclick="topoReset()">↺ Ulangi</button>
+    <span class="step-counter" id="topo-ctr">0 / 4 ronde</span>
+  </div>
+  <div class="tt-insight" id="topo-insight">
+    <strong style="color:var(--green)">✓ Produk (P) muncul di Ronde 4.</strong><br>
+    Jalur terpanjang menuju P: K→T→D→P (4 simpul) = K→T→Q→P (4 simpul). Posisi minimum P = ronde ke-4. Kunci: D dan Q bisa dikerjakan <em>paralel</em> di Ronde 3 (keduanya bebas prasyarat setelah T selesai).
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-fishbowl')">Lanjut ke Latihan Terpandu →</button>
+</div>
+
+<!-- ═══ PANEL 3 — FISHBOWL ═══ -->
+<div id="p-fishbowl" class="panel">
+  <div class="section-badge">Latihan Terpandu · Fishbowl</div>
+  <h2>Soal Fishbowl: Jaringan Pipa Kota</h2>
+
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">ℹ️ Format Fishbowl</div>
+    2–3 siswa sukarela mengerjakan soal di depan (berbagi layar + think-aloud). Siswa pengamat mengisi <strong>Tabel Pengamatan</strong> di bawah. Setelah selesai, pengamat memberi umpan balik sebelum instruktur.
+  </div>
+
+  <h3>Soal</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal — Jaringan Pipa Kota</div>
+    <p>Sebuah kota memiliki 6 stasiun pompa air (A, B, C, D, E, F) yang dihubungkan oleh pipa-pipa. Setiap pipa harus diperiksa oleh petugas setiap bulan. Petugas dapat berjalan di sepanjang pipa, tetapi demi efisiensi, setiap pipa hanya boleh diperiksa tepat satu kali per rute.</p>
+    <p>Hubungan pipa: A–B, A–C, B–C, B–D, C–D, C–E, D–E, D–F, E–F.</p>
+    <p><strong>Pertanyaan:</strong> Berapa rute minimum yang dibutuhkan petugas agar semua pipa diperiksa, dengan setiap pipa hanya diperiksa satu kali? Dan dari stasiun mana rute tersebut harus dimulai?</p>
+  </div>
+
+  <div class="graph-svg-wrap">
+    <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto">
+      <line x1="90" y1="155" x2="195" y2="85"  stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="90" y1="155" x2="195" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="85"  x2="205" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="85"  x2="335" y2="85"  stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="225" x2="335" y2="85"  stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="205" y1="225" x2="335" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="335" y1="85"  x2="335" y2="225" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="335" y1="85"  x2="450" y2="155" stroke="#c8bdb0" stroke-width="2.5"/>
+      <line x1="335" y1="225" x2="450" y2="155" stroke="#c8bdb0" stroke-width="2.5"/>
+      <circle cx="90"  cy="155" r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="90"  y="160" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">A</text>
+      <circle cx="205" cy="85"  r="22" fill="var(--card)" stroke="var(--border)" stroke-width="2.5"/>
+      <text x="205" y="90"  text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--ink)">B</text>
+      <circle cx="205" cy="225" r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="205" y="230" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">C</text>
+      <circle cx="335" cy="85"  r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="335" y="90"  text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">D</text>
+      <circle cx="335" cy="225" r="22" fill="var(--card)" stroke="var(--border)" stroke-width="2.5"/>
+      <text x="335" y="230" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--ink)">E</text>
+      <circle cx="450" cy="155" r="22" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+      <text x="450" y="160" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="var(--blue)">F</text>
+    </svg>
+    <p style="font-size:12px;color:var(--muted);margin:8px 0 0;text-align:center">Referensi graf (tanpa penanda ganjil/genap — tentukan sendiri!)</p>
+  </div>
+
+  <h3>Tabel Pengamatan Fishbowl</h3>
+  <p>Isi selama fishbowl berlangsung:</p>
+  <div class="tbl-wrap">
+    <table class="th-muted">
+      <thead><tr><th>Langkah Pengamatan</th><th>Apa yang dilakukan siswa fishbowl?</th><th>Sudah tepat?</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Identifikasi tipe soal</td>
+          <td><input type="text" data-key="fb_obs1_act" placeholder="tuliskan..."></td>
+          <td><select data-key="fb_obs1_ok"><option value="">—</option><option>Ya</option><option>Belum</option><option>Sebagian</option></select></td>
+        </tr>
+        <tr>
+          <td>Gambar/deskripsi graf</td>
+          <td><input type="text" data-key="fb_obs2_act" placeholder="tuliskan..."></td>
+          <td><select data-key="fb_obs2_ok"><option value="">—</option><option>Ya</option><option>Belum</option><option>Sebagian</option></select></td>
+        </tr>
+        <tr>
+          <td>Hitung derajat simpul</td>
+          <td><input type="text" data-key="fb_obs3_act" placeholder="tuliskan..."></td>
+          <td><select data-key="fb_obs3_ok"><option value="">—</option><option>Ya</option><option>Belum</option><option>Sebagian</option></select></td>
+        </tr>
+        <tr>
+          <td>Identifikasi simpul ganjil</td>
+          <td><input type="text" data-key="fb_obs4_act" placeholder="tuliskan..."></td>
+          <td><select data-key="fb_obs4_ok"><option value="">—</option><option>Ya</option><option>Belum</option><option>Sebagian</option></select></td>
+        </tr>
+        <tr>
+          <td>Simpulkan jumlah rute</td>
+          <td><input type="text" data-key="fb_obs5_act" placeholder="tuliskan..."></td>
+          <td><select data-key="fb_obs5_ok"><option value="">—</option><option>Ya</option><option>Belum</option><option>Sebagian</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Apa yang akan kamu lakukan berbeda jika kamu yang mengerjakan?</label>
+    <textarea rows="3" data-key="fb_obs_notes" placeholder="Tuliskan satu hal spesifik..."></textarea>
+  </div>
+
+  <h3>Workspace Pengerjaan</h3>
+  <p>Isi selama atau setelah giliran fishbowl.</p>
+
+  <h4>Hitung Derajat Setiap Simpul</h4>
+  <div class="tbl-wrap">
+    <table class="sim-table th-blue">
+      <thead><tr><th>Simpul</th><th>Derajat (isi)</th><th>Status (isi)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="row-label">A</td>
+          <td><input type="text" class="cell-input" data-key="fb_deg_A" placeholder="?"></td>
+          <td><select class="cell-select" data-key="fb_sta_A"><option value="">—</option><option>Genap</option><option>Ganjil</option></select></td>
+        </tr>
+        <tr>
+          <td class="row-label">B</td>
+          <td><input type="text" class="cell-input" data-key="fb_deg_B" placeholder="?"></td>
+          <td><select class="cell-select" data-key="fb_sta_B"><option value="">—</option><option>Genap</option><option>Ganjil</option></select></td>
+        </tr>
+        <tr>
+          <td class="row-label">C</td>
+          <td><input type="text" class="cell-input" data-key="fb_deg_C" placeholder="?"></td>
+          <td><select class="cell-select" data-key="fb_sta_C"><option value="">—</option><option>Genap</option><option>Ganjil</option></select></td>
+        </tr>
+        <tr>
+          <td class="row-label">D</td>
+          <td><input type="text" class="cell-input" data-key="fb_deg_D" placeholder="?"></td>
+          <td><select class="cell-select" data-key="fb_sta_D"><option value="">—</option><option>Genap</option><option>Ganjil</option></select></td>
+        </tr>
+        <tr>
+          <td class="row-label">E</td>
+          <td><input type="text" class="cell-input" data-key="fb_deg_E" placeholder="?"></td>
+          <td><select class="cell-select" data-key="fb_sta_E"><option value="">—</option><option>Genap</option><option>Ganjil</option></select></td>
+        </tr>
+        <tr>
+          <td class="row-label">F</td>
+          <td><input type="text" class="cell-input" data-key="fb_deg_F" placeholder="?"></td>
+          <td><select class="cell-select" data-key="fb_sta_F"><option value="">—</option><option>Genap</option><option>Ganjil</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ctrl-row">
+    <button class="check-btn" onclick="fbDegCheck()">Periksa Derajat</button>
+    <button class="reset-btn" onclick="fbDegReset()">↺ Reset</button>
+  </div>
+  <div id="fb-deg-feedback" style="display:none;margin-top:12px"></div>
+
+  <div class="form-group" style="margin-top:24px">
+    <label class="form-label">Simpul-simpul berderajat ganjil:</label>
+    <input type="text" data-key="fb_odd_nodes" placeholder="mis. B dan E">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Jumlah rute minimum:</label>
+    <input type="text" data-key="fb_num_routes" placeholder="mis. 1 rute">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Titik awal yang valid:</label>
+    <input type="text" data-key="fb_start_node" placeholder="mis. B atau E">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Contoh rute valid yang kamu temukan:</label>
+    <input type="text" data-key="fb_route" placeholder="mis. B → A → C → ...">
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-bacaan2')">Lanjut ke Algoritma C3+C4 →</button>
+</div>
+
+<!-- ═══ PANEL 4 — ALGORITMA C3+C4 ═══ -->
+<div id="p-bacaan2" class="panel">
+  <div class="section-badge blue">Bacaan · C3 + C4</div>
+  <h2>Algoritma: Apa yang Dihitung Fungsi Ini?</h2>
+
+  <p>Di Sesi 3, kita belajar menelusuri kode langkah demi langkah. Keterampilan ini penting — tetapi soal OSN-K Bagian C sering meminta lebih: mereka meminta kamu memahami pola umum dari fungsi tanpa menelusuri setiap input satu per satu.</p>
+
+  <h3>C3 — Mengidentifikasi Pola: Strategi Tabel Input-Output</h3>
+  <p>Langkah terbaik untuk memahami fungsi baru: jalankan fungsi pada beberapa input kecil, catat hasilnya, cari pola.</p>
+
+  <h4>Contoh: Fungsi go(N) — OSN-K 2024</h4>
+  <div class="code-block">fungsi go(N):
+  faktor ← []
+  untuk i dari 1 sampai N:
+    jika N mod i = 0: tambahkan i ke faktor
+  celah_maks ← 0
+  untuk j dari 2 sampai panjang(faktor):
+    celah_maks ← maks(celah_maks, faktor[j] − faktor[j−1])
+  kembalikan celah_maks</div>
+
+  <h4>② Coba Beberapa Input — Isi Kolom go(N)</h4>
+  <p>Kolom "Faktor-faktor N" sudah diisi. Hitunglah <em>celah terbesar</em> antara dua faktor berurutan, lalu isi kolom go(N).</p>
+
+  <div class="tbl-wrap">
+    <table class="io-table th-blue">
+      <thead><tr><th>N</th><th>Faktor-faktor N (urut naik)</th><th>go(N) — isi kamu</th></tr></thead>
+      <tbody id="go-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="ctrl-row">
+    <button class="check-btn" onclick="goFnCheck()">Periksa go(N)</button>
+    <button class="reset-btn" onclick="goFnReset()">↺ Reset</button>
+  </div>
+  <div id="go-feedback" style="display:none;margin-top:12px"></div>
+
+  <div class="form-group" style="margin-top:20px">
+    <label class="form-label">Berdasarkan tabelmu, apa yang dihitung go(N)? Tuliskan hipotesismu:</label>
+    <textarea rows="3" data-key="go_hypothesis" placeholder="go(N) menghitung..."></textarea>
+  </div>
+
+  <div class="callout callout-green" style="margin-top:8px">
+    <div class="callout-label" style="color:var(--green)">💡 Jawaban Referensi (buka setelah mencoba)</div>
+    go(N) menghitung <strong>celah terbesar antara dua faktor N yang berurutan</strong> (ketika faktor-faktor diurutkan dari kecil ke besar). Misalnya go(9) = 6 karena faktor-faktor 9 adalah [1, 3, 9] dan celah terbesarnya adalah 9 − 3 = 6.
+  </div>
+
+  <h3 style="margin-top:40px">C4 — Kompleksitas Waktu Intuitif</h3>
+  <p>Kita tidak perlu notasi-O formal di OSN-K. Yang diperlukan: memahami secara intuitif bagaimana waktu eksekusi berubah ketika ukuran input membesar.</p>
+
+  <div class="tbl-wrap">
+    <table class="th-purple">
+      <thead><tr><th>Kelas</th><th>Artinya</th><th>Contoh</th><th>N dua kali lipat →</th></tr></thead>
+      <tbody>
+        <tr><td><code>O(1)</code></td><td>Konstan</td><td>Ambil elemen pertama array</td><td>Waktu sama</td></tr>
+        <tr><td><code>O(log N)</code></td><td>Logaritmik</td><td>Binary search, bagi dua tiap langkah</td><td>+1 langkah saja</td></tr>
+        <tr><td><code>O(N)</code></td><td>Linear</td><td>Loop satu kali dari 1 sampai N</td><td>Waktu dua kali lipat</td></tr>
+        <tr><td><code>O(N²)</code></td><td>Kuadratik</td><td>Dua loop bersarang, tiap O(N)</td><td>Waktu empat kali lipat</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>② Klasifikasikan Kompleksitas — Pilih yang Tepat</h4>
+  <div id="complexity-container"></div>
+
+  <div class="ctrl-row">
+    <button class="check-btn" onclick="cxCheck()">Periksa Klasifikasi</button>
+    <button class="reset-btn" onclick="cxReset()">↺ Reset</button>
+  </div>
+  <div id="cx-feedback" style="display:none;margin-top:12px"></div>
+
+  <button class="next-btn" onclick="goPanel('p-mandiri')">Lanjut ke Latihan Mandiri →</button>
+</div>
+
+<!-- ═══ PANEL 5 — LATIHAN MANDIRI ═══ -->
+<div id="p-mandiri" class="panel">
+  <div class="section-badge purple">Latihan Mandiri · You Do</div>
+  <h2>Latihan Mandiri — Triase dan Pengerjaan</h2>
+  <p>Waktu: 25 menit. Ada dua soal — satu soal graf (Bagian A) dan satu soal penelusuran kode (Bagian C). <strong>Sebelum mengerjakan, bacalah kedua soal selama 2 menit, lalu isi Kotak Triase.</strong></p>
+
+  <h3>Kotak Triase (D4 — isi sebelum mulai)</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Kotak Triase</div>
+    <div class="form-group">
+      <label class="form-label">Soal mana yang akan kamu kerjakan lebih dulu?</label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="triase_urutan" value="A_dulu" data-key="triase_urutan"> Soal A (Graf) dulu, lalu Soal C</label>
+        <label class="radio-opt"><input type="radio" name="triase_urutan" value="C_dulu" data-key="triase_urutan"> Soal C (Kode) dulu, lalu Soal A</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Alasan pilihanmu:</label>
+      <textarea rows="2" data-key="triase_alasan" placeholder="Karena soal A terlihat lebih..."></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+      <label class="form-label">Perkiraan kesulitan masing-masing (1–5, di mana 5 = sangat sulit):</label>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px">
+        <div><label class="form-label" style="font-weight:400;font-size:13px">Soal A:</label>
+          <select data-key="triase_diff_A" style="width:auto"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div><label class="form-label" style="font-weight:400;font-size:13px">Soal C:</label>
+          <select data-key="triase_diff_C" style="width:auto"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOAL A -->
+  <h3 style="margin-top:32px">Soal A — Graf: Jadwal Rapat Tim Startup</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal A</div>
+    <p>Sebuah tim startup memiliki 7 divisi: Produk (P), Desain (D), Teknik (T), QA (Q), Marketing (M), Legal (L), dan Keuangan (K). Urutan prasyarat rapat:</p>
+    <ul>
+      <li>Keuangan harus selesai sebelum Legal.</li>
+      <li>Legal harus selesai sebelum Marketing.</li>
+      <li>Keuangan harus selesai sebelum Teknik.</li>
+      <li>Teknik harus selesai sebelum QA.</li>
+      <li>Teknik harus selesai sebelum Desain.</li>
+      <li>Desain harus selesai sebelum Produk.</li>
+      <li>QA harus selesai sebelum Produk.</li>
+    </ul>
+    <p><strong>Pertanyaan:</strong> Jika tim ingin rapat Produk diadakan seawal mungkin, pada urutan ke berapa paling awal rapat Produk bisa dilaksanakan?</p>
+  </div>
+
+  <h4>Workspace Soal A</h4>
+  <p>Hitung derajat masuk (in-degree) awal setiap simpul:</p>
+  <div class="tbl-wrap">
+    <table class="sim-table th-purple">
+      <thead><tr><th>Simpul</th><th>In-degree awal (isi)</th><th>Prasyaratnya</th></tr></thead>
+      <tbody>
+        <tr><td class="row-label">K (Keuangan)</td><td><input type="text" class="cell-input" data-key="lmA_ind_K" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">—</td></tr>
+        <tr><td class="row-label">L (Legal)</td><td><input type="text" class="cell-input" data-key="lmA_ind_L" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">K</td></tr>
+        <tr><td class="row-label">M (Marketing)</td><td><input type="text" class="cell-input" data-key="lmA_ind_M" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">L</td></tr>
+        <tr><td class="row-label">T (Teknik)</td><td><input type="text" class="cell-input" data-key="lmA_ind_T" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">K</td></tr>
+        <tr><td class="row-label">Q (QA)</td><td><input type="text" class="cell-input" data-key="lmA_ind_Q" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">T</td></tr>
+        <tr><td class="row-label">D (Desain)</td><td><input type="text" class="cell-input" data-key="lmA_ind_D" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">T</td></tr>
+        <tr><td class="row-label">P (Produk)</td><td><input type="text" class="cell-input" data-key="lmA_ind_P" placeholder="?"></td><td style="font-size:13px;color:var(--muted)">D, Q</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Jalur terpanjang menuju P (tuliskan urutan simpulnya):</label>
+    <input type="text" data-key="lmA_path" placeholder="mis. K → T → D → P">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Jawabanku: Rapat Produk paling awal bisa diadakan pada urutan ke —</label>
+    <input type="text" data-key="lmA_ans" placeholder="isi angka" style="max-width:200px">
+  </div>
+  <div class="form-group">
+    <label class="form-label">Satu urutan valid yang mencapai itu:</label>
+    <input type="text" data-key="lmA_order" placeholder="mis. K(1), T(2), D(3), Q(3), P(4)...">
+  </div>
+
+  <!-- SOAL C -->
+  <h3 style="margin-top:32px">Soal C — Penelusuran Kode: Fungsi Hitung Digit</h3>
+  <div class="answer-box">
+    <div class="answer-box-label">Soal C</div>
+    <div class="code-block">fungsi jumlah_digit(N):
+  jika N = 0: kembalikan 0
+  kembalikan (N mod 10) + jumlah_digit(N div 10)</div>
+    <p>Isi tabel penelusuran untuk 4 input yang berbeda:</p>
+  </div>
+
+  <h4>Tabel Penelusuran</h4>
+  <div class="tbl-wrap">
+    <table class="sim-table th-green">
+      <thead><tr><th>N</th><th>jumlah_digit(N) — isi kamu</th></tr></thead>
+      <tbody id="jd-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="ctrl-row">
+    <button class="check-btn" onclick="jdCheck()">Periksa Tabel</button>
+    <button class="reset-btn" onclick="jdReset()">↺ Reset</button>
+  </div>
+  <div id="jd-feedback" style="display:none;margin-top:12px"></div>
+
+  <div class="form-group" style="margin-top:20px">
+    <label class="form-label">P1: Berdasarkan tabel di atas, apa yang dihitung oleh jumlah_digit(N)?</label>
+    <textarea rows="2" data-key="lmC_p1" placeholder="jumlah_digit(N) menghitung..."></textarea>
+  </div>
+  <div class="form-group">
+    <label class="form-label">P2: Jika N adalah bilangan 6-digit, berapa kali maksimum fungsi ini memanggil dirinya sendiri (rekursi)?</label>
+    <input type="text" data-key="lmC_p2" placeholder="isi angka" style="max-width:200px">
+  </div>
+  <div class="form-group">
+    <label class="form-label">P3 (Tantangan): Ada berapa bilangan bulat positif di bawah 1000 yang nilai jumlah_digit(N)-nya adalah 10?</label>
+    <input type="text" data-key="lmC_p3" placeholder="isi angka" style="max-width:200px">
+  </div>
+
+  <div class="form-group" style="margin-top:24px">
+    <label class="form-label">Setelah mengerjakan kedua soal: apakah urutan triasemu terbukti tepat? Apa yang akan kamu ubah?</label>
+    <textarea rows="3" data-key="triase_refleksi" placeholder="Ternyata soal A lebih mudah/sulit karena..."></textarea>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-bank')">Lanjut ke Bank Soal →</button>
+</div>
+
+<!-- ═══ PANEL 6 — BANK SOAL ═══ -->
+<div id="p-bank" class="panel">
+  <div class="section-badge yellow">Bank Soal · Cadangan</div>
+  <h2>Soal Cadangan — Untuk yang Selesai Lebih Awal</h2>
+  <p>Tiga soal berikut adalah cadangan. Gunakan jika kamu selesai lebih awal dari waktu yang ditentukan.</p>
+
+  <div class="accordion-item" id="acc1">
+    <div class="accordion-head" onclick="toggleAccordion('acc1')">
+      <div class="accordion-title">Soal Cadangan 1 — Graf: Penambahan Sisi Minimum</div>
+      <div class="accordion-chev" id="acc1-chev">▼</div>
+    </div>
+    <div class="accordion-body" id="acc1-body">
+      <p><strong>Soal:</strong> Sebuah graf memiliki 5 simpul dengan derajat sebagai berikut: A=1, B=3, C=2, D=3, E=1. Berapa sisi minimum yang harus ditambahkan ke graf ini agar lintasan Euler ada?</p>
+      <div class="answer-box" style="margin-top:16px">
+        <div class="answer-box-label">Workspace</div>
+        <div class="form-group">
+          <label class="form-label">Simpul mana saja yang berderajat ganjil?</label>
+          <input type="text" data-key="bs1_ganjil" placeholder="isi...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Berapa banyak simpul ganjil saat ini?</label>
+          <input type="text" data-key="bs1_count" placeholder="isi angka" style="max-width:200px">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Jawabanku — sisi minimum yang perlu ditambahkan:</label>
+          <input type="text" data-key="bs1_ans" placeholder="isi angka" style="max-width:200px">
+        </div>
+      </div>
+      <div class="callout callout-green" style="margin-top:16px">
+        <div class="callout-label" style="color:var(--green)">Pembahasan</div>
+        Simpul berderajat ganjil: A(1), B(3), D(3), E(1) → 4 simpul ganjil. Untuk lintasan Euler, diperlukan tepat 2 simpul ganjil. Setiap sisi yang ditambahkan dapat mengubah derajat 2 simpul. Solusi: tambahkan sisi A–B dan D–E. Jawaban: <strong>2 sisi</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item" id="acc2">
+    <div class="accordion-head" onclick="toggleAccordion('acc2')">
+      <div class="accordion-title">Soal Cadangan 2 — Penelusuran Kode: Fungsi Panas/Dingin</div>
+      <div class="accordion-chev" id="acc2-chev">▼</div>
+    </div>
+    <div class="accordion-body" id="acc2-body">
+      <div class="code-block">fungsi panas(X):
+  jika X = 0: kembalikan 0
+  kembalikan (X mod 10) + panas(X div 10)
+
+fungsi dingin(target, langkah):
+  air ← 0
+  selagi panas(air) ≠ target:
+    air ← air + langkah
+  kembalikan air</div>
+      <p><strong>Pertanyaan:</strong> Berapakah kembalian dari pemanggilan <code>dingin(10, 7)</code>?</p>
+      <div class="answer-box" style="margin-top:16px">
+        <div class="answer-box-label">Workspace</div>
+        <div class="form-group">
+          <label class="form-label">Apa yang dihitung fungsi panas(X)?</label>
+          <input type="text" data-key="bs2_panas" placeholder="panas(X) menghitung...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Iterasi dingin(10, 7) — isi nilai air yang dicoba (0, 7, 14, ...):</label>
+          <textarea rows="3" data-key="bs2_iter" placeholder="air=0 → panas=0&#10;air=7 → panas=7&#10;..."></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Jawabanku — dingin(10, 7) = </label>
+          <input type="text" data-key="bs2_ans" placeholder="isi angka" style="max-width:200px">
+        </div>
+      </div>
+      <div class="callout callout-green" style="margin-top:16px">
+        <div class="callout-label" style="color:var(--green)">Pembahasan</div>
+        panas(X) = jumlah digit X. Untuk dingin(10, 7): cari bilangan kelipatan 7 terkecil dengan jumlah digit = 10. Iterasi: air=0→p=0, air=7→p=7, air=14→p=5, air=21→p=3, air=28→p=10. Berhenti! Jawaban: <strong>28</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item" id="acc3">
+    <div class="accordion-head" onclick="toggleAccordion('acc3')">
+      <div class="accordion-title">Soal Cadangan 3 — Graf: Komponen Terhubung</div>
+      <div class="accordion-chev" id="acc3-chev">▼</div>
+    </div>
+    <div class="accordion-body" id="acc3-body">
+      <p><strong>Soal:</strong> Sebuah festival musik memiliki 8 panggung. Hubungan akses antara panggung: {1–2, 2–3, 1–3}, {4–5, 5–6, 4–6}, {7–8}. Pengunjung dapat bergerak bebas dalam satu kelompok yang terhubung tetapi tidak bisa berpindah kelompok. Jika tiket memberikan akses ke satu komponen terhubung, berapa tiket minimum yang dibutuhkan untuk mengunjungi semua 8 panggung?</p>
+      <div class="answer-box" style="margin-top:16px">
+        <div class="answer-box-label">Workspace</div>
+        <div class="form-group">
+          <label class="form-label">Identifikasi komponen-komponen terhubung:</label>
+          <textarea rows="3" data-key="bs3_komponen" placeholder="Komponen 1: {...}&#10;Komponen 2: {...}&#10;Komponen 3: {...}"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Jawabanku — tiket minimum = </label>
+          <input type="text" data-key="bs3_ans" placeholder="isi angka" style="max-width:200px">
+        </div>
+      </div>
+      <div class="callout callout-green" style="margin-top:16px">
+        <div class="callout-label" style="color:var(--green)">Pembahasan</div>
+        3 komponen terhubung: {1,2,3}, {4,5,6}, {7,8}. Setiap komponen membutuhkan satu tiket. Jawaban: <strong>3 tiket</strong>.
+      </div>
+    </div>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-errorlog')">Lanjut ke Error Log →</button>
+</div>
+
+<!-- ═══ PANEL 7 — ERROR LOG ═══ -->
+<div id="p-errorlog" class="panel">
+  <div class="section-badge purple">Error Log · AS-F2</div>
+  <h2>Log Kesalahan — Sesi 6</h2>
+  <p>Catat setiap soal di mana kamu membuat kesalahan hari ini. Log ini adalah alat belajar terpenting yang kamu miliki menjelang Simulasi Tengah.</p>
+
+  <div class="tbl-wrap">
+    <table class="sim-table th-muted" style="font-size:13px">
+      <thead><tr>
+        <th style="width:40px">#</th>
+        <th>Sumber Soal</th>
+        <th>Jawabanku</th>
+        <th>Jawaban Benar</th>
+        <th>Di langkah mana saya salah?</th>
+        <th>Jenis Kesalahan</th>
+      </tr></thead>
+      <tbody id="errlog-tb"></tbody>
+    </table>
+  </div>
+  <button class="add-row-btn" onclick="errlogAdd()">+ Tambah Baris</button>
+
+  <button class="next-btn" onclick="goPanel('p-karcis')">Lanjut ke Karcis Keluar →</button>
+</div>
+
+<!-- ═══ PANEL 8 — KARCIS KELUAR ═══ -->
+<div id="p-karcis" class="panel">
+  <div class="section-badge">Karcis Keluar · AS-F1</div>
+  <h2>Karcis Keluar Sesi 6</h2>
+  <p>Kamu punya 10 menit terakhir untuk mengisi ini. Jawab dengan jujur — tidak ada jawaban salah untuk pertanyaan reflektif.</p>
+
+  <div class="exit-card">
+    <h3 style="margin-top:0;color:var(--accent)">Pertanyaan 1 — Euler (Pilihan Ganda)</h3>
+    <p>Sebuah graf tak berarah memiliki 6 simpul dengan derajat masing-masing: 3, 2, 3, 4, 2, 4. Berapa rute minimum yang dibutuhkan untuk melewati semua sisi graf ini, dengan setiap sisi dilalui tepat satu kali?</p>
+    <div class="radio-group" style="margin-top:12px">
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="A" data-key="karcis_p1"> A. 1 rute</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="B" data-key="karcis_p1"> B. 2 rute</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="C" data-key="karcis_p1"> C. 3 rute</label>
+      <label class="radio-opt"><input type="radio" name="karcis_p1" value="D" data-key="karcis_p1"> D. Tidak bisa ditentukan tanpa mengetahui sisi-sisinya</label>
+    </div>
+    <div class="callout callout-yellow" style="margin-top:12px;font-size:13px">
+      <strong>Petunjuk:</strong> Hitung berapa simpul yang berderajat ganjil. Ingat: rute minimum = (simpul ganjil) ÷ 2.
+    </div>
+  </div>
+
+  <div class="exit-card" style="margin-top:20px">
+    <h3 style="margin-top:0;color:var(--accent)">Pertanyaan 2 — Algoritma (Jawaban Singkat)</h3>
+    <p>Kamu diberi fungsi baru yang belum pernah kamu lihat. Jelaskan langkah-langkah konkret (C3) yang akan kamu lakukan dalam 2 menit pertama untuk mengidentifikasi apa yang dihitung fungsi tersebut, sebelum menelusuri kode secara penuh.</p>
+    <textarea data-key="karcis_p2" rows="5" placeholder="Pertama, saya akan mencoba fungsi pada beberapa input kecil seperti..."></textarea>
+  </div>
+
+  <div class="exit-card" style="margin-top:20px">
+    <h3 style="margin-top:0;color:var(--accent)">Pertanyaan 3 — Refleksi Menjelang Simulasi Tengah</h3>
+    <p>Dari seluruh materi Sesi 1–6, bagian mana yang paling menguatirkan kamu menjelang Simulasi Tengah? Apa satu hal spesifik yang akan kamu pelajari ulang malam ini?</p>
+    <textarea data-key="karcis_p3" rows="4" placeholder="Yang paling saya khawatirkan adalah...&#10;Malam ini saya akan mempelajari ulang..."></textarea>
+  </div>
+
+  <button class="next-btn" onclick="goPanel('p-ringkasan')">Lanjut ke Ringkasan →</button>
+</div>
+
+<!-- ═══ PANEL 9 — RINGKASAN + UNDUHAN ═══ -->
+<div id="p-ringkasan" class="panel">
+  <div class="section-badge green">Ringkasan · Sesi 6 → Simulasi Tengah</div>
+  <h2>Poin Kunci dan Strategi Simulasi Tengah</h2>
+
+  <div class="callout callout-accent">
+    <div class="callout-label" style="color:var(--accent)">A4 — Graf Lanjut</div>
+    <strong>Euler:</strong> lintasan ada ↔ tepat 0 atau 2 simpul berderajat ganjil. Rute minimum = (simpul ganjil) ÷ 2.<br>
+    <strong>Topologis:</strong> posisi minimum simpul = panjang jalur terpanjang menuju simpul (hitung simpul, bukan sisi).
+  </div>
+  <div class="callout callout-blue">
+    <div class="callout-label" style="color:var(--blue)">C3 + C4 — Analisis Algoritma</div>
+    <strong>C3:</strong> bangun tabel I/O dari beberapa input kecil sebelum membaca kode secara menyeluruh. Hipotesa pola, lalu verifikasi.<br>
+    <strong>C4:</strong> tanya "jika N dua kali lipat, waktu berubah berapa?" → konstan (×1), log (+ konstanta), linear (×2), kuadratik (×4).
+  </div>
+  <div class="callout callout-purple">
+    <div class="callout-label" style="color:var(--purple)">D4 — Triase Soal</div>
+    Baca semua soal 5 menit pertama. Kerjakan soal "paling yakin" dahulu. Jika satu soal memakan lebih dari 5 menit tanpa kemajuan — lewati dan tandai.
+  </div>
+  <div class="callout callout-yellow">
+    <div class="callout-label" style="color:var(--yellow)">📋 Strategi Simulasi Tengah (AS-F3)</div>
+    <ul style="margin:8px 0 0 16px">
+      <li>5 menit pertama: baca semua soal dari depan ke belakang — triase penuh.</li>
+      <li>Kerjakan soal Bagian A yang paling kamu kenali terlebih dahulu.</li>
+      <li>Jika satu soal memakan &gt;5 menit tanpa kemajuan — lewati dan tandai.</li>
+      <li>Kembali ke soal yang dilewati setelah semua soal "yakin" selesai.</li>
+      <li>10 menit terakhir: periksa semua jawaban — telusuri ulang soal yang melibatkan simulasi.</li>
+    </ul>
+  </div>
+
+  <h3>Rumus Ringkas untuk Lembar Catatan</h3>
+  <div class="tbl-wrap">
+    <table class="th-muted">
+      <thead><tr><th>Konsep</th><th>Rumus / Kunci</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Euler — syarat</strong></td><td>0 atau 2 simpul berderajat ganjil</td></tr>
+        <tr><td><strong>Euler — rute min</strong></td><td>(jumlah simpul ganjil) ÷ 2</td></tr>
+        <tr><td><strong>Topo — posisi min</strong></td><td>panjang jalur terpanjang masuk + 1 (atau: hitung node termasuk dirinya)</td></tr>
+        <tr><td><strong>C3 — strategi</strong></td><td>Tabel I/O dulu, pola dulu, baca kode kemudian</td></tr>
+        <tr><td><strong>C4 — kompleksitas</strong></td><td>O(1)→sama, O(log N)→+konst, O(N)→×2, O(N²)→×4</td></tr>
+        <tr><td><strong>De Morgan (S5)</strong></td><td>¬(A∧B) ≡ ¬A∨¬B &nbsp; | &nbsp; ¬(A∨B) ≡ ¬A∧¬B</td></tr>
+        <tr><td><strong>Nim XOR (S5)</strong></td><td>XOR semua pile: = 0 → P (kalah), ≠ 0 → N (menang)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="download-section">
+    <h3>📥 Unduh Respons Sesi 6</h3>
+    <p>Simpan seluruh jawaban sebagai file teks untuk dikumpulkan ke instruktur.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
+      <div style="text-align:left">
+        <label style="color:#ccc;font-size:13px;display:block;margin-bottom:4px">Nama</label>
+        <input type="text" data-key="dl_nama" placeholder="Nama lengkap" style="background:#2a2218;color:#fff;border-color:#555;width:200px">
+      </div>
+      <div style="text-align:left">
+        <label style="color:#ccc;font-size:13px;display:block;margin-bottom:4px">Email</label>
+        <input type="email" data-key="dl_email" placeholder="email@sekolah.id" style="background:#2a2218;color:#fff;border-color:#555;width:220px">
+      </div>
+    </div>
+    <button class="download-btn" onclick="doDownload()">⬇ Unduh Respons Sesi 6</button>
+    <div class="download-note">File .txt berisi seluruh jawabanmu dalam format Base64. Instruktur akan membacanya langsung.</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+const PANEL_IDS = ['p-gambaran','p-bacaan1','p-fishbowl','p-bacaan2','p-mandiri','p-bank','p-errorlog','p-karcis','p-ringkasan'];
+
+function goPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.prog-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.prog-btn')[PANEL_IDS.indexOf(id)].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  FIVE-ATTACK FLOWCHART
+// ═══════════════════════════════════════════════════════
+const FIVE_STEPS = [
+  { num:1, icon:'🔍', color:'var(--s1)', bg:'var(--s1-bg)', title:'Baca Cermat', desc:'Identifikasi: apa yang diminta, apa kondisi grafnya, apa objek-objeknya (simpul, sisi, berarah/tak-berarah, prasyarat). Untuk soal kode: cari nama fungsi, parameter, dan nilai kembalian.' },
+  { num:2, icon:'🏷️', color:'var(--s2)', bg:'var(--s2-bg)', title:'Identifikasi Tipe', desc:'Soal graf? Pilah: Euler (semua sisi tepat satu kali), topologis (prasyarat/urutan), atau komponen terhubung? Soal kode? Pilah: penelusuran langkah demi langkah, identifikasi pola I/O (C3), atau kompleksitas (C4).' },
+  { num:3, icon:'🧪', color:'var(--s3)', bg:'var(--s3-bg)', title:'Coba Kasus Kecil', desc:'Graf: gambar 3–4 simpul, hitung derajat secara manual. Kode: jalankan fungsi pada 2–3 input kecil (N=1, 2, 4, 8) dan catat hasilnya di tabel I/O sebelum membaca kode secara penuh.' },
+  { num:4, icon:'💎', color:'var(--s4)', bg:'var(--s4-bg)', title:'Cari Invariant / Pola', desc:'Euler: simpul berderajat ganjil selalu genap — rute min = ganjil÷2. Topologis: posisi min = panjang jalur terpanjang (hitunglah simpul, bukan sisi). Kode C3: apakah output = jumlah digit? maks celah faktor? hasil bagi berulang?' },
+  { num:5, icon:'⚠️', color:'var(--s5)', bg:'var(--s5-bg)', title:'Periksa Kasus Tepi', desc:'Graf: bagaimana jika tidak ada simpul ganjil? (→ 0 rute tambahan, sirkuit cukup) Bagaimana jika graf tidak terhubung? Kode: N=0, N=1, bilangan prima, bilangan kuadrat sempurna — apakah fungsi masih benar?' },
+];
+
+function buildFlowchart(containerId, steps) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  steps.forEach((step, i) => {
+    const card = document.createElement('div');
+    card.className = 'flow-step';
+    card.innerHTML = `
+      <div class="flow-icon" style="background:${step.bg};border:2px solid ${step.color}">${step.icon}</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:${step.color};letter-spacing:1px;font-family:monospace">LANGKAH ${step.num}</div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink)">${step.title}</div>
+      </div>
+      <div class="flow-chev">▼</div>`;
+    const desc = document.createElement('div');
+    desc.className = 'flow-desc';
+    desc.style.cssText = `background:${step.bg};border:1.5px solid ${step.color}40;`;
+    desc.textContent = step.desc;
+    card.onclick = () => {
+      const open = card._open = !card._open;
+      card.style.border = open ? `2px solid ${step.color}` : '2px solid var(--border)';
+      card.style.background = open ? step.bg : 'var(--card)';
+      desc.style.display = open ? 'block' : 'none';
+      card.querySelector('.flow-chev').style.opacity = open ? '1' : '0.4';
+      card.querySelector('.flow-chev').style.transform = open ? 'rotate(180deg)' : '';
+    };
+    wrap.appendChild(card);
+    wrap.appendChild(desc);
+    if (i < steps.length - 1) {
+      const conn = document.createElement('div');
+      conn.className = 'flow-connector';
+      conn.innerHTML = `<div class="flow-line"></div><div class="flow-arrow">⇅</div><div class="flow-line"></div>`;
+      wrap.appendChild(conn);
+    }
+  });
+}
+buildFlowchart('fc-five-attack', FIVE_STEPS);
+
+// ═══════════════════════════════════════════════════════
+//  EULER DEGREE STEP-REVEAL
+// ═══════════════════════════════════════════════════════
+const EULER_NODES = [
+  { simpul:'A', ke:'B, C',       deg:2, odd:false },
+  { simpul:'B', ke:'A, C, D',    deg:3, odd:true  },
+  { simpul:'C', ke:'A, B, D, E', deg:4, odd:false },
+  { simpul:'D', ke:'B, C, E, F', deg:4, odd:false },
+  { simpul:'E', ke:'C, D, F',    deg:3, odd:true  },
+  { simpul:'F', ke:'D, E',       deg:2, odd:false },
+];
+let eulerPhase = 0;
+
+function eulerRender() {
+  const tb = document.getElementById('euler-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  EULER_NODES.forEach((n, i) => {
+    if (i >= eulerPhase) return;
+    const tr = document.createElement('tr');
+    const badge = n.odd
+      ? `<span class="badge-odd">Ganjil ⭐</span>`
+      : `<span class="badge-even">Genap</span>`;
+    if (n.odd) tr.style.background = '#fff5f5';
+    tr.innerHTML = `
+      <td style="font-family:monospace;font-weight:900;font-size:18px;text-align:center;color:${n.odd?'#c0392b':'var(--blue)'}">${n.simpul}</td>
+      <td style="font-family:monospace;font-size:13px;color:var(--muted)">${n.ke}</td>
+      <td style="text-align:center;font-family:monospace;font-weight:900;font-size:18px;color:${n.odd?'#c0392b':'var(--blue)'}">${n.deg}</td>
+      <td style="text-align:center">${badge}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function eulerNext() {
+  if (eulerPhase >= EULER_NODES.length) return;
+  eulerPhase++;
+  eulerRender();
+  document.getElementById('euler-ctr').textContent = eulerPhase + ' / 6 simpul';
+  if (eulerPhase >= EULER_NODES.length) {
+    document.getElementById('euler-btn').disabled = true;
+    document.getElementById('euler-insight').style.display = 'block';
+  }
+  save();
+}
+
+function eulerReset() {
+  eulerPhase = 0;
+  eulerRender();
+  document.getElementById('euler-ctr').textContent = '0 / 6 simpul';
+  document.getElementById('euler-btn').disabled = false;
+  document.getElementById('euler-insight').style.display = 'none';
+  save();
+}
+eulerRender();
+
+// ═══════════════════════════════════════════════════════
+//  TOPO SORT ROUND-REVEAL
+// ═══════════════════════════════════════════════════════
+const TOPO_ROUNDS = [
+  { round:1, nodes:['K (Keuangan)'],             freed:['L (Legal)','T (Teknik)'],                   note:'K tidak memiliki prasyarat — in-degree = 0.' },
+  { round:2, nodes:['L (Legal)','T (Teknik)'],    freed:['M (Marketing)','Q (QA)','D (Desain)'],       note:'L dibebaskan oleh K. T dibebaskan oleh K. Keduanya bisa dikerjakan bersamaan.' },
+  { round:3, nodes:['M (Marketing)','Q (QA)','D (Desain)'], freed:['P (Produk)'],              note:'M dibebaskan oleh L. Q dan D dibebaskan oleh T. Ketiganya bisa dikerjakan bersamaan di Ronde 3.' },
+  { round:4, nodes:['P (Produk) ✓'],             freed:[],                                     note:'P membutuhkan D dan Q — keduanya selesai di Ronde 3. P bisa dijadwalkan pada Ronde 4 (posisi paling awal!).' },
+];
+let topoPhase = 0;
+
+function topoRender() {
+  const c = document.getElementById('topo-rounds-container');
+  if (!c) return;
+  c.innerHTML = '';
+  TOPO_ROUNDS.forEach((r, i) => {
+    if (i >= topoPhase) return;
+    const div = document.createElement('div');
+    div.className = 'topo-round-row';
+    const isProduk = r.nodes.some(n => n.includes('Produk'));
+    if (isProduk) div.style.background = 'var(--accent-light)';
+    const nodeChips = r.nodes.map(n =>
+      isProduk ? `<span class="topo-produk-chip">${n}</span>` : `<span class="topo-node-chip">${n}</span>`
+    ).join(' ');
+    const freedChips = r.freed.length
+      ? r.freed.map(n => `<span class="topo-freed-chip">${n}</span>`).join(' ')
+      : '<span style="color:var(--muted);font-size:12px">—</span>';
+    div.innerHTML = `
+      <div class="topo-round-num">${r.round}</div>
+      <div class="topo-round-content">
+        <div class="topo-round-label">Dikerjakan di Ronde ${r.round}</div>
+        <div style="margin-bottom:8px">${nodeChips}</div>
+        <div class="topo-round-label">Membebaskan prasyarat untuk</div>
+        <div style="margin-bottom:8px">${freedChips}</div>
+        <div style="font-size:13px;color:var(--muted);font-style:italic">${r.note}</div>
+      </div>`;
+    c.appendChild(div);
+    if (i < topoPhase - 1 && i < TOPO_ROUNDS.length - 1) {
+      const arrow = document.createElement('div');
+      arrow.style.cssText = 'text-align:center;font-size:20px;color:var(--muted);margin:4px 0;';
+      arrow.textContent = '↓';
+      c.appendChild(arrow);
+    }
+  });
+}
+
+function topoNext() {
+  if (topoPhase >= TOPO_ROUNDS.length) return;
+  topoPhase++;
+  topoRender();
+  document.getElementById('topo-ctr').textContent = topoPhase + ' / 4 ronde';
+  if (topoPhase >= TOPO_ROUNDS.length) {
+    document.getElementById('topo-btn').disabled = true;
+    document.getElementById('topo-insight').style.display = 'block';
+  }
+  save();
+}
+
+function topoReset() {
+  topoPhase = 0;
+  topoRender();
+  document.getElementById('topo-ctr').textContent = '0 / 4 ronde';
+  document.getElementById('topo-btn').disabled = false;
+  document.getElementById('topo-insight').style.display = 'none';
+  save();
+}
+topoRender();
+
+// ═══════════════════════════════════════════════════════
+//  FISHBOWL DEGREE CHECK
+// ═══════════════════════════════════════════════════════
+const FB_DEGREES = { A:'2', B:'3', C:'4', D:'4', E:'3', F:'2' };
+const FB_STATUS  = { A:'Genap', B:'Ganjil', C:'Genap', D:'Genap', E:'Ganjil', F:'Genap' };
+
+function fbDegCheck() {
+  let ok = 0;
+  ['A','B','C','D','E','F'].forEach(s => {
+    const di = document.querySelector(`[data-key="fb_deg_${s}"]`);
+    const si = document.querySelector(`[data-key="fb_sta_${s}"]`);
+    if (di) {
+      di.classList.remove('correct','wrong');
+      if (di.value.trim() === FB_DEGREES[s]) { di.classList.add('correct'); ok++; }
+      else if (di.value.trim()) { di.classList.add('wrong'); }
+    }
+    if (si) {
+      si.style.borderColor = '';
+      if (si.value === FB_STATUS[s]) si.style.borderColor = 'var(--green)';
+      else if (si.value) si.style.borderColor = '#e88a7a';
+    }
+  });
+  const fb = document.getElementById('fb-deg-feedback');
+  fb.style.display = 'block';
+  if (ok === 6) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Derajat Benar!</div>Simpul berderajat ganjil: B(3) dan E(3) → tepat 2 simpul ganjil → 1 rute cukup (Lintasan Euler dari B ke E).</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/6 Benar</div>Periksa kembali: derajat = jumlah sisi yang menyentuh simpul itu. Hitung tiap sisi yang tertera (A–B, A–C, B–C, B–D, C–D, C–E, D–E, D–F, E–F) satu per satu.</div>`;
+  }
+  save();
+}
+
+function fbDegReset() {
+  ['A','B','C','D','E','F'].forEach(s => {
+    const di = document.querySelector(`[data-key="fb_deg_${s}"]`);
+    const si = document.querySelector(`[data-key="fb_sta_${s}"]`);
+    if (di) { di.value=''; di.classList.remove('correct','wrong'); }
+    if (si) { si.value=''; si.style.borderColor=''; }
+  });
+  document.getElementById('fb-deg-feedback').style.display = 'none';
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  go(N) IO TABLE
+// ═══════════════════════════════════════════════════════
+const GO_ROWS = [
+  { n:4,  factors:'[1, 2, 4]',            ans:'2'  },
+  { n:6,  factors:'[1, 2, 3, 6]',         ans:'3'  },
+  { n:9,  factors:'[1, 3, 9]',            ans:'6'  },
+  { n:12, factors:'[1, 2, 3, 4, 6, 12]',  ans:'6'  },
+  { n:16, factors:'[1, 2, 4, 8, 16]',     ans:'8'  },
+  { n:15, factors:'[1, 3, 5, 15]',        ans:'10' },
+];
+
+function buildGoTable() {
+  const tb = document.getElementById('go-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  GO_ROWS.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-family:monospace;font-weight:700;font-size:16px">${r.n}</td>
+      <td style="font-family:monospace;font-size:13px;color:var(--muted)">${r.factors}</td>
+      <td><input type="text" class="cell-input" data-key="go_ans_${i}" placeholder="?" style="width:80px"></td>`;
+    tb.appendChild(tr);
+    tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+  });
+}
+buildGoTable();
+
+function goFnCheck() {
+  let ok = 0;
+  GO_ROWS.forEach((r, i) => {
+    const inp = document.querySelector(`[data-key="go_ans_${i}"]`);
+    if (!inp) return;
+    inp.classList.remove('correct','wrong');
+    if (inp.value.trim() === r.ans) { inp.classList.add('correct'); ok++; }
+    else if (inp.value.trim()) { inp.classList.add('wrong'); }
+  });
+  const fb = document.getElementById('go-feedback');
+  fb.style.display = 'block';
+  if (ok === GO_ROWS.length) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Benar!</div>Perhatikan: go(9) = go(12) = 6. Mengapa? Karena celah terbesar keduanya sama walaupun faktor-faktor berbeda. Ini memberi petunjuk bahwa go(N) tidak monoton dengan N.</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/6 Benar</div>Kunci: cari selisih terbesar antara faktor berurutan. Untuk go(9)=[1,3,9]: selisih-selisih adalah (3−1)=2 dan (9−3)=6 → max = 6.</div>`;
+  }
+  save();
+}
+
+function goFnReset() {
+  GO_ROWS.forEach((_, i) => {
+    const inp = document.querySelector(`[data-key="go_ans_${i}"]`);
+    if (inp) { inp.value=''; inp.classList.remove('correct','wrong'); }
+  });
+  document.getElementById('go-feedback').style.display = 'none';
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  COMPLEXITY CLASSIFIER
+// ═══════════════════════════════════════════════════════
+const CX_ITEMS = [
+  { num:1, desc:'Menjumlahkan semua elemen dalam array berukuran N dengan satu loop dari indeks 0 sampai N−1.', ans:'O(N)' },
+  { num:2, desc:'Mencari apakah elemen X ada dalam array terurut berukuran N menggunakan binary search (tiap langkah, ruang pencarian berkurang setengah).', ans:'O(log N)' },
+  { num:3, desc:'Membandingkan setiap pasangan elemen dalam array berukuran N: loop luar i dari 0..N, loop dalam j dari i+1..N.', ans:'O(N²)' },
+  { num:4, desc:'Mengembalikan elemen pertama (indeks 0) dari array berukuran N tanpa melakukan loop.', ans:'O(1)' },
+];
+const CX_OPTIONS = ['O(1)','O(log N)','O(N)','O(N²)'];
+
+function buildCxItems() {
+  const c = document.getElementById('complexity-container');
+  if (!c) return;
+  c.innerHTML = '';
+  CX_ITEMS.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'complexity-item';
+    const opts = CX_OPTIONS.map(o => `<option value="${o}">${o}</option>`).join('');
+    div.innerHTML = `
+      <div class="cx-num">Skenario ${item.num}</div>
+      <div class="cx-text">${item.desc}</div>
+      <select class="cx-select" data-key="cx_${item.num}"><option value="">— pilih kompleksitas —</option>${opts}</select>`;
+    c.appendChild(div);
+    div.querySelector('select').addEventListener('change', save);
+  });
+}
+buildCxItems();
+
+function cxCheck() {
+  let ok = 0;
+  CX_ITEMS.forEach(item => {
+    const sel = document.querySelector(`[data-key="cx_${item.num}"]`);
+    if (!sel) return;
+    sel.style.borderColor = '';
+    if (sel.value === item.ans) { sel.style.borderColor = 'var(--green)'; ok++; }
+    else if (sel.value) { sel.style.borderColor = '#e88a7a'; }
+  });
+  const fb = document.getElementById('cx-feedback');
+  fb.style.display = 'block';
+  if (ok === CX_ITEMS.length) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Benar!</div>Tip mnemonic: O(1)=konstan, O(log N)=bagi dua, O(N)=satu loop, O(N²)=dua loop bersarang. Di OSN-K, kunci utamanya adalah melihat apakah ada nested loop.</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/4 Benar</div>Tanya: "Berapa banyak operasi jika N=10 vs N=20?" Jika dua kali lipat → O(N). Jika empat kali lipat → O(N²). Jika cuma +1 langkah → O(log N).</div>`;
+  }
+  save();
+}
+
+function cxReset() {
+  CX_ITEMS.forEach(item => {
+    const sel = document.querySelector(`[data-key="cx_${item.num}"]`);
+    if (sel) { sel.value=''; sel.style.borderColor=''; }
+  });
+  document.getElementById('cx-feedback').style.display = 'none';
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  jumlah_digit TRACE TABLE
+// ═══════════════════════════════════════════════════════
+const JD_ROWS = [
+  { n:5,   ans:'5'  },
+  { n:23,  ans:'5'  },
+  { n:100, ans:'1'  },
+  { n:456, ans:'15' },
+];
+
+function buildJdTable() {
+  const tb = document.getElementById('jd-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  JD_ROWS.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-family:monospace;font-weight:700;font-size:16px;text-align:center">${r.n}</td>
+      <td style="text-align:center"><input type="text" class="cell-input" data-key="jd_ans_${i}" placeholder="?" style="width:80px"></td>`;
+    tb.appendChild(tr);
+    tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+  });
+}
+buildJdTable();
+
+function jdCheck() {
+  let ok = 0;
+  JD_ROWS.forEach((r, i) => {
+    const inp = document.querySelector(`[data-key="jd_ans_${i}"]`);
+    if (!inp) return;
+    inp.classList.remove('correct','wrong');
+    if (inp.value.trim() === r.ans) { inp.classList.add('correct'); ok++; }
+    else if (inp.value.trim()) { inp.classList.add('wrong'); }
+  });
+  const fb = document.getElementById('jd-feedback');
+  fb.style.display = 'block';
+  if (ok === JD_ROWS.length) {
+    fb.innerHTML = '<div class="callout callout-green"><div class="callout-label" style="color:var(--green)">✓ Semua Benar!</div>jumlah_digit(N) menghitung jumlah digit desimal dari N. jumlah_digit(456) = 4+5+6 = 15 karena setiap rekursi memisahkan satu digit terakhir (N mod 10) dan meneruskan sisanya (N div 10).</div>';
+  } else {
+    fb.innerHTML = `<div class="callout callout-accent"><div class="callout-label" style="color:var(--accent)">${ok}/4 Benar</div>Kunci: setiap panggilan rekursif memisahkan digit terakhir (N mod 10) dan melewati N div 10. Coba telusuri jumlah_digit(23): 23 mod 10=3, lalu jumlah_digit(2)=2. Total: 3+2=5.</div>`;
+  }
+  save();
+}
+
+function jdReset() {
+  JD_ROWS.forEach((_, i) => {
+    const inp = document.querySelector(`[data-key="jd_ans_${i}"]`);
+    if (inp) { inp.value=''; inp.classList.remove('correct','wrong'); }
+  });
+  document.getElementById('jd-feedback').style.display = 'none';
+  save();
+}
+
+// ═══════════════════════════════════════════════════════
+//  ACCORDION (BANK SOAL)
+// ═══════════════════════════════════════════════════════
+function toggleAccordion(id) {
+  const body = document.getElementById(id + '-body');
+  const chev = document.getElementById(id + '-chev');
+  const isOpen = body.style.display === 'block';
+  body.style.display = isOpen ? 'none' : 'block';
+  chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+// ═══════════════════════════════════════════════════════
+//  ERROR LOG
+// ═══════════════════════════════════════════════════════
+const ERROR_TYPES = [
+  'Salah identifikasi tipe soal',
+  'Salah hitung derajat simpul',
+  'Salah menerapkan rumus Euler',
+  'Salah langkah pengurutan topologis',
+  'Salah identifikasi pola I/O fungsi',
+  'Salah klasifikasi kompleksitas',
+  'Kehabisan waktu',
+  'Kesalahan hitung/aritmetika',
+];
+let errCount = 0;
+
+function errlogAdd() {
+  errCount++;
+  const n = errCount;
+  const opts = ERROR_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="text-align:center;color:var(--muted);font-size:13px;padding-top:10px">${n}</td>
+    <td><input type="text" data-key="err${n}_src" placeholder="mis. Fishbowl"></td>
+    <td><input type="text" data-key="err${n}_mine" placeholder="Jawabanku"></td>
+    <td><input type="text" data-key="err${n}_correct" placeholder="Jawaban benar"></td>
+    <td><textarea rows="2" data-key="err${n}_where" placeholder="Langkah mana yang salah?"></textarea></td>
+    <td><select data-key="err${n}_type"><option value="">— pilih —</option>${opts}</select></td>`;
+  document.getElementById('errlog-tb').appendChild(tr);
+  tr.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+  save();
+}
+errlogAdd();
+
+// ═══════════════════════════════════════════════════════
+//  PERSISTENCE (localStorage)
+// ═══════════════════════════════════════════════════════
+const STORE = 'osnk-sesi6-v1';
+
+function save() {
+  const d = {};
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (el.type === 'radio' || el.type === 'checkbox') { if (el.checked) d[k] = el.value; }
+    else { d[k] = el.value; }
+  });
+  d._eulerPhase = eulerPhase;
+  d._topoPhase  = topoPhase;
+  d._errCount   = errCount;
+  try { localStorage.setItem(STORE, JSON.stringify(d)); } catch(e) {}
+}
+
+function load() {
+  let d;
+  try { d = JSON.parse(localStorage.getItem(STORE)); } catch(e) {}
+  if (!d) return;
+  // restore extra rows before populating
+  if (d._errCount > 1) for (let i = 1; i < d._errCount; i++) errlogAdd();
+  // restore euler reveal
+  if (d._eulerPhase) { eulerPhase = 0; while (eulerPhase < d._eulerPhase) eulerNext(); }
+  // restore topo reveal
+  if (d._topoPhase)  { topoPhase = 0;  while (topoPhase < d._topoPhase)  topoNext(); }
+  // restore all form values
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (!(k in d)) return;
+    if (el.type === 'radio' || el.type === 'checkbox') el.checked = el.value === d[k];
+    else el.value = d[k];
+  });
+}
+document.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', save));
+
+// ═══════════════════════════════════════════════════════
+//  DOWNLOAD
+// ═══════════════════════════════════════════════════════
+function doDownload() {
+  const data = {};
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (el.type === 'radio' || el.type === 'checkbox') { if (el.checked) data[k] = el.value; }
+    else { data[k] = el.value; }
+  });
+  data._meta = { sesi: '6', versi: 'v1', ts: new Date().toISOString() };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([encoded], { type: 'text/plain' }));
+  a.download = 'respons-sesi6-' + Date.now() + '.txt';
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════════
+//  ARROW-KEY HEADING NAVIGATION
+// ═══════════════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName) || e.target.isContentEditable) return;
+    const hs = Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6')).filter(h => h.offsetWidth > 0 && h.offsetHeight > 0);
+    let t = null;
+    if (e.key === 'ArrowRight') t = hs.find(h => h.getBoundingClientRect().top > 10);
+    else t = [...hs].reverse().find(h => h.getBoundingClientRect().top < -10);
+    if (t) { t.scrollIntoView({ behavior: 'smooth' }); e.preventDefault(); }
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+//  INIT — MUST BE LAST
+// ═══════════════════════════════════════════════════════
+load();
+</script>
+</body>
+</html>
